@@ -1,0 +1,50 @@
+# V2 fitting recipe (2026-11-20 amendment, training-only milestone). Recorded BEFORE any V2 selection is run;
+# `python -m mife.probing.v2.cli recipe` copies it, with its sha256 and a timestamp, to results/v2/recipe_recorded.json.
+# Separate from configs/experiment.yaml so the 2026-11-14 freeze (which hashes that file) stays valid.
+# Labels: [D] = the project owner's decision in the spec; [P] = numerical default proposed by Claude.
+version: v2-2026-11-20
+
+objective1:
+  loss: summed binomial NLL on (violated, compliant) counts; implemented as mean per completion + penalty lam/N, N = head's fitting completions   # [D]
+  heads: one ridge-logistic head per rule type (15) per generator and predictor                                                                 # [D]
+  structure_columns: [k, position, "companion:<type> x 15", prompt_tokens, target_span_tokens, target_dist_to_final]                          # [D] columns; exact encoding [P]
+  # lam on the SUMMED-loss scale (the solver divides by N). Each value is 10x the previous one.
+  structure_lambda: 10.0                                     # [P] fixed weak penalty, identical in every predictor, never tuned
+  prompt_lambda_grid: [1.0e+2, 1.0e+3, 1.0e+4, 1.0e+5, 1.0e+6, 1.0e+7]   # [P] 6 values
+  rule_lambda_grid:   [1.0e+2, 1.0e+3, 1.0e+4, 1.0e+5, 1.0e+6, 1.0e+7]   # [P] 6 values
+  selection_metric: pooled held-out mean log loss per completion (sum NLL / sum completions over every OOF row of every type and fold)  # [D]
+  tie_precision: 1.0e-6                                      # [P] losses are compared after rounding to 6 decimals
+  fallback:                                                  # [D] thresholds 50/50; group threshold 5 accepted by the owner
+    min_violated: 50
+    min_compliant: 50
+    min_groups_with_violation: 5
+    prediction: (v + 0.5) / (n + 1)
+  hidden_rows: {llama: [8, 12, 16, 24, 33], qwen: [9, 14, 18, 27, 37]}  # [D]
+
+objective2:
+  loss: ridge fractional logit (binomial cross-entropy with q_hat as soft label, logistic link), every prompt weight 1; penalty lam/N, N = fitting prompts  # [D]
+  heads: one shared head per generator and predictor           # [D]
+  structure_columns: [k, prompt_tokens, "slot<s>_type:<type> (5 x 15)", "slot<s>_span_tokens x 5", "slot<s>_dist_to_final x 5", "slot<s>_present x 5"]  # [D]
+  structure_lambda: 1.0                                      # [P]
+  prompt_lambda_grid: [1.0e+0, 1.0e+1, 1.0e+2, 1.0e+3, 1.0e+4, 1.0e+5]   # [P] own loss scale, same shape as Objective 1
+  rule_lambda_grid:   [1.0e+0, 1.0e+1, 1.0e+2, 1.0e+3, 1.0e+4, 1.0e+5]   # [P]
+  selection_metric: pooled held-out mean squared error of the predicted fraction (every OOF prompt weight 1)  # [D]
+  tie_precision: 1.0e-8                                      # [P] MSEs are ~1e-2, so 1e-8 is ~1e-6 relative
+  hidden_rows: {llama: [8, 12, 16, 24, 33], qwen: [9, 14, 18, 27, 37]}  # [D]
+  ordered_slot_sensitivity: [B2, H2, RCAP, B2+H1, B2+A1]     # [D]; uses the main analysis' final grids, no further expansion [P]
+
+common:
+  folds: results/cv/folds.json (5 grouped folds over the 57 TRAIN groups, unchanged)  # [D]
+  standardisation: per head, fitting rows only; constant columns scale 1               # [D]
+  penalty_slots: {structure: fixed, prompt: [B1 EP, B2 EP, H1/H2 hidden state, RCAP A1max], rule: [B2, H2, RCAP exact-rule embedding]}  # [D]
+  tie_rule: among settings whose rounded pooled loss equals the minimum, pick the largest sum of log10 tuned penalties; then the larger prompt penalty  # [D]
+  boundary_expansion:                                        # [P] accepted by the owner
+    rule: if any predictor in a generator x objective selects the lowest or highest value of a tuned slot, that slot's grid is extended by one x10 step in that direction, once, for every predictor in that generator x objective that uses the slot; then everything is reselected. A winner on the extended edge is "best among the tested values".
+    incremental_added_block: the added block uses the prompt-slot values plus "off"; only its LOWEST value counts as an edge ("off" lies beyond the highest)
+    order: (1) base grids for every head-to-head predictor, layer search, other-generator reference; (2) incremental comparisons with the base-round baselines; (3) decide expansions from (1) and (2); (4) evaluate the extra values, reselect layer and penalties; (5) rerun incremental comparisons against the reselected baselines with the expanded added-block grid
+  incremental:                                               # [D]
+    baseline: frozen at its head-to-head selection (penalties and, for B2, both slots)
+    added_grid: prompt-slot values + off; off = strongest penalty under the tie rule (a tie goes to off); off reuses the baseline OOF predictions exactly
+  layer_selection: H1 + structure over the candidate rows by the objective's pooled CV metric; reused for H1, H2, B1+H1, B2+H1 of that generator and objective  # [D]
+  other_generator_reference: H1 + structure with the other generator's hidden states, the target generator's labels, structure, folds and recipe; its row chosen from its own candidates by the same rule  # [D]
+  solver: damped Newton, exact Hessian (float32 assembly, float64 Cholesky), float64 gradient; stop at max|grad| < 1e-9 (mean scale) or Newton decrement < 1e-14; warm start along the penalty path (strong -> weak)  # [P]
