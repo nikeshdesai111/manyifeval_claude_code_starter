@@ -59,7 +59,6 @@ def fit(Xs: np.ndarray, v: np.ndarray, n: np.ndarray, lam: np.ndarray, mean, sca
     """Xs: ALREADY standardised fitting matrix (float64). lam: per-column penalty (summed-loss scale).
     Damped Newton with the exact Hessian (assembled in float32 on Accelerate, solved by float64 Cholesky);
     gradient and objective in float64, so the fixed point is the exact float64 optimum."""
-    from scipy.linalg import cho_factor, cho_solve
     N = float(n.sum())
     lam_n = lam / N
     d = Xs.shape[1]
@@ -92,7 +91,7 @@ def fit(Xs: np.ndarray, v: np.ndarray, n: np.ndarray, lam: np.ndarray, mean, sca
         H[:d, :d][np.diag_indices(d)] += lam_n
         H[:d, d] = H[d, :d] = Xs.T @ s
         H[d, d] = s.sum()
-        step = cho_solve(cho_factor(H, check_finite=False), g, check_finite=False)
+        step = _solve(H, g)
         dec = float(g @ step)
         t = 1.0
         while True:
@@ -106,6 +105,28 @@ def fit(Xs: np.ndarray, v: np.ndarray, n: np.ndarray, lam: np.ndarray, mean, sca
             ok = True
             break
     return Fitted(mean, scale, x[:-1].copy(), float(x[-1]), lam, k, ok)
+
+
+def _solve(H, g):
+    """Newton direction H^-1 g. If float32 rounding in the assembled Hessian makes it numerically indefinite (nearly
+    collinear structure columns under a weak penalty), add the smallest diagonal jitter (1e-10 x mean diagonal,
+    x10 steps) that allows a Cholesky factorisation. The jittered direction is still a descent direction and
+    convergence is judged on the exact float64 gradient, so the optimum is unchanged."""
+    from numpy.linalg import LinAlgError
+    from scipy.linalg import cho_factor, cho_solve
+    jit, base = 0.0, float(np.mean(np.diag(H)))
+    while True:
+        try:
+            Hj = H if jit == 0 else H + jit * np.eye(len(H))
+            return cho_solve(cho_factor(Hj, check_finite=False), g, check_finite=False)
+        except LinAlgError:
+            jit = base * 1e-10 if jit == 0 else jit * 10
+            JITTER_EVENTS.append(jit / base)
+            if jit > base * 1e-2:
+                raise
+
+
+JITTER_EVENTS: list = []
 
 
 def log_loss(p, v, n) -> tuple[float, float]:

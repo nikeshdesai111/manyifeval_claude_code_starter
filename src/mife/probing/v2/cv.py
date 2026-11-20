@@ -291,7 +291,9 @@ class Engine:
                     h = ridge.fit(Xf, self.D.v[fit], self.D.n[fit], self.lam_vector(spec, s, widths), mu, sd, init, Xf32)
                     init = np.r_[h.w, h.b]
                     out[setting_key(s)][held] = ridge.expit(Xh @ h.w + h.b)
-                    diag.append({"fold": f, "type_id": t, "setting": setting_key(s), "n_iter": h.n_iter, "converged": h.converged})
+                    diag.append({"fold": f, "type_id": t, "setting": setting_key(s), "n_iter": h.n_iter, "converged": h.converged,
+                                 "hessian_jitter_steps": len(ridge.JITTER_EVENTS)})
+                    ridge.JITTER_EVENTS.clear()
                 del Xf, Xh, Xf32
         for k, p in out.items():
             assert np.isfinite(p).all(), (spec.name, k)
