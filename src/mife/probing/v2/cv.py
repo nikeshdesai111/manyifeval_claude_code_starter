@@ -110,12 +110,19 @@ class Data:
             else:
                 a = np.moveaxis(A * K[:, None, None, :], 3, 1).reshape(len(A), -1)  # slot-major, absent = 0
         elif name in ("ERmean", "ER5"):
-            ER = F.load_shared("ER")
+            ER = F.load_shared("ER").astype(np.float64)
             PR = data.prompt_rules("train")
             pid = {x: i for i, x in enumerate(self.P["prompt_id"])}
-            out = np.zeros((len(self.P), 5, ER.shape[1]), dtype=np.float32)
-            out[PR["prompt_id"].map(pid).values, PR["position"].values - 1] = ER[PR["rule_id"].map(F.rule_index()).values]
-            a = out.sum(1) / self.P["k"].values[:, None] if name == "ERmean" else out.reshape(len(self.P), -1)
+            pi, ri = PR["prompt_id"].map(pid).values, PR["rule_id"].map(F.rule_index()).values
+            if name == "ERmean":
+                # averaging matrix in rule-index order: identical rule sets give bitwise-identical means
+                M = np.zeros((len(self.P), len(ER)))
+                M[pi, ri] = 1.0 / self.P["k"].values[pi]
+                a = M @ ER
+            else:
+                out = np.zeros((len(self.P), 5, ER.shape[1]))
+                out[pi, PR["position"].values - 1] = ER[ri]
+                a = out.reshape(len(self.P), -1)
         elif name == "S":
             a = F.load_model_block(m, "S1" if self.o == 1 else "S2")
         elif name == "ER":
@@ -241,6 +248,36 @@ class Engine:
             return np.nonzero(sel)[0], np.zeros(0, int)
         return np.nonzero(sel & (D.fold != f))[0], np.nonzero(sel & (D.fold == f))[0]
 
+    RULE_BLOCKS = ("ER", "ERmean", "ER5")
+
+    def prepare(self, blocks, widths, fit, held, cache_key):
+        """Standardise on the fitting rows, then replace each rule-embedding block by its coordinates in an
+        orthonormal basis V of the block's row space on the fitting rows (thin SVD of its distinct standardised
+        rows). This is exact for ridge: the block's coefficients can be written w = V a + w_perp with V' w_perp = 0,
+        w_perp leaves fitting-row logits unchanged and only adds penalty, so the optimum has w_perp = 0 and
+        ||w||^2 = ||a||^2. Held-out logits X_h w = (X_h V) a are therefore identical. Rule-embedding blocks have
+        rank <= number of distinct exact rules (Objective 1: ~23 per type head; Objective 2: <= 343 rules)."""
+        Xf = self.D.X(blocks, fit)
+        mu, sd = ridge.standardise(Xf)
+        Xf = (Xf - mu) / sd
+        Xh = (self.D.X(blocks, held) - mu) / sd if len(held) else np.zeros((0, Xf.shape[1]))
+        parts_f, parts_h, weff, bases, c = [], [], [], [], 0
+        for b, w in zip(blocks, widths):
+            Bf, Bh = Xf[:, c:c + w], Xh[:, c:c + w]
+            if b in self.RULE_BLOCKS:
+                U = np.unique(Bf, axis=0)
+                _, sv, Vt = np.linalg.svd(U, full_matrices=False)
+                V = Vt[sv > sv[0] * 1e-10].T
+                Bf, Bh = Bf @ V, Bh @ V
+                bases.append(V)
+            else:
+                bases.append(None)
+            parts_f.append(Bf)
+            parts_h.append(Bh)
+            weff.append(Bf.shape[1])
+            c += w
+        return np.concatenate(parts_f, 1), np.concatenate(parts_h, 1), mu, sd, weff, bases
+
     def lam_vector(self, spec: Spec, st: dict, widths) -> np.ndarray:
         fixed = dict(spec.fixed)
         lam = []
@@ -281,20 +318,17 @@ class Engine:
                     for s in order:
                         out[setting_key(s)][held] = (v + 0.5) / (n + 1)
                     continue
-                Xf = self.D.X(blocks, fit)
-                mu, sd = ridge.standardise(Xf)
-                Xf = (Xf - mu) / sd
-                Xh = (self.D.X(blocks, held) - mu) / sd
-                Xf32 = Xf.astype(np.float32)
+                Xf, Xh, mu, sd, weff, _ = self.prepare(blocks, widths, fit, held, (f, t))
+                gram = ridge.Gram(Xf)
                 init = None
                 for s in order:
-                    h = ridge.fit(Xf, self.D.v[fit], self.D.n[fit], self.lam_vector(spec, s, widths), mu, sd, init, Xf32)
+                    h = ridge.fit(Xf, self.D.v[fit], self.D.n[fit], self.lam_vector(spec, s, weff), mu, sd, init, gram)
                     init = np.r_[h.w, h.b]
                     out[setting_key(s)][held] = ridge.expit(Xh @ h.w + h.b)
                     diag.append({"fold": f, "type_id": t, "setting": setting_key(s), "n_iter": h.n_iter, "converged": h.converged,
                                  "hessian_jitter_steps": len(ridge.JITTER_EVENTS)})
                     ridge.JITTER_EVENTS.clear()
-                del Xf, Xh, Xf32
+                del Xf, Xh, gram
         for k, p in out.items():
             assert np.isfinite(p).all(), (spec.name, k)
             np.save(self.pdir(spec) / f"{k}.npy", p)
@@ -500,10 +534,15 @@ def refit(E: Engine, allsel: dict, specs: dict, sel: dict) -> None:
                 _, v, n = E.fallback[("final", t)]
                 heads[key] = {"fallback": True, "p": (v + 0.5) / (n + 1)}
                 continue
-            Xf = E.D.X(blocks, fit)
-            mu, sd = ridge.standardise(Xf)
-            h = ridge.fit((Xf - mu) / sd, E.D.v[fit], E.D.n[fit], E.lam_vector(sp, st, widths), mu, sd)
-            heads[key] = {"fallback": False, "mean": mu, "scale": sd, "w": h.w, "b": h.b, "converged": h.converged}
+            Xf, _, mu, sd, weff, bases = E.prepare(blocks, widths, fit, np.zeros(0, int), ("final", t))
+            h = ridge.fit(Xf, E.D.v[fit], E.D.n[fit], E.lam_vector(sp, st, weff), mu, sd)
+            w, c = [], 0
+            for V, we in zip(bases, weff):  # back to coefficients on the standardised original columns
+                a = h.w[c:c + we]
+                w.append(a if V is None else V @ a)
+                c += we
+            heads[key] = {"fallback": False, "mean": mu, "scale": sd, "w": np.concatenate(w), "b": h.b,
+                          "converged": h.converged}
         np.savez(mdir / f"{name}.npz", **{f"{k}__{a}": np.asarray(v) for k, d in heads.items() for a, v in d.items()})
         write_versioned_json({"predictor": name, "setting": setting_key(st) if s["setting"] is not None else "off",
                               "fitted_as": sp.name, "blocks": [list(b) for b in sp.blocks], "fixed": dict(sp.fixed),

@@ -163,3 +163,27 @@ def test_v2_caches_train_only():
         df = pd.read_parquet(f)
         if "prompt_id" in df:
             assert not (set(df.prompt_id) & test), f
+
+
+def test_low_rank_rule_block_is_exact():
+    """Replacing a low-rank block by its row-space coordinates leaves ridge predictions unchanged."""
+    rng = np.random.default_rng(3)
+    n = 600
+    C = rng.standard_normal((7, 40))                      # 7 distinct "rules"
+    B = C[rng.integers(0, 7, n)]
+    A = rng.standard_normal((n, 15))
+    X = np.concatenate([A, B], 1)
+    X = (X - X.mean(0)) / X.std(0)
+    z = A[:, 0] + B[:, 0] - 0.3
+    v = rng.binomial(20, 1 / (1 + np.exp(-z))).astype(float)
+    nn = np.full(n, 20.0)
+    lam = np.r_[np.full(15, 30.0), np.full(40, 500.0)]
+    full = ridge.fit(X, v, nn, lam, 0, 1)
+    U = np.unique(X[:, 15:], axis=0)
+    _, sv, Vt = np.linalg.svd(U, full_matrices=False)
+    V = Vt[sv > sv[0] * 1e-10].T
+    assert V.shape[1] <= 7
+    Xr = np.concatenate([X[:, :15], X[:, 15:] @ V], 1)
+    red = ridge.fit(Xr, v, nn, np.r_[np.full(15, 30.0), np.full(V.shape[1], 500.0)], 0, 1)
+    assert np.allclose(X @ full.w + full.b, Xr @ red.w + red.b, atol=1e-6)
+    assert np.allclose(full.w[15:], V @ red.w[15:], atol=1e-6)

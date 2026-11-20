@@ -14,10 +14,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from scipy.linalg import cho_factor, cho_solve
+
 import numpy as np
 
 EPS = 1e-12
-MAX_NEWTON = 50
+MAX_NEWTON = 200
 NEWTON_GTOL = 1e-9
 DEC_TOL = 1e-14
 
@@ -54,15 +56,39 @@ def standardise(X: np.ndarray):
     return mu, sd
 
 
+class Gram:
+    """Builds X' diag(s) X for the Newton Hessian in float32, on the Apple GPU (MPS) when MIFE_V2_HESS=mps, else on
+    the CPU (Accelerate). Only the curvature used for the search direction is float32; gradients, objective and the
+    stopping rule are float64, so the optimum does not depend on where the Hessian is assembled."""
+
+    def __init__(self, Xs: np.ndarray):
+        import os
+        self.dev = os.environ.get("MIFE_V2_HESS", "cpu")
+        if self.dev == "mps":
+            import torch
+            self.t = torch
+            self.X = torch.from_numpy(np.ascontiguousarray(Xs, dtype=np.float32)).to("mps")
+        else:
+            self.X = Xs.astype(np.float32)
+
+    def __call__(self, s: np.ndarray) -> np.ndarray:
+        if self.dev == "mps":
+            sq = self.t.from_numpy(np.sqrt(s).astype(np.float32)).to("mps")
+            Xw = self.X * sq[:, None]
+            return (Xw.T @ Xw).cpu().numpy()
+        Xw = self.X * np.sqrt(s).astype(np.float32)[:, None]
+        return Xw.T @ Xw
+
+
 def fit(Xs: np.ndarray, v: np.ndarray, n: np.ndarray, lam: np.ndarray, mean, scale, init=None,
-        Xs32: np.ndarray | None = None) -> Fitted:
+        gram: "Gram | None" = None) -> Fitted:
     """Xs: ALREADY standardised fitting matrix (float64). lam: per-column penalty (summed-loss scale).
     Damped Newton with the exact Hessian (assembled in float32 on Accelerate, solved by float64 Cholesky);
     gradient and objective in float64, so the fixed point is the exact float64 optimum."""
     N = float(n.sum())
     lam_n = lam / N
     d = Xs.shape[1]
-    Xs32 = Xs.astype(np.float32) if Xs32 is None else Xs32
+    gram = Gram(Xs) if gram is None else gram
     w_, y_ = n / N, v / N
     x = np.zeros(d + 1)
     if init is None:
@@ -76,22 +102,27 @@ def fit(Xs: np.ndarray, v: np.ndarray, n: np.ndarray, lam: np.ndarray, mean, sca
         loss = float((w_ * softplus(z)).sum() - (y_ * z).sum() + 0.5 * (lam_n * x[:-1] ** 2).sum())
         return loss, z
     loss, z = f(x)
-    ok, k = False, 0
+    ok, k, fac, gprev, n_hess = False, 0, None, None, 0
     for k in range(1, MAX_NEWTON + 1):
         p = expit(z)
         r = w_ * p - y_
         g = np.r_[Xs.T @ r + lam_n * x[:-1], r.sum()]
-        if np.abs(g).max() < NEWTON_GTOL:
+        gmax = np.abs(g).max()
+        if gmax < NEWTON_GTOL:
             ok, k = True, k - 1
             break
-        s = (w_ * p * (1 - p))
-        Xw = Xs32 * np.sqrt(s).astype(np.float32)[:, None]
-        H = np.empty((d + 1, d + 1))
-        H[:d, :d] = Xw.T @ Xw
-        H[:d, :d][np.diag_indices(d)] += lam_n
-        H[:d, d] = H[d, :d] = Xs.T @ s
-        H[d, d] = s.sum()
-        step = _solve(H, g)
+        # modified Newton: reuse the factorised Hessian while it keeps cutting the gradient fast; refresh otherwise
+        if fac is None or (gprev is not None and gmax > 0.25 * gprev):
+            s = (w_ * p * (1 - p))
+            H = np.empty((d + 1, d + 1))
+            H[:d, :d] = gram(s)
+            H[:d, :d][np.diag_indices(d)] += lam_n
+            H[:d, d] = H[d, :d] = Xs.T @ s
+            H[d, d] = s.sum()
+            fac = _factor(H.T)  # H is symmetric: its transpose is the same matrix in LAPACK (Fortran) order
+            n_hess += 1
+            del H
+        step = cho_solve(fac, g, check_finite=False)
         dec = float(g @ step)
         t = 1.0
         while True:
@@ -100,25 +131,27 @@ def fit(Xs: np.ndarray, v: np.ndarray, n: np.ndarray, lam: np.ndarray, mean, sca
             if ln <= loss - 1e-4 * t * dec or t < 1e-10:
                 break
             t *= 0.5
-        x, loss, z = xn, ln, zn
+        if t < 1:
+            fac = None  # a damped step: refresh the curvature next iteration
+        x, loss, z, gprev = xn, ln, zn, gmax
         if 0.5 * dec < DEC_TOL:
             ok = True
             break
+    k = k + 1000 * n_hess  # encoded: Hessian assemblies x 1000 + iterations
     return Fitted(mean, scale, x[:-1].copy(), float(x[-1]), lam, k, ok)
 
 
-def _solve(H, g):
-    """Newton direction H^-1 g. If float32 rounding in the assembled Hessian makes it numerically indefinite (nearly
+def _factor(H):
+    """Cholesky factor of H. If float32 rounding in the assembled Hessian makes it numerically indefinite (nearly
     collinear structure columns under a weak penalty), add the smallest diagonal jitter (1e-10 x mean diagonal,
-    x10 steps) that allows a Cholesky factorisation. The jittered direction is still a descent direction and
-    convergence is judged on the exact float64 gradient, so the optimum is unchanged."""
+    x10 steps) that allows the factorisation. The resulting direction is still a descent direction and convergence
+    is judged on the exact float64 gradient, so the optimum is unchanged."""
     from numpy.linalg import LinAlgError
-    from scipy.linalg import cho_factor, cho_solve
     jit, base = 0.0, float(np.mean(np.diag(H)))
     while True:
         try:
-            Hj = H if jit == 0 else H + jit * np.eye(len(H))
-            return cho_solve(cho_factor(Hj, check_finite=False), g, check_finite=False)
+            Hj = H if jit == 0 else np.asfortranarray(H + jit * np.eye(len(H)))
+            return cho_factor(Hj, check_finite=False)
         except LinAlgError:
             jit = base * 1e-10 if jit == 0 else jit * 10
             JITTER_EVENTS.append(jit / base)
