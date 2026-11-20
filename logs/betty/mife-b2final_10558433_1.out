@@ -1,0 +1,17 @@
+b2 final task=1 job=10558433 host=dgx011
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 27373.74it/s]
+[transformers] [1mXLMRobertaModel LOAD REPORT[0m from: BAAI/bge-m3
+Key                 | Status     |  | 
+--------------------+------------+--+-
+pooler.dense.bias   | UNEXPECTED |  | 
+pooler.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+/vast/home/d/desai7/mife/repo/src/mife/probing/b2.py:306: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  losses.append(float(loss))
+/vast/home/d/desai7/mife/envs/mife/lib/python3.12/site-packages/peft/utils/save_and_load.py:307: UserWarning: Could not find a config file in BAAI/bge-m3 - will assume that the vocabulary was not modified.
+  warnings.warn(
+{"model": "llama", "objective": 2, "fold": -1, "adapt": "lora", "lr": 0.0002, "epochs": 3, "seed": 346484750, "device": "cuda", "n_fit_prompts": 42066, "steps": 3945, "train_s": 431.9734592437744, "train_loss_last_epoch": 0.004874161950811857, "torch": "2.11.0+cu129", "encoder": {"hf_id": "BAAI/bge-m3", "revision": "5617a9f61b028005a4858fdac845db406aefb181", "max_length": 8192, "dtype": "float32"}, "embed_s": 21.881747484207153, "adapter": "data/probing_features/b2_runs/final/llama_o2_lora_lr0.0002_ep3/adapter", "wall_s": 453.9954299926758}
+DONE b2 final task 1

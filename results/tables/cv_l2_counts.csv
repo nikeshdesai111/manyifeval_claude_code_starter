@@ -1,0 +1,5 @@
+model,objective,selected_l2=0.01,selected_l2=0.1,selected_l2=1
+llama,1,2,22,0
+llama,2,8,9,7
+qwen,1,1,18,5
+qwen,2,6,18,0

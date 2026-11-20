@@ -1,0 +1,95 @@
+{
+  "fold_dirs": {
+    "0": "/Users/nickydesai/Documents/manyifeval_claude_code_starter/data/probing_features/b2_runs/grid/qwen_o2_f0_lora_lr0.0002_ep1",
+    "1": "/Users/nickydesai/Documents/manyifeval_claude_code_starter/data/probing_features/b2_runs/grid/qwen_o2_f1_lora_lr0.0002_ep1",
+    "2": "/Users/nickydesai/Documents/manyifeval_claude_code_starter/data/probing_features/b2_runs/grid/qwen_o2_f2_lora_lr0.0002_ep1",
+    "3": "/Users/nickydesai/Documents/manyifeval_claude_code_starter/data/probing_features/b2_runs/grid/qwen_o2_f3_lora_lr0.0002_ep1",
+    "4": "/Users/nickydesai/Documents/manyifeval_claude_code_starter/data/probing_features/b2_runs/grid/qwen_o2_f4_lora_lr0.0002_ep1"
+  },
+  "grid": [
+    {
+      "adapt": "lora",
+      "cv_loss": 0.01547139249742031,
+      "epochs": 1,
+      "fold_losses": [
+        0.014388550072908401,
+        0.014096230268478394,
+        0.01680527813732624,
+        0.018007902428507805,
+        0.014059001579880714
+      ],
+      "lr": 0.0001,
+      "model": "qwen",
+      "objective": 2
+    },
+    {
+      "adapt": "lora",
+      "cv_loss": 0.014373432658612729,
+      "epochs": 3,
+      "fold_losses": [
+        0.016479061916470528,
+        0.014439711347222328,
+        0.01125437580049038,
+        0.019522203132510185,
+        0.01017181109637022
+      ],
+      "lr": 0.0001,
+      "model": "qwen",
+      "objective": 2
+    },
+    {
+      "adapt": "lora",
+      "cv_loss": 0.014328734949231148,
+      "epochs": 1,
+      "fold_losses": [
+        0.015230894088745117,
+        0.01199732068926096,
+        0.014523145742714405,
+        0.01635393686592579,
+        0.013538377359509468
+      ],
+      "lr": 0.0002,
+      "model": "qwen",
+      "objective": 2
+    },
+    {
+      "adapt": "lora",
+      "cv_loss": 0.015287602320313454,
+      "epochs": 3,
+      "fold_losses": [
+        0.012166952714323997,
+        0.012688029557466507,
+        0.013536760583519936,
+        0.020846379920840263,
+        0.017199888825416565
+      ],
+      "lr": 0.0002,
+      "model": "qwen",
+      "objective": 2
+    }
+  ],
+  "method_check": {
+    "method": "lora",
+    "results": {
+      "full": {
+        "heldout_loss": 0.41730213165283203,
+        "lr": 1e-05,
+        "train_s": 95.18716263771057,
+        "wall_s": 116.14489793777466
+      },
+      "lora": {
+        "heldout_loss": 0.4140678644180298,
+        "lr": 0.0001,
+        "train_s": 113.00631928443909,
+        "wall_s": 141.2794587612152
+      }
+    },
+    "rule": "lower held-out-fold NLL on (llama, objective 1, fold 0, 1 epoch, lower LR); tie -> full"
+  },
+  "selected": {
+    "adapt": "lora",
+    "epochs": 1,
+    "lr": 0.0002
+  },
+  "selected_cv_loss": 0.014328734949231148
+}

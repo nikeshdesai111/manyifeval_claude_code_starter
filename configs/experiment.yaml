@@ -1,0 +1,91 @@
+# ManyIFEval generation-phase experiment configuration.
+# Changing any value here after the manifest is frozen changes prompt identities;
+# the manifest build records a hash of this file.
+schema_version: "1.0.0"
+
+source:
+  repo_url: https://github.com/kenoharada/Multiple-Instructions-Following
+  commit: 5c1ba29e631e2bbee981ebd620898c2750c5ddbf
+  local_path: third_party/Multiple-Instructions-Following
+  data_file: data/manyifeval.jsonl
+  data_sha256: a51085f0a75d648d36ef5f8d59f7f4f02aa8358977f7e976e588f65d233feab6
+  nltk_data: third_party/nltk_data
+
+decisions:
+  D1_compatibility: manyifeval_implied      # docs/audit_findings.md
+  D2_parameter_space: ifeval_code_defaults   # official build_description() with no kwargs
+  D3_feasibility: provable_contradictions_with_witness
+  D4_decoding: model_card_defaults
+
+seeds:
+  task_grouping: 20261110
+  rule_sampling: 20261111     # per-group seeds are derived as sha256(base, group_id)
+  chain_ordering: 20261112
+  split: 20261113
+  pilot_selection: 20261114
+  generation: 20261115        # per-response seeds derived from (base, model, prompt_id, sample_index)
+
+design:
+  n_tasks: 216               # every ManyIFEval task is used; no task sampling
+  tasks_per_group: 3
+  n_groups: 72
+  rules_per_pool: 6
+  k_max: 5
+  coa_orderings_per_k: {1: 1, 2: 2, 3: 6, 4: 12, 5: 20}
+  n_train_groups: 57
+  n_test_groups: 15
+  # Amendment A2 (plan v3.6, 2026-11-09): 20 per prompt, restored (Amendment A1's 10 was withdrawn).
+  n_responses_per_prompt: 20
+
+pilot:
+  n_prompts: 100
+  per_k: 20
+  # as executed; equals the main design value, so all pilot samples can be imported into the main run
+  n_responses_per_prompt: 20
+
+models:
+  llama:
+    hf_id: meta-llama/Llama-3.1-8B-Instruct
+    revision: 0e9e39f249a16976918f6564b8830bc894c89659
+    chat_template_kwargs: {}
+    native_context: 131072
+    decoding: {temperature: 0.6, top_p: 0.9, top_k: 0, min_p: 0.0, max_new_tokens: 2048}
+  qwen:
+    hf_id: Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218
+    chat_template_kwargs: {enable_thinking: false}
+    native_context: 32768
+    decoding: {temperature: 0.7, top_p: 0.8, top_k: 20, min_p: 0.0, max_new_tokens: 2048}
+
+precision: bfloat16          # no quantization; any change requires research approval
+context_safety_margin: 0.20  # require input + max_new_tokens <= (1 - margin) * native_context
+
+# Probing / evaluation phase (PROMPT_probing_and_results.md). Added after the manifest was built; the manifest
+# records the hash of this file without this section (15bf87ce...), see results/run_manifest.json.
+probing:
+  schema_version: "1.0.0"
+  encoder:                          # BGE-M3 for B1 (frozen) and B2 (adapted); dense = L2-normalised [CLS] state
+    hf_id: BAAI/bge-m3
+    revision: 5617a9f61b028005a4858fdac845db406aefb181
+    max_length: 8192                # every prompt must fit; never truncate
+    dtype: float32
+  seeds: {folds: 20261201, heads: 20261202, bootstrap: 20261203, b2: 20261204}
+  cv: {n_folds: 5, fold_group_counts: [12, 12, 11, 11, 11]}
+  # candidate hidden rows (features_meta.json: row 0 = embeddings, 1..L = hidden_states[1..L] where row L is AFTER
+  # the final norm, row L+1 = pre-final-norm output of the last layer). 100% depth = row L+1 (pre-norm), so all
+  # three candidates are un-normalised residual-stream states.
+  hidden_rows: {llama: [16, 24, 33], qwen: [18, 27, 37]}
+  heads:
+    kinds: [linear, mlp]
+    mlp_hidden: 128
+    l2: [0.01, 0.1, 1.0]            # penalty (l2/2)*||W||^2 added to the mean per-completion (Obj1) / per-prompt (Obj2) loss
+    mlp_epochs: 30                  # epoch count chosen inside CV from per-epoch held-out losses
+    mlp_lr: 0.001
+    mlp_batch: 1024
+  b2:
+    full_lr: [1.0e-5, 3.0e-5]
+    lora_lr: [1.0e-4, 2.0e-4]
+    epochs: [1, 3]
+    weight_decay: 0.01
+    lora: {rank: 16, dropout: 0.05}
+  bootstrap: {descriptive_B: 2000, test_B: 10000}

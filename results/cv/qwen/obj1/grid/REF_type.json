@@ -1,0 +1,21 @@
+{
+  "config": "REF_type",
+  "grid": [
+    {
+      "cv_loss": 0.27645788591311743,
+      "fold_losses": [
+        0.25524458543097417,
+        0.2562163334772731,
+        0.27293724263800256,
+        0.3410920370464241,
+        0.2567992309729132
+      ],
+      "setting": "fitting-fold rates"
+    }
+  ],
+  "key": "REF_type",
+  "model": "qwen",
+  "objective": 1,
+  "selected": "fitting-fold rates",
+  "selected_cv_loss": 0.27645788591311743
+}

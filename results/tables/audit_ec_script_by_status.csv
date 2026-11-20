@@ -1,0 +1,7 @@
+model,status,n,any_cjk,mainly_cjk,mainly_other_script
+llama,passed,174733,1,0,0
+llama,violated: not all uppercase,29186,0,0,1
+llama,"violated: uppercase, langdetect != en",1281,0,0,0
+qwen,passed,176103,10,0,0
+qwen,violated: not all uppercase,16543,1,0,0
+qwen,"violated: uppercase, langdetect != en",12554,0,0,0

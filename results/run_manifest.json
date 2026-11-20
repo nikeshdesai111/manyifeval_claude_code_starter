@@ -1,0 +1,63 @@
+{
+  "config_sha256_at_manifest_build": "15bf87cef9124b409dfa5809d209c489528255bfeb7f6f8b3fb8d5ebd0eadcce",
+  "config_sha256_now": "7a3954bf3306c43bf6c300de391f4225b495aa05583466ade358531469075dd5",
+  "data_sha256": {
+    "llama_features_index": "e8b19e6e88eec8e86f11bcd3a1b6e4052e14d20d1009c9116100d90d4fcf580f",
+    "llama_labels_prompt": "61fed7b5334267e03698688669dde27c1cebb034d74a8bf9bac8a5ca26be775c",
+    "llama_labels_prompt_rule": "a4ec9fdfa32e44e1290dd7b446e1d1d6fb93fc3ccfe99c9661ee010e41e5b916",
+    "manifest_prompt_rules": "ece5be6255af0c6aa91590c954c39cb4b2dcc08a85b8c070569b6cb55d711363",
+    "manifest_prompts": "f63c0aeaeec8872ec22df70f3feccbb4ecf464ee24368a001aace0cc5ccf1b14",
+    "qwen_features_index": "fcc373ab19c2fcac7e974d58d94903a91c4a9c8853f130cd9febf3162fcec62b",
+    "qwen_labels_prompt": "883934eebf299aa6ff16872f2608ba0fd63fc56fe629c0302c5414cdbf90475e",
+    "qwen_labels_prompt_rule": "ecaa0d43ba1ba699580230e6cd53ddd9f7f696242e691138f96e126a3c2f4834"
+  },
+  "encoder": {
+    "dtype": "float32",
+    "hf_id": "BAAI/bge-m3",
+    "max_length": 8192,
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181"
+  },
+  "encoder_weights_note": "transformers loaded the safetensors conversion BAAI/bge-m3 refs/pr/130 (9a0624b8...); all 391 tensors are bit-identical to pytorch_model.bin at the pinned revision 5617a9f6...",
+  "git": "not a git repository; source_tree_sha256 instead",
+  "mps_available": true,
+  "packages": {
+    "ipywidgets": "8.1.9",
+    "matplotlib": "3.11.2",
+    "nbclient": "0.11.0",
+    "nbformat": "5.11.1",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "peft": "0.21.3",
+    "pyarrow": "26.0.1",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "tokenizers": "0.23.3",
+    "torch": "2.15.0",
+    "transformers": "5.22.2"
+  },
+  "platform": "macOS-15.7.3-arm64-arm-64bit",
+  "python": "3.12.5",
+  "seeds": {
+    "b2": 20261204,
+    "bootstrap": 20261203,
+    "folds": 20261201,
+    "heads": 20261202
+  },
+  "sentence_transformers / FlagEmbedding": "not used: BGE-M3 dense output computed with transformers (L2-normalised [CLS] state, as BGEM3FlagModel's dense_vecs)",
+  "source_tree_sha256": "728e87631d7782ac03e2fe50dd553897619ca9f2ed576107a07c2e8eaaebb2b0",
+  "updated": "2026-11-14T01:30:18",
+  "wall_times_s": {
+    "b2_final": 960.6,
+    "b2_grid": 21512.0,
+    "cv_heads_llama_obj1": 16012.1,
+    "cv_heads_llama_obj2": 7912.7,
+    "cv_heads_qwen_obj1": 15941.3,
+    "cv_heads_qwen_obj2": 8028.0,
+    "describe": 84.9,
+    "features_train_bge_llm": 430.1,
+    "refit_llama_obj1": 261.5,
+    "refit_llama_obj2": 150.2,
+    "refit_qwen_obj1": 347.4,
+    "refit_qwen_obj2": 192.3
+  }
+}

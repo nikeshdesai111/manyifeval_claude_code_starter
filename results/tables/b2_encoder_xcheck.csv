@@ -1,0 +1,2 @@
+check,n_prompts,min_cosine,max_abs_diff
+"frozen BGE-M3, first 8 TRAIN prompts: Mac MPS cache vs Betty CPU (offline, pinned snapshot)",8,1.0,2.980232238769531e-07

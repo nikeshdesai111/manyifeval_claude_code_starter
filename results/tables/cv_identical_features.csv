@@ -1,0 +1,13 @@
+objective,configurations,blocks
+1,H2 = H1+H2,H + ER
+1,H2+A1 = H1+H2+A1,H + ER + A
+1,B1+H1 = B1+H2 = B1+H1+H2,EP + ER + S1 + H
+1,B1+H1+A1 = B1+H2+A1 = B1+H1+H2+A1,EP + ER + S1 + H + A
+1,B2+H2 = B2+H1+H2,EP_B2 + ER_B2 + S1 + H + ER
+1,B2+H2+A1 = B2+H1+H2+A1,EP_B2 + ER_B2 + S1 + H + ER + A
+2,H2 = H1+H2,H + M2 + ER5
+2,H2+A1 = H1+H2+A1,H + M2 + ER5 + A5
+2,B1+H1 = B1+H2 = B1+H1+H2,EP + ER5 + S2 + H
+2,B1+H1+A1 = B1+H2+A1 = B1+H1+H2+A1,EP + ER5 + S2 + H + A5
+2,B2+H2 = B2+H1+H2,EP_B2 + ER5_B2 + S2 + H + ER5
+2,B2+H2+A1 = B2+H1+H2+A1,EP_B2 + ER5_B2 + S2 + H + ER5 + A5

@@ -1,0 +1,9 @@
+model,statistic,est,lo,hi
+llama,english_capital checks (response x rule),205200.0,,
+llama,violation rate (official checker),0.1484746588693957,0.11402205165692009,0.18557273391812862
+llama,share of violations caused only by langdetect,0.0420454918436341,0.014786621803500275,0.08254561465786944
+llama,violation rate if langdetect-only failures counted as followed (sensitivity),0.14223196881091618,0.1069365253411306,0.1802876461988304
+qwen,english_capital checks (response x rule),205200.0,,
+qwen,violation rate (official checker),0.1417982456140351,0.0975333820662768,0.18920577485380116
+qwen,share of violations caused only by langdetect,0.4314534144413513,0.19381721988687278,0.6089533281878451
+qwen,violation rate if langdetect-only failures counted as followed (sensitivity),0.08061890838206627,0.058067738791423004,0.10632651072124756

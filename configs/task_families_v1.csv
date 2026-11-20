@@ -1,0 +1,217 @@
+task_key,family,ambiguous,alt_family,note
+1001,PRACTICAL,0,,itinerary
+1005,PRACTICAL,0,,resume
+1019,TRANSFORM,1,ANALYTICAL,ask a question about a given sentence
+102,CREATIVE,0,,dialogue
+1040,PRACTICAL,0,,resume
+1051,PERSUASIVE,1,PRACTICAL,letter urging friend to vote
+1069,PRACTICAL,0,,email template
+1072,INFO,1,PERSUASIVE,benefits blog post
+1082,CREATIVE,0,,story
+1087,ANALYTICAL,0,,movie review
+1092,INFO,1,CREATIVE,travel blog post
+1132,CREATIVE,0,,lyrics
+1153,INFO,1,PERSUASIVE,social media post (informational)
+1203,INFO,0,,history question
+1216,INFO,0,,history question
+1217,PERSUASIVE,0,,ad copy
+122,INFO,0,,history blog post
+1236,PERSUASIVE,0,,advertisement
+1251,CREATIVE,0,,poem
+1258,TRANSFORM,1,CREATIVE,FRAGMENTARY task text; flagged
+1262,TRANSFORM,0,,elaborate given text
+1265,INFO,0,,informational essay
+1268,CREATIVE,1,PRACTICAL,example journal entry + explanation
+127,TRANSFORM,0,,complete given text into article
+1286,ANALYTICAL,0,,comparison
+1287,INFO,0,,history question
+1300,PRACTICAL,1,PERSUASIVE,research proposal
+1314,INFO,1,TRANSFORM,answer then article
+1322,ANALYTICAL,0,,pros and cons
+1325,INFO,1,CREATIVE,funny article (tone ignored)
+136,TRANSFORM,1,INFO,elaborate given statement
+1361,CREATIVE,0,,lyrics
+1372,INFO,1,PERSUASIVE,blog post about attraction
+1377,PRACTICAL,0,,planning doc
+1381,CREATIVE,0,,song
+1389,PRACTICAL,1,CREATIVE,personal letter
+1402,PRACTICAL,1,ANALYTICAL,recommendation
+1436,CREATIVE,0,,story
+1466,CREATIVE,0,,song
+1498,CREATIVE,0,,song
+1512,CREATIVE,0,,forum thread (invented)
+152,INFO,0,,informational essay
+1531,PRACTICAL,1,PERSUASIVE,research proposal
+1535,PRACTICAL,0,,cover letter
+1551,PRACTICAL,0,,cover letters
+1566,CREATIVE,0,,song
+1580,CREATIVE,0,,story
+1593,CREATIVE,0,,poem
+163,PRACTICAL,0,,itinerary
+1634,PRACTICAL,0,,rubric
+164,INFO,1,ANALYTICAL,essay on TV episode
+1643,ANALYTICAL,0,,opinion on quote
+1653,PERSUASIVE,1,PRACTICAL,advertisement template
+1658,PRACTICAL,0,,resume
+1667,INFO,0,,history essay
+1670,PRACTICAL,0,,rubric
+1733,CREATIVE,0,,fairy tale
+1779,PRACTICAL,0,,itinerary
+1781,PRACTICAL,0,,resume
+179,PERSUASIVE,0,,investor essay
+1802,ANALYTICAL,0,,evaluate explanation
+1813,PRACTICAL,1,ANALYTICAL,advice
+1834,ANALYTICAL,1,PRACTICAL,evaluate advice
+1837,CREATIVE,0,,song
+1845,PRACTICAL,1,INFO,process summary
+1857,PERSUASIVE,0,,promotional tweet
+1858,PERSUASIVE,1,CREATIVE,argumentative letter
+1880,INFO,0,,informational article
+1883,CREATIVE,0,,song
+19,CREATIVE,1,INFO,blog post as riddle
+1908,ANALYTICAL,0,,opinion on statement
+1928,TRANSFORM,1,CREATIVE,elaborate sentence into story
+1934,ANALYTICAL,1,INFO,why popular
+1936,PRACTICAL,0,,rubric
+1964,PERSUASIVE,0,,advertisement
+1967,PRACTICAL,1,TRANSFORM,brainstorm ideas
+1996,CREATIVE,0,,story
+201,CREATIVE,0,,story
+2010,ANALYTICAL,0,,review
+2028,INFO,0,,factual question
+2041,PRACTICAL,0,,personal email
+2069,INFO,0,,informational
+2084,INFO,0,,informational
+209,PRACTICAL,1,INFO,how-to blog post
+2097,INFO,0,,history essay
+2100,CREATIVE,1,ANALYTICAL,speculative
+2107,TRANSFORM,0,,complete given sentence
+2139,CREATIVE,0,,song
+2142,PRACTICAL,1,CREATIVE,course proposal
+2143,TRANSFORM,0,,expand given text
+2162,ANALYTICAL,0,,comparison
+2164,PERSUASIVE,0,,product description
+2169,ANALYTICAL,1,INFO,why question
+218,PRACTICAL,0,,trip plan
+2180,CREATIVE,1,INFO,rap explanation
+219,ANALYTICAL,0,,opinion judgement
+2209,PERSUASIVE,1,PRACTICAL,proposal to customer
+2229,PERSUASIVE,0,,sales pitch
+2243,INFO,0,,factual question
+2246,PRACTICAL,1,ANALYTICAL,recommendation
+2247,INFO,0,,informational essay
+2275,PERSUASIVE,0,,startup pitch
+2284,INFO,0,,informational
+2292,PERSUASIVE,0,,pitch deck
+2303,INFO,1,ANALYTICAL,blog comparing solar systems
+2304,PERSUASIVE,1,CREATIVE,persona essay to audience
+2311,INFO,0,,factual question
+2323,PERSUASIVE,0,,advertisement
+2328,PERSUASIVE,0,,startup pitch
+2341,ANALYTICAL,0,,opinion judgement
+2350,PRACTICAL,0,,rubric
+2357,PRACTICAL,0,,itinerary
+2374,PRACTICAL,1,PERSUASIVE,project proposal
+2386,TRANSFORM,0,,expand given sentences
+2391,PRACTICAL,0,,directions
+2392,PRACTICAL,0,,itinerary
+24,CREATIVE,0,,story
+2416,PRACTICAL,0,,itinerary
+2432,CREATIVE,1,PRACTICAL,condolences + story
+2441,PERSUASIVE,1,INFO,speech-like paragraphs
+2447,CREATIVE,1,PRACTICAL,rubric as poem
+2457,INFO,1,TRANSFORM,summary for kids (no source text)
+2471,INFO,1,CREATIVE,academic paper on persona
+251,PRACTICAL,0,,resume
+2531,PERSUASIVE,0,,product description
+2532,PRACTICAL,1,CREATIVE,personal email
+2567,PRACTICAL,0,,how-to blog post
+2571,ANALYTICAL,0,,choose better description
+2589,INFO,0,,informational
+260,PRACTICAL,0,,resume
+2617,INFO,1,CREATIVE,description of a person's work
+2653,INFO,1,ANALYTICAL,political history question
+2667,TRANSFORM,0,,elaborate given text
+2674,PRACTICAL,0,,itinerary
+2691,PRACTICAL,0,,cover letter
+2716,PRACTICAL,0,,cover letter
+2728,CREATIVE,0,,song
+2749,PERSUASIVE,1,INFO,benefits blog post
+2751,INFO,1,PERSUASIVE,product description
+2765,PRACTICAL,1,PERSUASIVE,research proposal
+2768,PRACTICAL,0,,template
+2779,TRANSFORM,0,,rephrase given sentence
+2787,PRACTICAL,0,,steps
+2807,PERSUASIVE,0,,advertisement
+2817,CREATIVE,1,PERSUASIVE,pitch as poem
+2825,PRACTICAL,1,INFO,relationship advice
+2829,CREATIVE,1,INFO,invented scenario
+2832,PERSUASIVE,0,,pitch
+2853,CREATIVE,0,,poem
+2870,PRACTICAL,0,,rubric
+2871,CREATIVE,0,,poem
+2887,INFO,0,,brief
+292,PRACTICAL,1,CREATIVE,funny personal email
+2941,CREATIVE,0,,poem
+2943,CREATIVE,0,,conversation
+295,CREATIVE,1,PRACTICAL,letter about King's mandates
+296,CREATIVE,1,PERSUASIVE,elaborate compliment
+2969,PERSUASIVE,0,,ad copy
+2985,ANALYTICAL,0,,why/comparison
+2997,PERSUASIVE,1,PRACTICAL,letter-to-editor template
+30,INFO,0,,medical information
+301,PRACTICAL,1,INFO,how-to for kid
+3025,INFO,0,,factual question
+3041,PERSUASIVE,0,,startup pitch
+3081,CREATIVE,0,,fictional news story
+3098,PRACTICAL,0,,how-to blog post
+3109,CREATIVE,0,,fiction
+3126,PRACTICAL,0,,how-to article
+3150,ANALYTICAL,0,,comparison
+3156,PRACTICAL,1,PERSUASIVE,refund letter
+3166,PRACTICAL,0,,steps
+3186,ANALYTICAL,1,INFO,analysis article
+3188,CREATIVE,0,,role-play
+3204,INFO,1,CREATIVE,persona essay
+3221,PRACTICAL,0,,trip plan
+3245,PERSUASIVE,0,,best city article
+3256,CREATIVE,0,,poem
+3280,ANALYTICAL,1,CREATIVE,absurd comparison
+3294,TRANSFORM,1,INFO,UNDERSPECIFIED task text
+331,CREATIVE,0,,song
+3315,PRACTICAL,0,,itinerary
+3326,CREATIVE,0,,conversation
+3329,PRACTICAL,0,,rubric
+3345,CREATIVE,0,,poem
+3350,PRACTICAL,0,,research proposal
+3362,PERSUASIVE,1,TRANSFORM,ad copy expanding given text
+3380,PRACTICAL,0,,job description
+3414,TRANSFORM,0,,elaborate given sentence
+3415,PERSUASIVE,1,PRACTICAL,ad template
+3424,CREATIVE,0,,story
+3425,ANALYTICAL,1,INFO,comparison essay
+3428,INFO,1,TRANSFORM,UNDERSPECIFIED task text
+343,PERSUASIVE,0,,startup pitch
+3445,PRACTICAL,1,ANALYTICAL,advice
+3455,PERSUASIVE,0,,persuasive email
+3478,CREATIVE,0,,song
+3479,CREATIVE,0,,song
+3513,PRACTICAL,0,,resume
+3534,CREATIVE,1,PERSUASIVE,tweet storm (invented)
+3536,CREATIVE,0,,song
+3538,PERSUASIVE,0,,promotional post
+3540,ANALYTICAL,0,,critique
+3565,ANALYTICAL,1,INFO,meaning of word
+3572,TRANSFORM,1,PRACTICAL,brainstorm name
+3595,CREATIVE,0,,poem
+3606,CREATIVE,0,,movie plot
+3608,PRACTICAL,0,,cover letter
+3631,CREATIVE,0,,song
+3672,PERSUASIVE,0,,why best place
+3690,ANALYTICAL,0,,critique
+3691,CREATIVE,0,,first-person blog (fiction)
+3697,PERSUASIVE,0,,pitch deck
+3703,TRANSFORM,0,,complete given sentence
+3709,PERSUASIVE,0,,advertisement
+3719,CREATIVE,0,,song
+3732,PRACTICAL,1,INFO,recommendations

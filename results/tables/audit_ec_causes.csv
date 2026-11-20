@@ -1,0 +1,5 @@
+model,cause,n_violations,share_of_violations,share_of_checks
+llama,not all uppercase (langdetect not reached),29186,0.957954508156366,0.14223196881091618
+llama,"all uppercase, langdetect != en",1281,0.0420454918436341,0.006242690058479532
+qwen,not all uppercase (langdetect not reached),16543,0.5685465855586487,0.08061890838206627
+qwen,"all uppercase, langdetect != en",12554,0.4314534144413513,0.06117933723196881

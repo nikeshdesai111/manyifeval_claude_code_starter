@@ -1,0 +1,3 @@
+stage,adapt,lr,epochs,heldout_nll_fold0,train_s_per_epoch,wall_s,chosen
+"full-vs-LoRA check (Betty dgx-b200, 1 x B200)",full,1e-05,1,0.41730213165283203,95.18716263771057,116.14489793777466,False
+"full-vs-LoRA check (Betty dgx-b200, 1 x B200)",lora,0.0001,1,0.4140678644180298,113.00631928443909,141.2794587612152,True

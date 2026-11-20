@@ -1,0 +1,13 @@
+stage,where,seconds,note,hours
+describe,Mac (MPS/CPU),84.9,,0.023583333333333335
+features_train_bge_llm,Mac (MPS/CPU),430.1,,0.11947222222222223
+cv_heads_llama_obj1,"Mac (CPU, 4 threads)",16012.10731959343,sum over 30 grid files (all CV stages); the four model × objective processes ran in parallel,4.4478075887759525
+cv_heads_llama_obj2,"Mac (CPU, 4 threads)",7912.6724972724915,sum over 30 grid files (all CV stages); the four model × objective processes ran in parallel,2.197964582575692
+cv_heads_qwen_obj1,"Mac (CPU, 4 threads)",15941.316169977188,sum over 30 grid files (all CV stages); the four model × objective processes ran in parallel,4.428143380549219
+cv_heads_qwen_obj2,"Mac (CPU, 4 threads)",8027.990310668945,sum over 30 grid files (all CV stages); the four model × objective processes ran in parallel,2.2299973085191516
+b2_grid,"Betty (dgx-b200, 1 GPU per task)",21512.022427797318,sum over 80 LoRA and 1 full fine-tuning runs (array tasks ran concurrently),5.975561785499255
+b2_final,"Betty (dgx-b200, 1 GPU per task)",960.5829107761383,sum over 4 LoRA and 0 full fine-tuning runs (array tasks ran concurrently),0.2668285863267051
+refit_llama_obj1,Mac (CPU),261.5312178134918,final heads on all 57 TRAIN groups,0.07264756050374772
+refit_llama_obj2,Mac (CPU),150.2063286304474,final heads on all 57 TRAIN groups,0.04172398017512428
+refit_qwen_obj1,Mac (CPU),347.4326899051666,final heads on all 57 TRAIN groups,0.09650908052921295
+refit_qwen_obj2,Mac (CPU),192.2506968975067,final heads on all 57 TRAIN groups,0.05340297136041853

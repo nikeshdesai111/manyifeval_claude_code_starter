@@ -1,0 +1,2 @@
+statistic,est,lo,hi,n_prompts
+Spearman rho of q_hat (per prompt),0.4343093775536913,0.3581957425305654,0.5056448998155141,42066

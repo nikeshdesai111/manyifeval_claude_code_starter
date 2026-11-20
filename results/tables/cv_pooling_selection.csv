@@ -1,0 +1,9 @@
+model,objective,pooling,best_cv_loss,selected
+llama,1,mean,0.33320912841324424,False
+llama,1,sum,0.33157392531485275,True
+llama,2,mean,0.017371473574124937,False
+llama,2,sum,0.01692969855568056,True
+qwen,1,mean,0.23666639312134102,False
+qwen,1,sum,0.23605782404601125,True
+qwen,2,mean,0.0128402448492938,False
+qwen,2,sum,0.012740464295561641,True

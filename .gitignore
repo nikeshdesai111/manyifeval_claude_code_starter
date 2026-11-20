@@ -1,0 +1,43 @@
+# Generated research artifacts, often large and potentially sensitive
+/data/*
+!/data/.gitkeep
+/outputs/
+/runs/
+/models/
+/checkpoints/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.parquet
+*.arrow
+*.npy
+*.npz
+*.zarr/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# macOS and environment/secrets
+.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+
+# pinned external source checkout (re-clone at the commit in configs/experiment.yaml)
+/third_party/Multiple-Instructions-Following/
+
+# Large or regenerable local folders (not for version control)
+/_to_delete/
+/results/models/
+/results/predictions/
+/third_party/nltk_data/
+*.ipynb_checkpoints/

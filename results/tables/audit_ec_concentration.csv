@@ -1,0 +1,3 @@
+model,n_langdetect_only,n_tasks,n_groups,share_from_top_5_tasks,share_from_top_10_tasks
+llama,1281,33,17,0.7743950039032006,0.9063231850117096
+qwen,12554,45,19,0.6415485104349211,0.9166799426477616

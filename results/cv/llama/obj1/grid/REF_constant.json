@@ -1,0 +1,21 @@
+{
+  "config": "REF_constant",
+  "grid": [
+    {
+      "cv_loss": 0.47048385615428917,
+      "fold_losses": [
+        0.4976532634327373,
+        0.3665599357986054,
+        0.49395550005505984,
+        0.50771147711972,
+        0.4865391043653233
+      ],
+      "setting": "fitting-fold rates"
+    }
+  ],
+  "key": "REF_constant",
+  "model": "llama",
+  "objective": 1,
+  "selected": "fitting-fold rates",
+  "selected_cv_loss": 0.47048385615428917
+}

@@ -1,0 +1,11 @@
+{
+  "analysis_plan_sha256": "5070f05b7eb8ed1ec18528c5321053264e48909f4076ddc8279b381bcd265b7d",
+  "config_sha256": "7a3954bf3306c43bf6c300de391f4225b495aa05583466ade358531469075dd5",
+  "folds_sha256": "563bae055fb92e9ed1246593602e7f3869c538c5200a5207d5e623fd1269c880",
+  "frozen_at": "2026-11-14T01:32:07",
+  "git": "not a git repository (source-tree hash recorded instead)",
+  "manifest_sha256": "f63c0aeaeec8872ec22df70f3feccbb4ecf464ee24368a001aace0cc5ccf1b14",
+  "source_tree_sha256": "2cb1398ae4864633f43a2b400694a4d79e431948d63779ebf366a2956f6d9500",
+  "test_runs": [],
+  "unblind_approved": false
+}

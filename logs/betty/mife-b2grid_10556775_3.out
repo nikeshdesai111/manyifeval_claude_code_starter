@@ -1,0 +1,42 @@
+b2 grid task=3 job=10556775 host=dgx023 gpu=NVIDIA B200
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 31828.96it/s]
+[transformers] [1mXLMRobertaModel LOAD REPORT[0m from: BAAI/bge-m3
+Key                 | Status     |  | 
+--------------------+------------+--+-
+pooler.dense.weight | UNEXPECTED |  | 
+pooler.dense.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+/vast/home/d/desai7/mife/repo/src/mife/probing/b2.py:305: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  losses.append(float(loss))
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 31417.10it/s]
+[transformers] [1mXLMRobertaModel LOAD REPORT[0m from: BAAI/bge-m3
+Key                 | Status     |  | 
+--------------------+------------+--+-
+pooler.dense.weight | UNEXPECTED |  | 
+pooler.dense.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 24085.98it/s]
+[transformers] [1mXLMRobertaModel LOAD REPORT[0m from: BAAI/bge-m3
+Key                 | Status     |  | 
+--------------------+------------+--+-
+pooler.dense.weight | UNEXPECTED |  | 
+pooler.dense.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 32090.64it/s]
+[transformers] [1mXLMRobertaModel LOAD REPORT[0m from: BAAI/bge-m3
+Key                 | Status     |  | 
+--------------------+------------+--+-
+pooler.dense.weight | UNEXPECTED |  | 
+pooler.dense.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+[{"model": "llama", "objective": 1, "fold": 3, "adapt": "lora", "lr": 0.0001, "epochs": 1, "seed": 889234576, "device": "cuda", "n_fit_prompts": 33948, "steps": 1061, "train_s": 116.57468891143799, "train_loss_last_epoch": 0.3403486431656189, "torch": "2.11.0+cu129", "encoder": {"hf_id": "BAAI/bge-m3", "revision": "5617a9f61b028005a4858fdac845db406aefb181", "max_length": 8192, "dtype": "float32"}, "heldout_loss": 0.3948307931423187, "embed_s": 21.82383942604065, "wall_s": 144.0144498348236}, {"model": "llama", "objective": 1, "fold": 3, "adapt": "lora", "lr": 0.0001, "epochs": 3, "seed": 946470882, "device": "cuda", "n_fit_prompts": 33948, "steps": 3183, "train_s": 343.5363748073578, "train_loss_last_epoch": 0.2895949391769307, "torch": "2.11.0+cu129", "encoder": {"hf_id": "BAAI/bge-m3", "revision": "5617a9f61b028005a4858fdac845db406aefb181", "max_length": 8192, "dtype": "float32"}, "heldout_loss": 0.40862202644348145, "embed_s": 21.87589430809021, "wall_s": 370.9943482875824}, {"model": "llama", "objective": 1, "fold": 3, "adapt": "lora", "lr": 0.0002, "epochs": 1, "seed": 618017915, "device": "cuda", "n_fit_prompts": 33948, "steps": 1061, "train_s": 114.54092383384705, "train_loss_last_epoch": 0.3328276834433984, "torch": "2.11.0+cu129", "encoder": {"hf_id": "BAAI/bge-m3", "revision": "5617a9f61b028005a4858fdac845db406aefb181", "max_length": 8192, "dtype": "float32"}, "heldout_loss": 0.40909504890441895, "embed_s": 21.9412841796875, "wall_s": 142.06578731536865}, {"model": "llama", "objective": 1, "fold": 3, "adapt": "lora", "lr": 0.0002, "epochs": 3, "seed": 1989205350, "device": "cuda", "n_fit_prompts": 33948, "steps": 3183, "train_s": 343.9848620891571, "train_loss_last_epoch": 0.28761359790829866, "torch": "2.11.0+cu129", "encoder": {"hf_id": "BAAI/bge-m3", "revision": "5617a9f61b028005a4858fdac845db406aefb181", "max_length": 8192, "dtype": "float32"}, "heldout_loss": 0.38949859142303467, "embed_s": 21.863571166992188, "wall_s": 371.44040727615356}]
+DONE b2 grid task 3

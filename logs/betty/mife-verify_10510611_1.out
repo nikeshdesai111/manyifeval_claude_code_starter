@@ -1,0 +1,9 @@
+verify model=qwen run=main host=epyc-3-2
+{
+ "n_responses": 1062720,
+ "n_rule_checks": 4432320,
+ "n_prompt_rule_labels": 221616,
+ "n_prompt_labels": 53136,
+ "verifier_version": "manyifeval@5c1ba29+nltk-vendored+langdetect-seed0/v1"
+}
+DONE verify qwen
