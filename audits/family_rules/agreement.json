@@ -1,0 +1,342 @@
+{
+  "rules_version": "family_rules_v1",
+  "n_tasks": 216,
+  "accuracy": 0.8796296296296297,
+  "cohen_kappa": 0.8499639336378938,
+  "accuracy_counting_alt_family": 0.9444444444444444,
+  "n_disagreements": 26,
+  "n_disagreements_on_ambiguous": 22,
+  "n_disagreements_matching_alt_family": 14,
+  "n_ambiguous": 68,
+  "accuracy_on_ambiguous": 0.6764705882352942,
+  "accuracy_on_unambiguous": 0.972972972972973,
+  "family_counts_rule": {
+    "CREATIVE": 43,
+    "INFO": 51,
+    "TRANSFORM": 16,
+    "PRACTICAL": 64,
+    "ANALYTICAL": 18,
+    "PERSUASIVE": 24
+  },
+  "family_counts_hand": {
+    "CREATIVE": 52,
+    "INFO": 35,
+    "TRANSFORM": 15,
+    "PRACTICAL": 59,
+    "PERSUASIVE": 33,
+    "ANALYTICAL": 22
+  },
+  "decided_by_default_INFO": 51,
+  "confusion_rows_hand_cols_rule": {
+    "TRANSFORM": {
+      "TRANSFORM": 15,
+      "CREATIVE": 0,
+      "PERSUASIVE": 0,
+      "PRACTICAL": 0,
+      "ANALYTICAL": 0,
+      "INFO": 0
+    },
+    "CREATIVE": {
+      "TRANSFORM": 0,
+      "CREATIVE": 43,
+      "PERSUASIVE": 0,
+      "PRACTICAL": 1,
+      "ANALYTICAL": 0,
+      "INFO": 8
+    },
+    "PERSUASIVE": {
+      "TRANSFORM": 1,
+      "CREATIVE": 0,
+      "PERSUASIVE": 24,
+      "PRACTICAL": 5,
+      "ANALYTICAL": 0,
+      "INFO": 3
+    },
+    "PRACTICAL": {
+      "TRANSFORM": 0,
+      "CREATIVE": 0,
+      "PERSUASIVE": 0,
+      "PRACTICAL": 57,
+      "ANALYTICAL": 0,
+      "INFO": 2
+    },
+    "ANALYTICAL": {
+      "TRANSFORM": 0,
+      "CREATIVE": 0,
+      "PERSUASIVE": 0,
+      "PRACTICAL": 1,
+      "ANALYTICAL": 17,
+      "INFO": 4
+    },
+    "INFO": {
+      "TRANSFORM": 0,
+      "CREATIVE": 0,
+      "PERSUASIVE": 0,
+      "PRACTICAL": 0,
+      "ANALYTICAL": 1,
+      "INFO": 34
+    }
+  },
+  "disagreements": [
+    {
+      "task_key": 179,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "",
+      "hand_ambiguous": "0",
+      "rule_family": "PRACTICAL",
+      "rule": "functional_document",
+      "matched": "proposal",
+      "task_text": "A filmmaker is trying to get financing for a film about the history of the Internet. Write an essay to be used in the proposal to potential investors."
+    },
+    {
+      "task_key": 295,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "PRACTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "PRACTICAL",
+      "rule": "correspondence",
+      "matched": "write me a letter",
+      "task_text": "Write me a letter about the mandates and instructions of the King."
+    },
+    {
+      "task_key": 296,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "PERSUASIVE",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Write an elaborate compliment to Kruger."
+    },
+    {
+      "task_key": 1051,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "PRACTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "PRACTICAL",
+      "rule": "correspondence",
+      "matched": "write a letter",
+      "task_text": "Write a letter to a friend ask them to go and vote."
+    },
+    {
+      "task_key": 1268,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "PRACTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Can you give me an example for a journal entry about stress management? Tell me how you come up with the example."
+    },
+    {
+      "task_key": 1512,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "",
+      "hand_ambiguous": "0",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Generate a forum thread about several people waiting to hear the latest local news."
+    },
+    {
+      "task_key": 1834,
+      "hand_family": "ANALYTICAL",
+      "hand_alt_family": "PRACTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "PRACTICAL",
+      "rule": "how_to_steps",
+      "matched": "how to",
+      "task_text": "I asked a friend about how to remove rust from my bike chain. He told me to pour coke on it and then scrub it with a steel wool. Is this a good way to remove rust?"
+    },
+    {
+      "task_key": 1858,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "CREATIVE",
+      "hand_ambiguous": "1",
+      "rule_family": "PRACTICAL",
+      "rule": "correspondence",
+      "matched": "write a very angry letter",
+      "task_text": "Write a very angry letter to someone who's been trying to convince you that 1+1=3."
+    },
+    {
+      "task_key": 1934,
+      "hand_family": "ANALYTICAL",
+      "hand_alt_family": "INFO",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Why star wars is so popular?"
+    },
+    {
+      "task_key": 1967,
+      "hand_family": "PRACTICAL",
+      "hand_alt_family": "TRANSFORM",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "What are some startup ideas that could help improve the lives of people in developing regions?"
+    },
+    {
+      "task_key": 2100,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "ANALYTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "What kind of fashion would Frankenstein's bride wear?"
+    },
+    {
+      "task_key": 2169,
+      "hand_family": "ANALYTICAL",
+      "hand_alt_family": "INFO",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Why didn't the 2022 winter olympics have the best ratings?"
+    },
+    {
+      "task_key": 2209,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "PRACTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "PRACTICAL",
+      "rule": "functional_document",
+      "matched": "proposal",
+      "task_text": "Write an academic proposal to a customer who's interested in implementing a new feature for their product."
+    },
+    {
+      "task_key": 2303,
+      "hand_family": "INFO",
+      "hand_alt_family": "ANALYTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "ANALYTICAL",
+      "rule": "comparison",
+      "matched": "is different from",
+      "task_text": "Write a casual blog post about how the outer solar system is different from the inner solar system, and what that means for the possibility of life."
+    },
+    {
+      "task_key": 2304,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "CREATIVE",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Write an essay as if you are the president of the United States targeting moms as your audience."
+    },
+    {
+      "task_key": 2341,
+      "hand_family": "ANALYTICAL",
+      "hand_alt_family": "",
+      "hand_ambiguous": "0",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Is praying for someone's health a good idea?"
+    },
+    {
+      "task_key": 2432,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "PRACTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "My best friend drowned yesterday and I'm so sad. Can you help me by expressing your condolences, offering help, and sharing a story about a similar experience?"
+    },
+    {
+      "task_key": 2441,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "INFO",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Write speech-like paragraphs on the US elections."
+    },
+    {
+      "task_key": 2749,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "INFO",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Write a blog post about the benefits of using a digital marketing agency."
+    },
+    {
+      "task_key": 2829,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "INFO",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Why did the man travel from Saskatoon to Helsinki to buy a piano?"
+    },
+    {
+      "task_key": 2997,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "PRACTICAL",
+      "hand_ambiguous": "1",
+      "rule_family": "PRACTICAL",
+      "rule": "functional_document",
+      "matched": "template",
+      "task_text": "You feel strongly about a local issue that involves the environment, pollution, and climate change. Write a template for a letter to the editor of a newspaper."
+    },
+    {
+      "task_key": 3186,
+      "hand_family": "ANALYTICAL",
+      "hand_alt_family": "INFO",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Write an article about how intra-team conflict affected sports teams."
+    },
+    {
+      "task_key": 3362,
+      "hand_family": "PERSUASIVE",
+      "hand_alt_family": "TRANSFORM",
+      "hand_ambiguous": "1",
+      "rule_family": "TRANSFORM",
+      "rule": "expand_supplied",
+      "matched": "expanding \"",
+      "task_text": "Create an ad copy by expanding \"Get 40 miles per gallon on the highway\" in the form of a QA with a weird style."
+    },
+    {
+      "task_key": 3534,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "PERSUASIVE",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Write a tweet storm about a time when you found out that the earth is indeed not flat."
+    },
+    {
+      "task_key": 3691,
+      "hand_family": "CREATIVE",
+      "hand_alt_family": "",
+      "hand_ambiguous": "0",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "Blog post from the perspective of a 16 year old girl who is being followed by a stranger."
+    },
+    {
+      "task_key": 3732,
+      "hand_family": "PRACTICAL",
+      "hand_alt_family": "INFO",
+      "hand_ambiguous": "1",
+      "rule_family": "INFO",
+      "rule": "default",
+      "matched": "",
+      "task_text": "What are the best things to do in Rochester, New York?"
+    }
+  ]
+}

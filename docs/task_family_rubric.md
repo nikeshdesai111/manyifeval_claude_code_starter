@@ -48,3 +48,7 @@ These are near-paraphrases or tasks on the same specific subject or persona, not
 - us_elections: 2441, 2097
 
 Borderline candidates that are logged but **not enforced** (please review): resumes (1005, 1040, 1658, 1781, 251, 260, 3513), cover letters (1535, 1551, 2691, 2716, 3608), rubrics (1634, 1670, 1936, 2350, 2870, 3329, 2447), startup pitches (2275, 2292, 2328, 2817, 3041, 343, 3697), Algiers (1040, 3672), Islam (1153, 3425), US presidency history (1667).
+
+## Scripted version of this rubric
+
+`src/mife/family_rules.py` implements this rubric as deterministic keyword/pattern rules, and `scripts/family_rules_audit.py` compares its output with the hand labels. The labels used by the pipeline are still the hand labels in `configs/task_families_v1.csv`. Agreement and disagreements: `docs/task_family_rules_agreement.md`.
