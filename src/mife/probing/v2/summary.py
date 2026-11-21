@@ -45,7 +45,22 @@ def build() -> str:
              "Amendment: `docs/amendment_v2_2026-11-20.md`; recipe: `configs/v2_recipe.yaml` "
              "(recorded in `results/v2/recipe_recorded.json`).", ""]
     rec = read_versioned_json(RESULTS_V2 / "recipe_recorded.json")
-    lines += [f"Recipe sha256 `{rec['sha256'][:16]}…`, recorded {rec['recorded_at']}, before any selection reported here.", ""]
+    lines += [f"Recipe sha256 `{rec['sha256'][:16]}…`, recorded {rec['recorded_at']}, before any selection reported here.", "",
+              "## What changed from V1", "",
+              "- **Predictors:** 7 planned comparisons (3 primary, 4 secondary) plus references, instead of 23 configurations. "
+              "B2 is now B1 plus a *frozen* exact-rule embedding (no fine-tuning). A1 is the per-layer×head **max** "
+              "attention over the target-rule span (new training-only extraction). The rule-conditioned attention probe "
+              "is A1 + exact-rule embedding + structure.",
+              "- **Architecture:** every Objective 1 predictor uses 15 per-type ridge-logistic heads with the same structure "
+              "block. Every Objective 2 predictor uses one shared ridge fractional-logit head on the existing q_hat target. "
+              "There are no MLP heads.",
+              "- **Fitting:** summed binomial NLL (Objective 1) or fractional logit (Objective 2), with penalty λ/N. There are "
+              "three penalty slots (fixed structure, tuned prompt representation, tuned rule embedding) on identical grids, a "
+              "deterministic tie rule, a one-time ×10 boundary expansion, a block-off option for the incremental comparisons, "
+              "and a sparse-head fallback that also uses group coverage.",
+              "- **Layer search:** widened to 5 rows per generator, selected by H1 + structure, separately per objective.",
+              "- **Kept:** the 2026-11-14 freeze, every V1 file, the folds, labels and frozen features. Everything V2 is "
+              "versioned (`v2-2026-11-20`) under `data/probing_features_v2/` and `results/v2/`.", ""]
 
     # ---- extraction
     lines += ["## 1. Max-attention extraction (TRAIN prompts only)", ""]
@@ -53,8 +68,12 @@ def build() -> str:
     for m in MODELS:
         meta = json.loads((FEAT_V2 / m / "maxattn" / "maxattn_meta.json").read_text())
         wall = sum(s["wall_s"] for s in meta["sessions"])
+        idx = sorted((FEAT_V2 / m / "maxattn").glob("index_[0-9]*.parquet"))
+        mt = [f.stat().st_mtime for f in idx]
+        per_shard = (mt[-1] - mt[0]) / max(len(mt) - 1, 1)
+        span_h = (mt[-1] - mt[0] + per_shard) / 3600  # first shard start (approx.) to last commit
         row = {"model": m, "status": meta["status"], "n_prompts": meta["n_prompts"], "n_train_prompts": meta["n_train_prompts"],
-               "wall_h": round(wall / 3600, 2), "storage_gb": round(meta["storage_bytes"] / 1e9, 3),
+               "wall_h_recorded_sessions": round(wall / 3600, 2), "wall_h_shard_span": round(span_h, 2), "storage_gb": round(meta["storage_bytes"] / 1e9, 3),
                "backend": f"{meta['backend']}, {meta['attn_implementation']}, {meta['dtype']}",
                "torch": meta["torch_version"], "transformers": meta["transformers_version"]}
         for tag in ("pre", "post"):
@@ -78,7 +97,11 @@ def build() -> str:
               "outside the rule; every sampled span has a boundary token that covers whitespace outside it. (2) For every "
               "layer and head, the extracted max equals the direct max over the span from the full attention row (exact "
               "equality); after the run, the stored value equals it too. (3) The recomputed span SUM reproduces the cached "
-              "V1 sum within the documented absolute tolerance.", ""]
+              "V1 sum within the documented absolute tolerance.", "",
+              "Wall time: `wall_h_recorded_sessions` sums the sessions written to the metadata. The Qwen run was restarted "
+              "once, and the killed session wrote no record, so `wall_h_shard_span` (from the shard commit times) is the "
+              "elapsed time. Both runs shared the Mac with CV jobs and other applications under memory pressure; the "
+              "unloaded rate was about 0.25–0.30 s per prompt.", ""]
 
     # ---- selections
     sel_rows, grid_notes, fb_rows, layer_rows = [], [], [], []

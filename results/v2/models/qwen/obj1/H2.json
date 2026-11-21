@@ -1,0 +1,30 @@
+{
+  "blocks": [
+    [
+      "H18",
+      "P"
+    ],
+    [
+      "ER",
+      "R"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [
+    "detectable_format:title"
+  ],
+  "fitted_as": "H2",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "H2",
+  "setting": "P=1e+06,R=1e+06",
+  "version": "v2-2026-11-20",
+  "widths": [
+    4096,
+    1024,
+    20
+  ]
+}

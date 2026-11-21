@@ -1,0 +1,23 @@
+{
+  "blocks": [
+    [
+      "XH12",
+      "P"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "XH1",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "XH1",
+  "setting": "P=1000",
+  "version": "v2-2026-11-20",
+  "widths": [
+    4096,
+    92
+  ]
+}

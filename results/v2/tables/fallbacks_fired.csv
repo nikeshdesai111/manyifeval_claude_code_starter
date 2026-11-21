@@ -1,0 +1,7 @@
+compliant,fallback,fold,groups_with_violation,model,reason,type_id,violated
+276904.0,True,0,2,qwen,groups_with_violation<5,detectable_format:title,116.0
+225604.0,True,1,2,qwen,groups_with_violation<5,detectable_format:title,116.0
+276905.0,True,2,1,qwen,groups_with_violation<5,detectable_format:title,115.0
+246239.0,True,3,1,qwen,violated<50;groups_with_violation<5,detectable_format:title,1.0
+246124.0,True,4,2,qwen,groups_with_violation<5,detectable_format:title,116.0
+317944.0,True,final,2,qwen,groups_with_violation<5,detectable_format:title,116.0

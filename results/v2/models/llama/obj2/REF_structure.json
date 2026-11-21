@@ -1,0 +1,18 @@
+{
+  "blocks": [
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "REF_structure",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "REF_structure",
+  "setting": "none",
+  "version": "v2-2026-11-20",
+  "widths": [
+    92
+  ]
+}

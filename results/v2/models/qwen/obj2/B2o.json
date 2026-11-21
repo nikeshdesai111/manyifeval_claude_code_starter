@@ -1,0 +1,28 @@
+{
+  "blocks": [
+    [
+      "EP",
+      "P"
+    ],
+    [
+      "ER5",
+      "R"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "B2o",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "B2o",
+  "setting": "P=100000,R=10000",
+  "version": "v2-2026-11-20",
+  "widths": [
+    1024,
+    5120,
+    92
+  ]
+}

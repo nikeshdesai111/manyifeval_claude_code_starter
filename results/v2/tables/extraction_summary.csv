@@ -1,0 +1,3 @@
+model,status,n_prompts,n_train_prompts,wall_h_recorded_sessions,wall_h_shard_span,storage_gb,backend,torch,transformers,pre_prompts/spans,pre_alignment_ok,pre_max_equals_direct,pre_sum_max_abs_diff_vs_v1,sum_tolerance,straddling_spans_whitespace,post_prompts/spans,post_alignment_ok,post_max_equals_direct,post_stored_equals_direct,post_sum_max_abs_diff_vs_v1
+llama,complete,42066,42066,4.97,5.01,0.438,"transformers+torch-mps, eager, bfloat16",2.15.0,5.22.2,23/74,True,True,5.960464477539063e-08,0.001,74,23/74,True,True,True,5.960464477539063e-08
+qwen,complete,42066,42066,2.5,6.25,0.492,"transformers+torch-mps, eager, bfloat16",2.15.0,5.22.2,23/74,True,True,5.960464477539063e-08,0.001,74,23/74,True,True,True,5.960464477539063e-08

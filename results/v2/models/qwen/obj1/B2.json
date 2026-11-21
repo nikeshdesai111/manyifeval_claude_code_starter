@@ -1,0 +1,30 @@
+{
+  "blocks": [
+    [
+      "EP",
+      "P"
+    ],
+    [
+      "ER",
+      "R"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [
+    "detectable_format:title"
+  ],
+  "fitted_as": "B2",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "B2",
+  "setting": "P=1e+06,R=1e+06",
+  "version": "v2-2026-11-20",
+  "widths": [
+    1024,
+    1024,
+    20
+  ]
+}

@@ -156,10 +156,10 @@ def test_maxattn_refuses_test_prompts(monkeypatch):
 @needs_data
 def test_v2_caches_train_only():
     import pandas as pd
-    from mife.probing.v2.versioning import FEAT_V2
+    from mife.probing.v2.versioning import FEAT_V2, RESULTS_V2
     m = pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet", columns=["prompt_id", "split"])
     test = set(m.prompt_id[m.split == "test"])
-    for f in FEAT_V2.rglob("*.parquet"):
+    for f in list(FEAT_V2.rglob("*.parquet")) + list(RESULTS_V2.rglob("*.parquet")):
         df = pd.read_parquet(f)
         if "prompt_id" in df:
             assert not (set(df.prompt_id) & test), f
@@ -187,3 +187,14 @@ def test_low_rank_rule_block_is_exact():
     red = ridge.fit(Xr, v, nn, np.r_[np.full(15, 30.0), np.full(V.shape[1], 500.0)], 0, 1)
     assert np.allclose(X @ full.w + full.b, Xr @ red.w + red.b, atol=1e-6)
     assert np.allclose(full.w[15:], V @ red.w[15:], atol=1e-6)
+
+
+def test_freeze_and_v1_untouched():
+    """The 2026-11-14 freeze still matches the config and folds it hashed, and unblinding is not approved."""
+    from mife.config import ROOT
+    from mife.storage import sha256_file
+    fz = json.loads((ROOT / "results/prespec/FROZEN.json").read_text())
+    assert fz["unblind_approved"] is False and fz["test_runs"] == []
+    assert sha256_file(ROOT / "configs/experiment.yaml") == fz["config_sha256"]
+    assert sha256_file(ROOT / "results/cv/folds.json") == fz["folds_sha256"]
+    assert sha256_file(ROOT / "results/prespec/analysis_plan.md") == fz["analysis_plan_sha256"]
