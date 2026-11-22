@@ -216,18 +216,6 @@
       "example_wording": "Respond with three sentences, all containing the same number of characters but using all different words.",
       "shim": false
     },
-    "count:words_japanese": {
-      "parameters": {
-        "N": {
-          "min": 1,
-          "max": 30,
-          "distinct": 30
-        }
-      },
-      "distinct_wordings": 30,
-      "example_wording": "Every 10th word of your response must be in Japanese.",
-      "shim": true
-    },
     "words:start_verb": {
       "parameters": {},
       "distinct_wordings": 1,
@@ -249,13 +237,13 @@
     "sentence:keyword": {
       "parameters": {
         "word": {
-          "distinct": 187,
+          "distinct": 189,
           "examples": [
-            "a",
-            "active",
-            "address",
-            "annual",
-            "apartment"
+            "affair",
+            "airport",
+            "anxiety",
+            "apple",
+            "application"
           ]
         },
         "N": {
@@ -264,8 +252,8 @@
           "distinct": 20
         }
       },
-      "distinct_wordings": 198,
-      "example_wording": "The response must include keyword \"a\" in the 14-th sentence.",
+      "distinct_wordings": 199,
+      "example_wording": "The response must include keyword \"affair\" in the 13-th sentence.",
       "shim": false
     },
     "count:pronouns": {
@@ -365,6 +353,63 @@
     "count:keywords_multiple": {
       "parameters": {
         "keyword1": {
+          "distinct": 183,
+          "examples": [
+            "age",
+            "agent",
+            "alcohol",
+            "arm",
+            "art"
+          ]
+        },
+        "keyword2": {
+          "distinct": 187,
+          "examples": [
+            "advance",
+            "advice",
+            "agreement",
+            "anybody",
+            "apartment"
+          ]
+        },
+        "keyword3": {
+          "distinct": 188,
+          "examples": [
+            "ability",
+            "advantage",
+            "alcohol",
+            "amount",
+            "analyst"
+          ]
+        },
+        "keyword4": {
+          "distinct": 190,
+          "examples": [
+            "activity",
+            "actor",
+            "advertising",
+            "airport",
+            "anything"
+          ]
+        },
+        "keyword5": {
+          "distinct": 191,
+          "examples": [
+            "account",
+            "active",
+            "administration",
+            "ambition",
+            "application"
+          ]
+        }
+      },
+      "distinct_wordings": 200,
+      "example_wording": "Include keyword age once in your response, keyword chapter twice in your response, keyword unit three times in your response, keyword name five times in your response, and keyword ear seven times in your response.",
+      "shim": false
+    },
+    "words:keywords_specific_position": {
+      "parameters": {
+        "keyword": {
           "distinct": 190,
           "examples": [
             "age",
@@ -372,63 +417,6 @@
             "animal",
             "anything",
             "anywhere"
-          ]
-        },
-        "keyword2": {
-          "distinct": 181,
-          "examples": [
-            "ability",
-            "account",
-            "action",
-            "anybody",
-            "apartment"
-          ]
-        },
-        "keyword3": {
-          "distinct": 182,
-          "examples": [
-            "accident",
-            "action",
-            "agent",
-            "anxiety",
-            "arrival"
-          ]
-        },
-        "keyword4": {
-          "distinct": 191,
-          "examples": [
-            "ability",
-            "advantage",
-            "advice",
-            "afternoon",
-            "airline"
-          ]
-        },
-        "keyword5": {
-          "distinct": 188,
-          "examples": [
-            "abroad",
-            "act",
-            "amount",
-            "appearance",
-            "article"
-          ]
-        }
-      },
-      "distinct_wordings": 200,
-      "example_wording": "Include keyword age once in your response, keyword community twice in your response, keyword maximum three times in your response, keyword fat five times in your response, and keyword question seven times in your response.",
-      "shim": false
-    },
-    "words:keywords_specific_position": {
-      "parameters": {
-        "keyword": {
-          "distinct": 191,
-          "examples": [
-            "ability",
-            "account",
-            "affair",
-            "alternative",
-            "animal"
           ]
         },
         "n": {
@@ -443,24 +431,24 @@
         }
       },
       "distinct_wordings": 200,
-      "example_wording": "Include keyword ability in the 28-th sentence, as the 35-th word of that sentence.",
+      "example_wording": "Include keyword age in the 24-th sentence, as the 36-th word of that sentence.",
       "shim": false
     },
     "words:words_position": {
       "parameters": {
         "keyword": {
-          "distinct": 186,
+          "distinct": 191,
           "examples": [
-            "abroad",
-            "active",
-            "addition",
-            "advance",
-            "advantage"
+            "ability",
+            "account",
+            "affair",
+            "alternative",
+            "animal"
           ]
         }
       },
-      "distinct_wordings": 186,
-      "example_wording": "The second word in your response and the second to last word in your response should be the word abroad.",
+      "distinct_wordings": 191,
+      "example_wording": "The second word in your response and the second to last word in your response should be the word ability.",
       "shim": false
     },
     "format:title_case": {

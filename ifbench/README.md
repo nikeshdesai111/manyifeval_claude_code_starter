@@ -28,7 +28,7 @@ scripts/fetch_source.sh             # pinned IFBench checkout + checksum-verifie
 
 - `configs/ifbench.yaml`: pins (commit, test-file hash, NLTK zip hashes, package versions) and the new seed family.
 - `src/mife_ifb/source.py`: the only door to IFBench code: wording, default parameter draws, strict and loose official checks.
-- `src/mife_ifb/inventory.py`: 15 exclusions with reasons, 43 candidates (16 parameterized, 27 fixed).
+- `src/mife_ifb/inventory.py`: 15 exclusions with reasons, 42 candidates (15 parameterized, 27 fixed); count:words_japanese dropped after stage-1 review.
 - `src/mife_ifb/plain_meaning.py`: one frozen plain-meaning check per candidate (witnesses only, never labels).
 - `freeze/`: sha256 freeze record, inventory, stage-1 audit. `docs/`: generated check table and stage report.
 - `third_party/` (git-ignored): the IFBench checkout and NLTK data, recreated by `fetch_source.sh`.

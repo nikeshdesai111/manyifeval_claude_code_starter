@@ -184,11 +184,6 @@ def _sentence_words(r, kw, t):
     return _ok(all(len(_words(x)) >= 2 for x in s), "a sentence has fewer than two words")
 
 
-def _words_japanese(r, kw, t):
-    n = len(r.split())
-    return _ok(n >= kw["N"], f"{n} words, so no word sits at position {kw['N']} (the rule is never exercised)")
-
-
 def _first_n_sentences(key):
     def f(r, kw, t):
         s = _sentences(r)[: int(kw[key])]
@@ -387,11 +382,6 @@ CHECKS: dict[str, Check] = {
         _sentence_words,
         Example("Cats nap. Dogs run. Owls fly."),
         Example("Cats. Dogs. Owls.")),
-    "count:words_japanese": Check(
-        "At least N words, so at least one word position is required to be Japanese.",
-        _words_japanese,
-        Example("I like 寿司 and also 猫 very", {"N": 3}),
-        Example("Hello there my friend", {"N": 5})),
     "words:start_verb": Check(G1_ONLY, _none, Example("Write the letter today.")),
     "words:repeats": Check(G1_ONLY, _none, Example("The cat sat on a mat.", {"small_n": 2})),
     "sentence:keyword": Check(

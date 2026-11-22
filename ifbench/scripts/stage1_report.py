@@ -89,6 +89,7 @@ def main():
          "### Candidates and their released default generators", "",
          md_table(rows, ["type", "parameters (200 default draws)", "example wording", "plain-meaning check adds"]), "",
          "## Findings in the released code", "",
+         "**Decision after review (Nicky, 2026-11-22): `count:words_japanese` is dropped (findings 1 and 2), leaving 42 candidates and 861 pairs.**", "",
          "1. **`count:words_japanese` default generator crashes.** `build_description()` with no arguments raises "
          "`TypeError` (it tests `N % 10` on the argument, not the drawn value). The adapter draws N exactly as the "
          "released default would (`random.randint(1, 30)`, one call on the same RNG) and passes it in. Wording is unchanged.",

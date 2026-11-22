@@ -1,7 +1,7 @@
 """The candidate instruction-type inventory (Nicky's decision, 2026-11-22).
 
-IFBench has 58 out-of-distribution types. 15 are excluded before any audit, for reasons that
-make them unusable in a task-independent, reusable rule pool. The remaining 43 are
+IFBench has 58 out-of-distribution types. 16 are excluded (15 before stage 1, count:words_japanese after it) before any audit, for reasons that
+make them unusable in a task-independent, reusable rule pool. The remaining 42 are
 *candidates*: the final inventory is chosen only after the stage-3 pairwise witness audit,
 with no preset cap.
 """
@@ -27,13 +27,15 @@ EXCLUDED: dict[str, str] = {
     "repeat:repeat_change": _REPEAT,
     "repeat:repeat_simple": _REPEAT,
     "repeat:repeat_span": _REPEAT,
+    "count:words_japanese": "dropped by Nicky after stage 1 (2026-11-22): the released default generator crashes without "
+                            "arguments and its wording drops the word 'word' for N ending in 1, 2 or 3",
     "format:options": "the answer must be exactly one fixed option and nothing else, so it conflicts with every other "
                       "rule and with almost every task",
 }
 
 
 def candidates() -> list[str]:
-    """The 43 candidate types, in IFBench registry order."""
+    """The 42 candidate types, in IFBench registry order."""
     return [t for t in source.ood_types() if t not in EXCLUDED]
 
 

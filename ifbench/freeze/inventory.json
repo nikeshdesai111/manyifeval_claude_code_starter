@@ -15,6 +15,7 @@
     "repeat:repeat_change": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
     "repeat:repeat_simple": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
     "repeat:repeat_span": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
+    "count:words_japanese": "dropped by Nicky after stage 1 (2026-11-22): the released default generator crashes without arguments and its wording drops the word 'word' for N ending in 1, 2 or 3",
     "format:options": "the answer must be exactly one fixed option and nothing else, so it conflicts with every other rule and with almost every task"
   },
   "candidates": [
@@ -39,7 +40,6 @@
     "format:newline",
     "format:emoji",
     "ratio:sentence_words",
-    "count:words_japanese",
     "words:start_verb",
     "words:repeats",
     "sentence:keyword",
@@ -70,7 +70,6 @@
     "count:person_names",
     "ratio:overlap",
     "count:numbers",
-    "count:words_japanese",
     "words:repeats",
     "sentence:keyword",
     "count:pronouns",
@@ -309,8 +308,8 @@
     {
       "type": "count:words_japanese",
       "category": "count",
-      "status": "candidate",
-      "reason": "",
+      "status": "excluded",
+      "reason": "dropped by Nicky after stage 1 (2026-11-22): the released default generator crashes without arguments and its wording drops the word 'word' for N ending in 1, 2 or 3",
       "parameters": [
         "N"
       ],
