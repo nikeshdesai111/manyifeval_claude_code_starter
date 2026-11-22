@@ -1,0 +1,1422 @@
+{
+  "singles": [
+    {
+      "types": [
+        "count:word_count_range"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.3,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "count:word_count_range": {
+            "min_words": 486,
+            "max_words": 528
+          }
+        },
+        "text": "Reality consist igloo burn active star ring escape lid inflation age state expert grab fall hen ear. Steal skirt army page gas senior fill city yearn population equipment travel winter return volume job square girl push tub. Field year grandmother chicken leading vivid tennis unit creative action dug insect jolly pick register cousin refuse spy pop internal climate career sex clerk. Fortune table weekend female calm group muscle clock relief home account extreme speaker attention airline list test blood bowl journey sentence. Blue administration street sport schedule twist feather cost way bother bicycle night organization rug concert. Jewel management pancake lead future menu paw mission respect file incident rope session sample currency advice. Possible tackle score run sweet health yarn following serve gem possession camera football pit tradition cabbage roll fire guidance draw actor. Office complex illegal quote user ivy mail boat sick guy step occasion scheme laugh measurement context. Tag grape subject worry debt fuel motor sign teach trip oar prize weight storm republic bench engine shahs vault. Winner mall one bar official client hide balance appointment particular designer target copy concern. Patient appeal rotator face operation homework package spare data unique south total xenon fact preference brilliant agent. Buddy term speed redivider flower version writing box great rod manner perception discount company. Back pad goal vote anxiety put fin wish food normal local wine. Turn brick contract divide throat shop loss doubt major xylem wealth ox highlight tower response. Dump club poem tip energy cheek ease height truck jet access still process criticism. Cream shoot rest eagle island go repaper device gather awareness utter punch land hog shame image fishing hit pot. Pen association top arm dimension chip culture original credit ideal car closet contribution rich assist economy. Photo spirit mud display angle ladder fog cow transportation force plenty side whole control highway mind shock drink. External market stomach alternative exchange partner wheel opposite mom gold many yellow jelly judgment tough theory appearance situation. Simple salary interaction panic business film attitude coach relative post rainbow idea skin blank spring supermarket sun cake sing. Save media water jog cab explanation floor memory procedure lack let sell police sensitive dream. Uncle zany private friendship lie yonder feature ship signal fable chemistry afternoon course maintenance hospital clothes stupid fox spite guest maximum. Bed search gym patience shake tension hand phrase hold zinc class sink yap amount big spot study love art excuse rat western. Primary zest ice sale percentage importance video red failure assistant honey kid traffic weakness beer confusion mate. Sandwich scale weather forever rise mountain sense risk. Ram slice public telephone yeast dry pin independence present visual tin significance relation glass performance house wash edge shoe. Hug visit deified adult wing pea satisfaction kite march buy experience county feeling fir practice point leg bay bone blind library cancel technology stand single. Heart stretch beginning price assumption rip initiative plastic mess crash news music drawer scratch tug information. Notice reaction might resist quality associate kiss spiritual board iron ticket stage sleep housing fix disease duty."
+      }
+    },
+    {
+      "types": [
+        "count:unique_word_count"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.3,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "count:unique_word_count": {
+            "N": 374
+          }
+        },
+        "text": "Anxiety roof wheel calm young noise plant diet moment shoot material choice trouble bus bank quit swim steal garbage routine concentrate royal interaction mouth hate agency stable string landscape feed shoe formal brief spell stress human signal document hub store link inevitable indication nose bad action tool church bother inside command fur hang start passage leadership jam spy procedure king wind teacher familiar ant log gate stretch fail comparison budget tooth impress son restaurant green civic chip package instance comfort bill implement clock wave jump design yoga highway dead individual shopping expert travel eat end horse cap fish tone strain culture ode status plastic order trust gym. Injury xenon sick native rub feather decision event calendar laugh gene shock bench usher office common living employment bitter manufacturer addition joint comment yarn mouse funny lead wing title many law editor simple mug physics jacket peak novel chance pull loan split visit spirit lake crew imp profession hour xylem solution read measurement adult hall camp supermarket woman jewel object earth cookie book proof eagle recommendation bag affect march floor stick sympathy car track product pension theory cause knowledge attitude nail kitchen necessary talk quantity nerve hug cat flower. Temporary axe lemon redder university mom perception extreme official long attempt till ability gain currency surround picture equivalent season size normal hurry switch current lock rope jury essay combination failure unicorn thunder dog address department administration sink nation mail leather dug hand background post report alternative nap fault regret request tomorrow knot hurt result leader go grandmother statement rotator mother neck finish twist reading middle marriage virus ink winter ring summer pot host iron volcano telephone damage whale ideal partner belt branch mango south keep journey union goal climate hold ladder week payment. Shine mortgage stay possibility intention cabinet amount mix place grass life situation stomach step yonder dependent concern gap error gold employee list database judgment suspect reputation warning crazy chapter departure girl zip put film agent salad juice quail outcome idea bedroom kettle single republic sleep preference head coat soil pack regular deposit shop word practice reason profit player jaw ball limit cold fir shelter substance net fuel velvet orange punch side fable balloon tank training park flight fold management drive gas lift sense face speech raw flow hen."
+      }
+    },
+    {
+      "types": [
+        "ratio:stop_words"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "ratio:stop_words": {
+            "percentage": 47
+          }
+        },
+        "text": "Dry fill go sense harvest orange trade glass. Drag yarn wake vault law conversation log engine help. Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "ratio:sentence_type"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "ratio:sentence_type": {}
+        },
+        "text": "Code charity pet meaning mirror miss score cloud? Dot scratch boss toe shot hole news risk rag. Arc basket muscle watch hop tip wing weekend gene. Door bottom sympathy condition fortune jury challenge hug turn. Survey general time article swimming official weird analyst corner. Mode sly point fable let angle mood shelter screw?"
+      }
+    },
+    {
+      "types": [
+        "ratio:sentence_balance"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "ratio:sentence_balance": {}
+        },
+        "text": "Code charity pet meaning mirror miss score cloud! Dot scratch boss toe shot hole news risk rag. Arc basket muscle watch hop tip wing weekend gene? Door bottom sympathy condition fortune jury challenge hug turn? Survey general time article swimming official weird analyst corner. Mode sly point fable let angle mood shelter screw!"
+      }
+    },
+    {
+      "types": [
+        "count:conjunctions"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "count:conjunctions": {
+            "small_n": 3
+          }
+        },
+        "text": "Worker but body extreme estate opening traffic stick. Touch couple blind or garage equipment remove recording. Print for alarm analyst zipper excitement buy hate advertising. Grocery natural cream neck device kick project."
+      }
+    },
+    {
+      "types": [
+        "count:person_names"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "count:person_names": {
+            "N": 44
+          }
+        },
+        "text": "David Alexander Zoe Olivia Benjamin Jacob Thomas Nicholas Lily Penelope Hannah Jonathan. Mason Samuel Ella Elijah accident Owen Chloe Ethan Liam review Joseph sea. Audrey Nathan Mia Nora Jackson Claire kick Ryan. Amelia Emma Isabella Matthew Aria Leo Lucas. Scarlett Ava Layla Daniel Noah Gabriel Christopher Charlotte Andrew pay."
+      }
+    },
+    {
+      "types": [
+        "ratio:overlap"
+      ],
+      "draws": 50,
+      "success": 49,
+      "seconds": 8.2,
+      "top_failure_reasons": [
+        [
+          "no task-text span puts the overlap in the window",
+          31
+        ]
+      ],
+      "example": {
+        "rules": {
+          "ratio:overlap": {
+            "percentage": 61
+          }
+        },
+        "text": "Blind garbage dolphin march. Expression extreme stretch establishment. short story about a lighthouse keeper who finds a message in a bottle on the beach and decides."
+      }
+    },
+    {
+      "types": [
+        "count:numbers"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "count:numbers": {
+            "N": 5
+          }
+        },
+        "text": "Gate respond agent reason 7 67 comment lock discussion. University travel guard swimming pleasure mat 35 slice phrase. 51 candy excitement 55 fall maintenance solid machine officer. Violin schedule birthday entrance zany life concentrate championship."
+      }
+    },
+    {
+      "types": [
+        "words:alphabet"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:alphabet": {}
+        },
+        "text": "Dry entry face garbage hang internal joke knot. Leadership moment nurse ode pool quarter request spot training. User village whole xylophone year zeal advice book cabinet. Diet external front garage hat international jog key lunch."
+      }
+    },
+    {
+      "types": [
+        "words:vowel"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:vowel": {}
+        },
+        "text": "Cookie minor cry remove voice living yolk oil dig. Weight growth screen boyfriend kid bin screw lip wedding. Tenet sink front roll gym strip employment editor form. Click resort stress stop tomorrow sip television pick science."
+      }
+    },
+    {
+      "types": [
+        "words:consonants"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:consonants": {}
+        },
+        "text": "Beyond confusion ladder purple duty tennis investment possibility. Confidence steal manner housing shot dish fight conflict event. Profit adult task reaction warning coast tension accident software. Inspection brother fish profile attempt challenge writer brain pick."
+      }
+    },
+    {
+      "types": [
+        "sentence:alliteration_increment"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "sentence:alliteration_increment": {}
+        },
+        "text": "Dry fill go sense harvest orange trade glass. Drag department lake draft bake lie pleasure area tea. Highlight hour hook example outcome radio burn motor file. Yak yacht yellow yonder mix strike kite vote society."
+      }
+    },
+    {
+      "types": [
+        "words:palindrome"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:palindrome": {}
+        },
+        "text": "Racecar civic redder sexes kayak. Reviver contribution ad topic concert arm east. Great redivider igloo conversation rotator operation king male. Level muscle nut tool reality city female homework minim."
+      }
+    },
+    {
+      "types": [
+        "count:punctuation"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [
+        [
+          "verify count:punctuation: official verifier fails",
+          18
+        ]
+      ],
+      "example": {
+        "rules": {
+          "count:punctuation": {}
+        },
+        "text": "Dry, fill; go: sense harvest orange trade glass! Drag yarn wake vault law conversation log engine help? Income perception recover equivalent delay knife power news variation?! Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "format:parentheses"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:parentheses": {}
+        },
+        "text": "Dry (fill [go {sense (harvest [orange])}]) trade glass. Drag yarn wake vault law conversation log engine help. Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "format:quotes"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:quotes": {}
+        },
+        "text": "Dry \"fill 'go \"sense\" harvest' orange\" trade glass. Drag yarn wake vault law conversation log engine help. Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "words:prime_lengths"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:prime_lengths": {}
+        },
+        "text": "Monster bit maybe doubt twist spite alcohol grape. Rug fur tub recover motor woman mouth fly lab. Prize improvement craft value buddy scale plate towel perspective. Kayak suspect board natural claim nerve cloud storage tan."
+      }
+    },
+    {
+      "types": [
+        "format:newline"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:newline": {}
+        },
+        "text": "dry\nfill\ngo\nsense\nharvest\norange\ntrade\nglass.\ndrag\nyarn\nwake\nvault\nlaw\nconversation\nlog\nengine\nhelp.\nincome\nperception\nrecover\nequivalent\ndelay\nknife\npower\nnews\nvariation.\nfollowing\nedge\nstreet\nbench\npress\nmention\ndemand\ndue\nchallenge."
+      }
+    },
+    {
+      "types": [
+        "format:emoji"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:emoji": {}
+        },
+        "text": "Dry fill go sense harvest orange trade glass 🌳. Drag yarn wake vault law conversation log engine help 🚀. Income perception recover equivalent delay knife power news variation 🌞. Following edge street bench press mention demand due challenge 🎵."
+      }
+    },
+    {
+      "types": [
+        "ratio:sentence_words"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [
+        [
+          "exactly three sentences, but another rule needs more",
+          116
+        ]
+      ],
+      "example": {
+        "rules": {
+          "ratio:sentence_words": {}
+        },
+        "text": "Incident evidence teacher painting hair. Quiet junior daughter release childhood. Software writer shelter currency kernel."
+      }
+    },
+    {
+      "types": [
+        "words:start_verb"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.4,
+      "top_failure_reasons": [
+        [
+          "verify words:start_verb: official verifier fails",
+          20
+        ]
+      ],
+      "example": {
+        "rules": {
+          "words:start_verb": {}
+        },
+        "text": "Give tower general university score north replacement craft. Sandwich entertainment sister hour level advertising peace dust mention. Term harm dirt shelter oar sea adult radio relation. Session history search ice cabinet angle hide care group."
+      }
+    },
+    {
+      "types": [
+        "words:repeats"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:repeats": {
+            "small_n": 4
+          }
+        },
+        "text": "Dry fill go sense harvest orange trade glass. Drag yarn wake vault law conversation log engine help. Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "sentence:keyword"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "sentence:keyword": {
+            "word": "pin",
+            "N": 7
+          }
+        },
+        "text": "Phase routine cow main reason finding monster weight. Win post eat doctor corner film stranger word command. Positive spell wonder kill vapor coffee ash picture rest. Wash member ring environment director formal affect paint axe. Soup ask band still resolve variety motor violin button. Sick kiss project mode bicycle touch stand pattern number. Battle pin feature yam employ representative worker dinner balance."
+      }
+    },
+    {
+      "types": [
+        "count:pronouns"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "count:pronouns": {
+            "N": 15
+          }
+        },
+        "text": "Pie they nothing what yours giraffe she them lack. Who you nobody awareness mine none. Those both either anyone ash picture."
+      }
+    },
+    {
+      "types": [
+        "words:odd_even_syllables"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:odd_even_syllables": {}
+        },
+        "text": "Dry hurry go storage election orange trade disease. Drag guitar wake western law conversation log engine help. Income perception shelter oar delay knife power news variation. Following member street environment press mention care figure vehicle."
+      }
+    },
+    {
+      "types": [
+        "words:last_first"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:last_first": {}
+        },
+        "text": "Dry fill go sense harvest orange trade glass. Glass drag yarn wake vault law conversation log engine. Engine help income perception recover equivalent delay knife power. Power news variation following edge street bench press mention."
+      }
+    },
+    {
+      "types": [
+        "words:paragraph_last_first"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:paragraph_last_first": {}
+        },
+        "text": "Dry fill go sense harvest orange trade dry.\nGlass drag yarn wake vault law conversation log glass.\nEngine help income perception recover equivalent delay knife engine.\nPower news variation following edge street bench press power."
+      }
+    },
+    {
+      "types": [
+        "sentence:increment"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [
+        [
+          "verify sentence:increment: official verifier fails",
+          1
+        ]
+      ],
+      "example": {
+        "rules": {
+          "sentence:increment": {
+            "small_n": 5
+          }
+        },
+        "text": "Pattern gate middle tar. Drunk put business escape due trainer dump introduction case. Influence passion silver affect print garage anxiety roof wheel calm young noise plant diet. Moment shoot material choice trouble bus bank quit swim steal garbage routine concentrate royal interaction mouth hate agency stable."
+      }
+    },
+    {
+      "types": [
+        "words:no_consecutive"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:no_consecutive": {}
+        },
+        "text": "Dry fill go sense harvest orange trade glass. Drag yarn wake vault law conversation log engine help. Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand figure challenge."
+      }
+    },
+    {
+      "types": [
+        "format:line_indent"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:line_indent": {}
+        },
+        "text": "Dry fill go sense harvest orange trade glass.\n  Drag yarn wake vault law conversation log engine help.\n    Income perception recover equivalent delay knife power news variation.\n      Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "format:quote_unquote"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:quote_unquote": {}
+        },
+        "text": "Dry \"fill go\" sense harvest orange trade glass. Drag yarn wake vault law conversation log engine help. Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "format:list"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:list": {
+            "sep": "..."
+          }
+        },
+        "text": "... Dry fill go sense harvest orange trade glass.\n... Drag yarn wake vault law conversation log engine help.\n... Income perception recover equivalent delay knife power news variation.\n... Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "format:thesis"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:thesis": {}
+        },
+        "text": "<i>Dry fill go sense harvest orange trade glass.</i> Drag yarn wake vault law conversation log engine help. Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "format:sub-bullets"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:sub-bullets": {}
+        },
+        "text": "* Dry fill go sense harvest orange trade glass.\n- Drag yarn wake vault law conversation log engine help.\n* Income perception recover equivalent delay knife power news variation.\n- Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "format:no_bullets_bullets"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:no_bullets_bullets": {}
+        },
+        "text": "Dry fill go sense harvest orange trade glass. Drag yarn wake vault law conversation log engine help.\n* Income perception recover equivalent delay knife power news variation.\n* Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "count:keywords_multiple"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "count:keywords_multiple": {
+            "keyword1": "progress",
+            "keyword2": "article",
+            "keyword3": "sample",
+            "keyword4": "reveal",
+            "keyword5": "maybe"
+          }
+        },
+        "text": "Maybe sample article reveal maybe maybe role window. Reveal menu pea weight knee significance air purpose government. Kind sweet progress sample reveal reveal reveal kettle ability. Maybe sample article maybe hope maybe maybe iron effect."
+      }
+    },
+    {
+      "types": [
+        "words:keywords_specific_position"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.3,
+      "top_failure_reasons": [
+        [
+          "verify words:keywords_specific_position: official verifier fails",
+          1
+        ]
+      ],
+      "example": {
+        "rules": {
+          "words:keywords_specific_position": {
+            "keyword": "habit",
+            "n": 26,
+            "m": 32
+          }
+        },
+        "text": "Charity pet meaning mirror miss score cloud dot. Scratch boss toe shot hole news risk rag arc. Basket muscle watch hop tip wing weekend gene door. Bottom sympathy condition fortune jury challenge hug turn survey. General time article swimming official weird analyst corner mode. Sly point fable let angle mood shelter screw championship. Command quick axe cookie eat emu dinner balance tab. Daughter target jet competition style end tell death. Pattern counter blood sail object requirement temperature feed. Front meeting internet hide female advantage dump rain bet. Ivy familiar look pipe knot present advice fuel. Bone theory western confusion volume fruit dust crash. Neck elk contest award feeling spirit cold collection rotator. Equal chance bother pride step expert lay cross. Pound tower discussion cake solos mate invite education family. Offer drunk two extreme topic connection disease snow. Shift string entry catch form image priest room. Alternative course comparison list clothes hair brick iron mouth. Elevator bad glove program wish agreement performance manufacturer stress. Sip shoe library age population pig thanks concentrate. Snake creative note aspect ratio fur koala prompt ink. Outcome nerve force mother window sleep yearn violin evening. Membership farmer golf rush suck city hope profile industry. Spring hit reception stand curve client dolphin treat. Bear solution agent shame category queen chip expression garbage. Nasty ask period skill walk inspection foot work beyond till bath fault cut passage wake accident language designer lift struggle monster rim result rule enthusiasm ape vote beginning brief run regret habit complaint."
+      }
+    },
+    {
+      "types": [
+        "words:words_position"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:words_position": {
+            "keyword": "silver"
+          }
+        },
+        "text": "Dry silver fill go sense harvest orange trade. Glass drag yarn wake vault law conversation log engine. Help income perception recover equivalent delay knife power news. Variation following edge street bench press mention silver demand."
+      }
+    },
+    {
+      "types": [
+        "format:title_case"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:title_case": {}
+        },
+        "text": "Dry Fill Go Sense Harvest Orange Trade Glass. Drag Yarn Wake Vault Law Conversation Log Engine Help. Income Perception Recover Equivalent Delay Knife Power News Variation. Following Edge Street Bench Press Mention Demand Due Challenge."
+      }
+    },
+    {
+      "types": [
+        "format:output_template"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:output_template": {}
+        },
+        "text": "My Answer: Dry fill go sense harvest orange trade glass.\nMy Conclusion: Drag yarn wake vault law conversation log engine help.\nFuture Outlook: Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand due challenge."
+      }
+    },
+    {
+      "types": [
+        "format:no_whitespace"
+      ],
+      "draws": 50,
+      "success": 50,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:no_whitespace": {}
+        },
+        "text": "Dry,fill,go,sense,harvest,orange,trade,glass.,Drag,yarn,wake,vault,law,conversation,log,engine,help.,Income,perception,recover,equivalent,delay,knife,power,news,variation.,Following,edge,street,bench,press,mention,demand,due,challenge."
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "types": [
+        "words:alphabet",
+        "format:title_case"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:alphabet": {},
+          "format:title_case": {}
+        },
+        "text": "Dry Entry Face Garbage Hang Internal Joke Knot. Leadership Moment Nurse Ode Pool Quarter Request Spot Training. User Village Whole Xylophone Year Zeal Advice Book Cabinet. Diet External Front Garage Hat International Jog Key Lunch."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:alphabet",
+        "count:person_names"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:alphabet": {},
+          "count:person_names": {
+            "N": 16
+          }
+        },
+        "text": "Topic urn virus winner xylophone yellow zinc Audrey bother Charlotte delay Elijah function Gabriel Hannah island Jonathan kick Lucas manager Noah outside. Phrase quality Ryan sing trainer unicorn vote wheel xenon year zany Andrew board Chloe drop Emma force gather high invite jog. Knife Layla membership net objective poet quilt rag sip travel university value wedding xylem yoga zest Amelia blame context. Drawer Ella fat green history inside jazz kitchen Liam memory nerve orb phone quench remove speech. Tower umpire view weight xray yolk zero advertising bicycle chicken department education floor guidance health international joke knee line measurement negotiation ode point quantity ride stick."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:prime_lengths",
+        "format:newline"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:prime_lengths": {},
+          "format:newline": {}
+        },
+        "text": "monster\nbit\nmaybe\ndoubt\ntwist\nspite\nalcohol\ngrape.\nrug\nfur\ntub\nrecover\nmotor\nwoman\nmouth\nfly\nlab.\nprize\nimprovement\ncraft\nvalue\nbuddy\nscale\nplate\ntowel\nperspective.\nkayak\nsuspect\nboard\nnatural\nclaim\nnerve\ncloud\nstorage\ntan."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "ratio:sentence_type",
+        "count:punctuation"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "ratio:sentence_type": {},
+          "count:punctuation": {}
+        },
+        "text": "Vault, outcome; eat: dress escape jet volcano comment? Lock discussion regular ball stage indication suggestion tackle rib. Role computer court ship stable reality orange mug theme. Skill transportation structure environment celebration conflict evening hope concern. Bowl explanation hay extreme possibility grass phrase part dew. Cat cover alcohol fig unit quick golf xray path? Sweet glad philosophy discount flight zest purpose?! Mouth plan interaction pizza mall blow!"
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "ratio:sentence_balance",
+        "count:punctuation"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "ratio:sentence_balance": {},
+          "count:punctuation": {}
+        },
+        "text": "Code, charity; pet: meaning mirror miss score cloud?! Dot scratch boss toe shot hole news risk rag. Arc basket muscle watch hop tip wing weekend gene? Door bottom sympathy condition fortune jury challenge hug turn? Survey general time article swimming official weird analyst corner. Mode sly point fable let angle mood shelter screw!"
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "sentence:increment",
+        "count:word_count_range"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.2,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "sentence:increment": {
+            "small_n": 2
+          },
+          "count:word_count_range": {
+            "min_words": 465,
+            "max_words": 504
+          }
+        },
+        "text": "Blind garbage dolphin march expression extreme stretch establishment practice bag truth audience restaurant satisfaction use newspaper link gem sweet kiss ground candy snake green character jelly sensitive mess water cigarette manufacturer lunch madam assumption rain game land expert personality break cow simple upper reflection yonder spread civic balance hell eagle oar blow. Assistant vehicle twist singer repair average bake society dealer breath nose bad action tool shoot bother inside command fur hang start passage leadership jam spy procedure king wind noise familiar ant log gate working fail comparison choice tooth impress son skin election rim chip package instance comfort bill implement clock wave jump design yoga. Highway dead individual shopping spray travel eat end horse cap fish tone strain culture ode status plastic order trust gym injury xenon sick native rub feather decision event calendar laugh gene shock bench usher office common living employment bitter wedding addition joint comment yarn mouse funny lead wing title many law editor opportunity mug physics jacket. Peak novel chance pull loan split visit spirit lake crew imp profession hour xylem solution read measurement adult hall camp supermarket woman jewel object earth cookie book hub stable recommendation space affect sail floor stick sympathy car track product pension theory cause knowledge attitude nail kitchen necessary talk quantity nerve hug cat flower temporary axe lemon redder university. Mom perception discount official long attempt till ability gain currency surround picture equivalent season size normal hurry switch current lock rope jury essay combination failure unicorn thunder dog address department administration sink nation mail leather dug hand background post report alternative nap fault regret request tomorrow knot hurt result leader go grandmother statement agency mother neck finish hate reading middle. Marriage virus ink winter ring summer pot host iron volcano telephone damage whale ideal partner belt branch mango south keep journey union goal climate hold ladder week payment shine mortgage stay possibility intention cabinet amount mix place grass life situation feed step exchange dependent concern gap error gold employee list database judgment suspect reputation warning crazy chapter departure girl zip put film. Agent salad juice quail outcome idea bedroom kettle single republic sleep preference head coat soil pack regular deposit shop word truck reason profit player jaw ball limit cold budget shelter substance net fuel velvet orange punch side quit balloon tank training park flight fold management drive gas lift sense face speech raw flow hen escape town pride trouble repaper classic lack owner consequence golf. Mark interest nut art knee frame cab primary drop support divide percentage importance video red complex tower honey kid traffic club beer confusion mate sandwich scale weather forever rise mountain motor risk ram slice public outside yeast dry pin independence present winner tin significance relation glass performance house wash edge shoe table description deified temperature pea teach rat kite contact buy experience county feeling fir tub."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:last_first",
+        "sentence:increment"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:last_first": {},
+          "sentence:increment": {
+            "small_n": 5
+          }
+        },
+        "text": "Pattern gate middle tar. Tar drunk put business escape due trainer dump introduction. Introduction case influence passion silver affect print garage anxiety roof wheel calm young noise. Noise plant diet moment shoot material choice trouble bus bank quit swim steal garbage routine concentrate royal interaction mouth."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "format:list",
+        "format:line_indent"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:list": {
+            "sep": "..."
+          },
+          "format:line_indent": {}
+        },
+        "text": "... Dry fill go sense harvest orange trade glass.\n  ... Drag yarn wake vault law conversation log engine help.\n    ... Income perception recover equivalent delay knife power news variation.\n      ... Following edge street bench press mention demand due challenge."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "format:sub-bullets",
+        "format:line_indent"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:sub-bullets": {},
+          "format:line_indent": {}
+        },
+        "text": "* Dry fill go sense harvest orange trade glass.\n  - Drag yarn wake vault law conversation log engine help.\n    * Income perception recover equivalent delay knife power news variation.\n      - Following edge street bench press mention demand due challenge."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "format:output_template",
+        "format:title_case"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:output_template": {},
+          "format:title_case": {}
+        },
+        "text": "My Answer: Dry Fill Go Sense Harvest Orange Trade Glass.\nMy Conclusion: Drag Yarn Wake Vault Law Conversation Log Engine Help.\nFuture Outlook: Income Perception Recover Equivalent Delay Knife Power News Variation. Following Edge Street Bench Press Mention Demand Due Challenge."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "format:thesis",
+        "words:paragraph_last_first"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 0.4,
+      "top_failure_reasons": [
+        [
+          "verify words:paragraph_last_first: official verifier fails",
+          480
+        ]
+      ],
+      "example": null,
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "format:quotes",
+        "format:quote_unquote"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:quotes": {},
+          "format:quote_unquote": {}
+        },
+        "text": "Dry \"fill 'go \"sense\" harvest' orange\" trade glass. Drag yarn wake vault law conversation log engine help. Income perception recover equivalent delay knife power news variation. Following edge street bench press mention demand due challenge."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "format:parentheses",
+        "format:emoji"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "format:parentheses": {},
+          "format:emoji": {}
+        },
+        "text": "Dry (fill [go {sense (harvest [orange])}]) trade glass 🌳. Drag yarn wake vault law conversation log engine help 🚀. Income perception recover equivalent delay knife power news variation 🌞. Following edge street bench press mention demand due challenge 🎵."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:vowel",
+        "count:conjunctions"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [
+        [
+          "required words use more than three vowels",
+          14
+        ]
+      ],
+      "example": {
+        "rules": {
+          "words:vowel": {},
+          "count:conjunctions": {
+            "small_n": 5
+          }
+        },
+        "text": "Yarn rug show rum but so track camp. Background and young touch sparrow woman lady company. County for bow arm hurry candy or dog analyst. Horror roof hunt mood car sky gas."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:consonants",
+        "words:no_consecutive"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:consonants": {},
+          "words:no_consecutive": {}
+        },
+        "text": "Beyond confusion ladder purple duty tennis investment possibility. Confidence steal manner housing shot dish fight conflict event. Profit adult task reaction warning coast tension accident software. Inspection brother fish profile attempt challenge writer brain pick."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:odd_even_syllables",
+        "words:no_consecutive"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:odd_even_syllables": {},
+          "words:no_consecutive": {}
+        },
+        "text": "Dry hurry go storage election orange trade disease. Lip guitar wake level touch conversation log engine help. Income perception shelter oar delay knife power news variation. Following member street environment press mention care figure vehicle."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "ratio:stop_words",
+        "count:pronouns"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "ratio:stop_words": {
+            "percentage": 81
+          },
+          "count:pronouns": {
+            "N": 3
+          }
+        },
+        "text": "Who bar jam cell explanation camp physical burn lie. Anyone influence passion silver affect print. Them alarm analyst zipper excitement buy."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "count:unique_word_count",
+        "words:repeats"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.1,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "count:unique_word_count": {
+            "N": 160
+          },
+          "words:repeats": {
+            "small_n": 3
+          }
+        },
+        "text": "Recording change poetry solos suspect guard swimming nerve physical quench grape writing dry carry western sea weather sap yam benefit newspaper designer yoga warning reading floor success girlfriend possibility normal setting knot battle mountain examination paper shame yeast entry limit throat bake president zip dear research ground treat senior use owl. Internet sink working math spite front corner desire bath sentence adult summer pair candle scene tourist sign face current beach conference purchase bunch solid cancer chocolate draft book quarter soft upper inside man cash election egg zeal coach schedule specialist. Customer exam fin quantity sort competition glove gain wig communication tiger cub passage republic culture design unicorn brush college week hut signal script plastic pain bench bid smell home worry scheme security meal cable government day excuse square youth ink. Chicken magazine detail unique chip usual extent replacement branch queen train internal anywhere world instruction shake yearn incident feedback act couple hat force speech psychology heart rich gem stroke golf writer theory."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:words_position",
+        "words:start_verb"
+      ],
+      "draws": 20,
+      "success": 19,
+      "seconds": 0.4,
+      "top_failure_reasons": [
+        [
+          "verify words:start_verb: official verifier fails",
+          71
+        ]
+      ],
+      "example": {
+        "rules": {
+          "words:words_position": {
+            "keyword": "matter"
+          },
+          "words:start_verb": {}
+        },
+        "text": "Give matter cream video red control currency neck. Chest union subject guitar association pie story emphasis final. Operation king male computer shelter oar sea adult radio. Relation session history search ice cabinet angle matter hide."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "sentence:keyword",
+        "words:keywords_specific_position"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.1,
+      "top_failure_reasons": [
+        [
+          "verify sentence:keyword: official verifier fails",
+          1
+        ],
+        [
+          "verify words:keywords_specific_position: official verifier fails",
+          1
+        ]
+      ],
+      "example": {
+        "rules": {
+          "sentence:keyword": {
+            "word": "fly",
+            "N": 5
+          },
+          "words:keywords_specific_position": {
+            "keyword": "agency",
+            "n": 26,
+            "m": 38
+          }
+        },
+        "text": "Charity pet meaning mirror miss score cloud dot. Scratch boss toe shot hole news risk rag arc. Basket muscle watch hop tip wing weekend gene door. Bottom sympathy condition fortune jury challenge hug turn survey. Recording hay bear fly mountain examination paper shame yeast. Entry limit throat bake president zip dear research ground. Treat senior use owl internet sink working math spite. Front corner desire bath sentence adult summer pair. Candle scene tourist sign face current beach conference. Purchase bunch solid cancer chocolate draft book quarter soft. Upper inside poetry cash election egg zeal coach. Schedule specialist customer exam fin quantity sort competition. Glove gain wig communication tiger cub passage republic culture. Design unicorn brush college week hut signal script. Plastic pain bench bid smell home worry scheme security. Meal cable government day excuse square youth ink. Chicken magazine detail unique chip usual extent replacement. Branch queen train internal anywhere world instruction shake yearn. Incident feedback act couple hat force speech psychology heart. Rich gem stroke golf writer theory movie sir. Hour history test failure tonight profile pot valuable afternoon. Choice injury purple play jewel emphasis tool knee medium. Ape promotion jaw tag jacket setting stretch importance fable. Reception ease refuse brave person professional network mode. Voice medicine wealth shahs capital original reality bird dinner. Drag function document temporary departure end lid floor brief campaign chemistry girl coffee team teach indication jog dolphin black language remote common aside fail climate discipline standard shift peace top teaching representative motor solos candidate oil prior agency racecar."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "ratio:overlap",
+        "format:list"
+      ],
+      "draws": 20,
+      "success": 10,
+      "seconds": 42.7,
+      "top_failure_reasons": [
+        [
+          "no task-text span puts the overlap in the window",
+          240
+        ]
+      ],
+      "example": {
+        "rules": {
+          "ratio:overlap": {
+            "percentage": 57
+          },
+          "format:list": {
+            "sep": "-"
+          }
+        },
+        "text": "- Guy guard window escape.\n- Bat shock sand thing. short story about a lighthouse keeper who finds a message in a bottle on the beach and decides to."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "ratio:sentence_words",
+        "format:emoji"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [
+        [
+          "exactly three sentences, but another rule needs more",
+          45
+        ]
+      ],
+      "example": {
+        "rules": {
+          "ratio:sentence_words": {},
+          "format:emoji": {}
+        },
+        "text": "Incident evidence teacher painting hair 🍎. Quiet junior daughter release childhood 🐱. Software writer shelter currency kernel 📚."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "format:no_whitespace",
+        "count:numbers"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [
+        [
+          "verify count:numbers: official verifier fails",
+          22
+        ]
+      ],
+      "example": {
+        "rules": {
+          "format:no_whitespace": {},
+          "count:numbers": {
+            "N": 4
+          }
+        },
+        "text": "Spot,10,selection,tale,knife,extreme,desk,promise,concept.,Market,medicine,19,cub,34,fog,task,limit,internet.,74,maximum,chance,teaching,ruin,skin,drama,world,assistance."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:palindrome",
+        "words:repeats"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:palindrome": {},
+          "words:repeats": {
+            "small_n": 3
+          }
+        },
+        "text": "Racecar civic redder sexes kayak. Reviver contribution ad topic concert arm east. Great redivider igloo conversation rotator operation king male. Level muscle nut tool reality city female homework minim."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "count:word_count_range",
+        "count:unique_word_count"
+      ],
+      "draws": 20,
+      "success": 7,
+      "seconds": 0.1,
+      "top_failure_reasons": [
+        [
+          "other rules need more words than the word-count range allows",
+          312
+        ]
+      ],
+      "example": {
+        "rules": {
+          "count:word_count_range": {
+            "min_words": 291,
+            "max_words": 307
+          },
+          "count:unique_word_count": {
+            "N": 277
+          }
+        },
+        "text": "President comfortable example outcome glass burn motor file yak tear prize sector source letter figure vehicle purple pleasure click zebra player refrigerator look map society class exercise side table split window count pension kitchen bank problem wig pop nation jungle sand rate reception sugar band leading fire girlfriend role department breath gear quote chemical leg final people quality spite magazine election profit love border special horse yoga slice dig good confusion access tree harm title promise world series cub dog. Research clock knife block reveal brush estate load employee purchase lemon section visit spy district pack employ sweet member high implement dead imagination hit worker appointment pain task bottom bat share currency ride brown self charity respect fable radar milk contact cheek catch store gift working rainbow start back smoke category minute government guard iron touch economy specialist creative mop maximum welcome hub. Rule resort combine winter local maintenance birthday shelter dump dust subject staff oil hair transportation roll comment army training type sly equivalent try valuable rod consequence lesson finance normal measurement fish parent classroom struggle dear oar rotor coach month business clue plan draft box treat bear insurance shahs help rim trainer scratch experience garbage tenet charge period stick grass entrance east turn recommendation. Till pound fault cut target wake accident language designer lift individual monster sip result surgery enthusiasm queen vote beginning brief run regret complaint rib yield stand log ideal cabinet goal convert carry warning thought blank kayak area swim soft sort football guitar gather rat mixture emergency answer suggestion arm arrival ball storm. Mat dark. Vast drag classic stage. Literature interest. Age candy bet. Pad television wax virus base. Taste giraffe. Failure preference. Collection voice pay gate lead. Preparation advice. Change steak. Remote delivery grade force. Weakness repaper. Active feed."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "words:alphabet",
+        "words:consonants"
+      ],
+      "draws": 20,
+      "success": 20,
+      "seconds": 0.0,
+      "top_failure_reasons": [],
+      "example": {
+        "rules": {
+          "words:alphabet": {},
+          "words:consonants": {}
+        },
+        "text": "Beyond creative delivery engineering fill guest health interest. Jungle king lunch match normal outcome past quantity respond. Scale type upstairs vegetable western xray yarn zipper affect. Body candidate double extent floor grocery housing illegal jazz."
+      },
+      "group": "likely compatible"
+    },
+    {
+      "types": [
+        "format:list",
+        "format:sub-bullets"
+      ],
+      "draws": 20,
+      "success": 7,
+      "seconds": 0.3,
+      "top_failure_reasons": [
+        [
+          "verify format:list: official verifier fails",
+          312
+        ]
+      ],
+      "example": {
+        "rules": {
+          "format:list": {
+            "sep": "-"
+          },
+          "format:sub-bullets": {}
+        },
+        "text": "* Dry fill go sense harvest orange trade glass.\n- Drag yarn wake vault law conversation log engine help.\n* Income perception recover equivalent delay knife power news variation.\n- Following edge street bench press mention demand due challenge."
+      },
+      "group": "expected conflict"
+    },
+    {
+      "types": [
+        "ratio:sentence_type",
+        "ratio:sentence_balance"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 0.6,
+      "top_failure_reasons": [
+        [
+          "verify ratio:sentence_type: official verifier fails",
+          480
+        ]
+      ],
+      "example": null,
+      "group": "expected conflict"
+    },
+    {
+      "types": [
+        "words:alphabet",
+        "words:last_first"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 52.7,
+      "top_failure_reasons": [
+        [
+          "search budget exhausted",
+          480
+        ]
+      ],
+      "example": null,
+      "group": "expected conflict"
+    },
+    {
+      "types": [
+        "words:no_consecutive",
+        "sentence:alliteration_increment"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 470.0,
+      "top_failure_reasons": [
+        [
+          "search budget exhausted",
+          480
+        ]
+      ],
+      "example": null,
+      "group": "expected conflict"
+    },
+    {
+      "types": [
+        "words:alphabet",
+        "count:numbers"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 0.0,
+      "top_failure_reasons": [
+        [
+          "numbers are not words for a word-shape rule",
+          480
+        ]
+      ],
+      "example": null,
+      "group": "expected conflict"
+    },
+    {
+      "types": [
+        "format:newline",
+        "words:vowel"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 0.4,
+      "top_failure_reasons": [
+        [
+          "verify words:vowel: official verifier fails",
+          480
+        ]
+      ],
+      "example": null,
+      "group": "expected conflict"
+    },
+    {
+      "types": [
+        "format:no_whitespace",
+        "count:unique_word_count"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 3.7,
+      "top_failure_reasons": [
+        [
+          "verify count:unique_word_count: official verifier fails",
+          480
+        ]
+      ],
+      "example": null,
+      "group": "expected conflict"
+    },
+    {
+      "types": [
+        "format:output_template",
+        "words:prime_lengths"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 0.4,
+      "top_failure_reasons": [
+        [
+          "verify words:prime_lengths: official verifier fails",
+          480
+        ]
+      ],
+      "example": null,
+      "group": "expected conflict"
+    },
+    {
+      "types": [
+        "count:keywords_multiple",
+        "words:repeats"
+      ],
+      "draws": 20,
+      "success": 0,
+      "seconds": 0.0,
+      "top_failure_reasons": [
+        [
+          "'escape' is required 5 times but words may repeat at most 4 times",
+          24
+        ],
+        [
+          "'selection' is required 7 times but words may repeat at most 5 times",
+          24
+        ],
+        [
+          "'year' is required 5 times but words may repeat at most 4 times",
+          24
+        ]
+      ],
+      "example": null,
+      "group": "expected conflict"
+    }
+  ]
+}
