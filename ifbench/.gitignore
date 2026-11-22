@@ -1,0 +1,8 @@
+# Pinned external checkout and vendored NLTK data: re-create with scripts/fetch_source.sh
+/third_party/IFBench/
+/third_party/nltk_data/
+/third_party/nltk_zips/
+# Generated data (large)
+/data/
+__pycache__/
+.pytest_cache/

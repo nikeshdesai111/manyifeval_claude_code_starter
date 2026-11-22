@@ -1,0 +1,33 @@
+# IFBench adaptation (stage 1). Fully separate from the ManyIFEval experiment:
+# nothing under src/, configs/, scripts/ or tests/ at the repository root is read or changed.
+schema_version: "0.1.0"
+
+source:
+  repo_url: https://github.com/allenai/IFBench
+  commit: 488918665d53f867fa908a293769ec6e71e74aec   # 2026-11-13, "Merge pull request #45"
+  package_version: "0.2.0"                            # pyproject.toml at that commit
+  local_path: third_party/IFBench                    # relative to ifbench/
+  test_file: data/IFBench_test.jsonl
+  test_file_sha256: d2ada7da94a38cfe406351614c4e686846ed2da6d1b339db95fa5ead19554a4a
+
+nltk:
+  data_dir: third_party/nltk_data                    # relative to ifbench/; the ONLY NLTK search path
+  # Zip SHA-256 values equal the checksums in NLTK's own index.xml (gh-pages), checked on 2026-11-22.
+  packages:
+    tokenizers/punkt_tab: e57f64187974277726a3417ca6f181ec5403676c717672eef6a748a7b20e0106
+    tokenizers/punkt: 51c3078994aeaf650bfc8e028be4fb42b4a0d177d41c012b6a983979653660ec
+    corpora/stopwords: 48c0e52d8b52546e827f53761fb30300c0ab94f70660d28bd65ba0a86270946b
+    taggers/averaged_perceptron_tagger_eng: 6025f530624335c67d6547d44757b357b4e79bae030a0383e9887a92c1718f0b
+
+# Python packages that the IFBench verifiers depend on (labels change if these change).
+packages:
+  nltk: "3.10.4"          # same as the ManyIFEval lock
+  emoji: "2.16.0"
+  syllapy: "0.8.0"
+  langdetect: "1.0.9"
+  absl-py: "2.5.1"
+  immutabledict: "4.3.1"
+
+# New seed family for IFBench (distinct from every ManyIFEval seed, which are 2026111x / 2026120x).
+seeds:
+  plain_meaning_examples: 20261122

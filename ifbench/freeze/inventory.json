@@ -1,0 +1,629 @@
+{
+  "ood_types": 58,
+  "excluded": {
+    "custom:multiples": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:mcq_count_length": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:reverse_newline": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:word_reverse": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:character_reverse": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:sentence_alphabet": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:european_capitals_sort": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:csv_city": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:csv_special_character": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:csv_quotes": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "custom:date_format_list": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+    "repeat:repeat_change": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
+    "repeat:repeat_simple": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
+    "repeat:repeat_span": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
+    "format:options": "the answer must be exactly one fixed option and nothing else, so it conflicts with every other rule and with almost every task"
+  },
+  "candidates": [
+    "count:word_count_range",
+    "count:unique_word_count",
+    "ratio:stop_words",
+    "ratio:sentence_type",
+    "ratio:sentence_balance",
+    "count:conjunctions",
+    "count:person_names",
+    "ratio:overlap",
+    "count:numbers",
+    "words:alphabet",
+    "words:vowel",
+    "words:consonants",
+    "sentence:alliteration_increment",
+    "words:palindrome",
+    "count:punctuation",
+    "format:parentheses",
+    "format:quotes",
+    "words:prime_lengths",
+    "format:newline",
+    "format:emoji",
+    "ratio:sentence_words",
+    "count:words_japanese",
+    "words:start_verb",
+    "words:repeats",
+    "sentence:keyword",
+    "count:pronouns",
+    "words:odd_even_syllables",
+    "words:last_first",
+    "words:paragraph_last_first",
+    "sentence:increment",
+    "words:no_consecutive",
+    "format:line_indent",
+    "format:quote_unquote",
+    "format:list",
+    "format:thesis",
+    "format:sub-bullets",
+    "format:no_bullets_bullets",
+    "count:keywords_multiple",
+    "words:keywords_specific_position",
+    "words:words_position",
+    "format:title_case",
+    "format:output_template",
+    "format:no_whitespace"
+  ],
+  "parameterized": [
+    "count:word_count_range",
+    "count:unique_word_count",
+    "ratio:stop_words",
+    "count:conjunctions",
+    "count:person_names",
+    "ratio:overlap",
+    "count:numbers",
+    "count:words_japanese",
+    "words:repeats",
+    "sentence:keyword",
+    "count:pronouns",
+    "sentence:increment",
+    "format:list",
+    "count:keywords_multiple",
+    "words:keywords_specific_position",
+    "words:words_position"
+  ],
+  "fixed": [
+    "ratio:sentence_type",
+    "ratio:sentence_balance",
+    "words:alphabet",
+    "words:vowel",
+    "words:consonants",
+    "sentence:alliteration_increment",
+    "words:palindrome",
+    "count:punctuation",
+    "format:parentheses",
+    "format:quotes",
+    "words:prime_lengths",
+    "format:newline",
+    "format:emoji",
+    "ratio:sentence_words",
+    "words:start_verb",
+    "words:odd_even_syllables",
+    "words:last_first",
+    "words:paragraph_last_first",
+    "words:no_consecutive",
+    "format:line_indent",
+    "format:quote_unquote",
+    "format:thesis",
+    "format:sub-bullets",
+    "format:no_bullets_bullets",
+    "format:title_case",
+    "format:output_template",
+    "format:no_whitespace"
+  ],
+  "reads_task_text": [
+    "ratio:overlap"
+  ],
+  "table": [
+    {
+      "type": "count:word_count_range",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "min_words",
+        "max_words"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "count:unique_word_count",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "N"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "ratio:stop_words",
+      "category": "ratio",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "percentage"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "ratio:sentence_type",
+      "category": "ratio",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "ratio:sentence_balance",
+      "category": "ratio",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "count:conjunctions",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "small_n"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "count:person_names",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "N"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "ratio:overlap",
+      "category": "ratio",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "percentage"
+      ],
+      "reads_task_text": true
+    },
+    {
+      "type": "count:numbers",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "N"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:alphabet",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:vowel",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:consonants",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "sentence:alliteration_increment",
+      "category": "sentence",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:palindrome",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "count:punctuation",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:parentheses",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:quotes",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:prime_lengths",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:options",
+      "category": "format",
+      "status": "excluded",
+      "reason": "the answer must be exactly one fixed option and nothing else, so it conflicts with every other rule and with almost every task",
+      "parameters": [
+        "options"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:newline",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:emoji",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "ratio:sentence_words",
+      "category": "ratio",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "count:words_japanese",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "N"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:start_verb",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:repeats",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "small_n"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "sentence:keyword",
+      "category": "sentence",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "word",
+        "N"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "count:pronouns",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "N"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:odd_even_syllables",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:last_first",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:paragraph_last_first",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "sentence:increment",
+      "category": "sentence",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "small_n"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:no_consecutive",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:line_indent",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:quote_unquote",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:list",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "sep"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:thesis",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:sub-bullets",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:no_bullets_bullets",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:multiples",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:mcq_count_length",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:reverse_newline",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:word_reverse",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:character_reverse",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:sentence_alphabet",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:european_capitals_sort",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:csv_city",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:csv_special_character",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:csv_quotes",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "custom:date_format_list",
+      "category": "custom",
+      "status": "excluded",
+      "reason": "it is a complete task of its own (fixed question and fixed answer), so it cannot be applied to another task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "count:keywords_multiple",
+      "category": "count",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "keyword1",
+        "keyword2",
+        "keyword3",
+        "keyword4",
+        "keyword5"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:keywords_specific_position",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "keyword",
+        "n",
+        "m"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "words:words_position",
+      "category": "words",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [
+        "keyword"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "repeat:repeat_change",
+      "category": "repeat",
+      "status": "excluded",
+      "reason": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
+      "parameters": [
+        "prompt_to_repeat"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "repeat:repeat_simple",
+      "category": "repeat",
+      "status": "excluded",
+      "reason": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "repeat:repeat_span",
+      "category": "repeat",
+      "status": "excluded",
+      "reason": "it asks the model to repeat or edit the prompt text, so its verifier reads the prompt and the rule depends on the task",
+      "parameters": [
+        "n_start",
+        "n_end",
+        "prompt_to_repeat"
+      ],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:title_case",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:output_template",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    },
+    {
+      "type": "format:no_whitespace",
+      "category": "format",
+      "status": "candidate",
+      "reason": "",
+      "parameters": [],
+      "reads_task_text": false
+    }
+  ]
+}

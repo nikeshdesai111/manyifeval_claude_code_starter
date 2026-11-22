@@ -1,0 +1,609 @@
+{
+  "pins": {
+    "commit": "488918665d53f867fa908a293769ec6e71e74aec",
+    "test_file_sha256": "d2ada7da94a38cfe406351614c4e686846ed2da6d1b339db95fa5ead19554a4a",
+    "nltk": {
+      "tokenizers/punkt_tab": {
+        "zip_sha256": "e57f64187974277726a3417ca6f181ec5403676c717672eef6a748a7b20e0106",
+        "tree_sha256": "a5e581953703fa752a770963fadfd2c17bfec704af1bf65f19b1ded32e83fa3e"
+      },
+      "tokenizers/punkt": {
+        "zip_sha256": "51c3078994aeaf650bfc8e028be4fb42b4a0d177d41c012b6a983979653660ec",
+        "tree_sha256": "23b6571b054e21220a500cc66225b6b95d0c89c19626acfa7747b87eff0db80e"
+      },
+      "corpora/stopwords": {
+        "zip_sha256": "48c0e52d8b52546e827f53761fb30300c0ab94f70660d28bd65ba0a86270946b",
+        "tree_sha256": "ca2dfc188044d19830ef1d7a0db44ed7e7df0df9de159143503339d3d4be55d4"
+      },
+      "taggers/averaged_perceptron_tagger_eng": {
+        "zip_sha256": "6025f530624335c67d6547d44757b357b4e79bae030a0383e9887a92c1718f0b",
+        "tree_sha256": "0189b5b3824b9c61b131d017c86749201a8e3962e089a67a811548aefcd195a3"
+      }
+    }
+  },
+  "packages": {
+    "nltk": "3.10.4",
+    "emoji": "2.16.0",
+    "syllapy": "0.8.0",
+    "langdetect": "1.0.9",
+    "absl-py": "2.5.1",
+    "immutabledict": "4.3.1"
+  },
+  "environment": {
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39",
+    "packages": {
+      "nltk": "3.10.4",
+      "emoji": "2.16.0",
+      "syllapy": "0.8.0",
+      "langdetect": "1.0.9",
+      "absl-py": "2.5.1",
+      "immutabledict": "4.3.1"
+    },
+    "ifbench_commit": "488918665d53f867fa908a293769ec6e71e74aec"
+  },
+  "default_smoke": {
+    "count:word_count_range": {
+      "parameters": {
+        "min_words": {
+          "min": 101,
+          "max": 497,
+          "distinct": 159
+        },
+        "max_words": {
+          "min": 108,
+          "max": 533,
+          "distinct": 158
+        }
+      },
+      "distinct_wordings": 197,
+      "example_wording": "The response must contain between 101 and 108 words.",
+      "shim": false
+    },
+    "count:unique_word_count": {
+      "parameters": {
+        "N": {
+          "min": 100,
+          "max": 500,
+          "distinct": 154
+        }
+      },
+      "distinct_wordings": 154,
+      "example_wording": "Use at least 100 unique words in the response.",
+      "shim": false
+    },
+    "ratio:stop_words": {
+      "parameters": {
+        "percentage": {
+          "min": 1,
+          "max": 100,
+          "distinct": 87
+        }
+      },
+      "distinct_wordings": 87,
+      "example_wording": "Ensure that stop words constitute no more than 1% of the total words in your response.",
+      "shim": false
+    },
+    "ratio:sentence_type": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Maintain a 2:1 ratio of declarative to interrogative sentences.",
+      "shim": false
+    },
+    "ratio:sentence_balance": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Ensure that the ratio of sentence types (declarative, interrogative, exclamatory) is balanced.",
+      "shim": false
+    },
+    "count:conjunctions": {
+      "parameters": {
+        "small_n": {
+          "min": 2,
+          "max": 6,
+          "distinct": 5
+        }
+      },
+      "distinct_wordings": 5,
+      "example_wording": "Use at least 2 different coordinating conjunctions in the response.",
+      "shim": false
+    },
+    "count:person_names": {
+      "parameters": {
+        "N": {
+          "min": 1,
+          "max": 50,
+          "distinct": 48
+        }
+      },
+      "distinct_wordings": 48,
+      "example_wording": "Mention at least 1 different person names in the response, from this list of person names: Emma, Liam, Sophia, Jackson, Olivia, Noah, Ava, Lucas, Isabella, Mason, Mia, Ethan, Charlotte, Alexander, Amelia, Benjamin, Harper, Leo, Zoe, Daniel, Chloe, Samuel, Lily, Matthew, Grace, Owen, Abigail, Gabriel, Ella, Jacob, Scarlett, Nathan, Victoria, Elijah, Layla, Nicholas, Audrey, David, Hannah, Christopher, Penelope, Thomas, Nora, Andrew, Aria, Joseph, Claire, Ryan, Stella, Jonathan .",
+      "shim": false
+    },
+    "ratio:overlap": {
+      "parameters": {
+        "percentage": {
+          "min": 1,
+          "max": 100,
+          "distinct": 86
+        }
+      },
+      "distinct_wordings": 86,
+      "example_wording": "Maintain a trigram overlap of 1% (±2%) with the provided reference text.",
+      "shim": false
+    },
+    "count:numbers": {
+      "parameters": {
+        "N": {
+          "min": 1,
+          "max": 6,
+          "distinct": 6
+        }
+      },
+      "distinct_wordings": 6,
+      "example_wording": "Include exactly 1 numbers in the response.",
+      "shim": false
+    },
+    "words:alphabet": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Each word must start with the next letter of the alphabet, looping back to 'A' after 'Z'.",
+      "shim": false
+    },
+    "words:vowel": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Write a paragraph using words that contain only three types of vowels.",
+      "shim": false
+    },
+    "words:consonants": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Ensure each word in your response has at least one consonant cluster (two or more consonants together).",
+      "shim": false
+    },
+    "sentence:alliteration_increment": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Each sentence must have a longer sequence of consecutive alliterative words than the previous one.",
+      "shim": false
+    },
+    "words:palindrome": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Include at least 10 single-word palindromes, each at least 5 characters long.",
+      "shim": false
+    },
+    "count:punctuation": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Use every standard punctuation mark at least once, including semicolons, colons, and the interrobang (?!).",
+      "shim": false
+    },
+    "format:parentheses": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Nest parentheses (and [brackets {and braces}]) at least 5 levels deep.",
+      "shim": false
+    },
+    "format:quotes": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Include quotes within quotes within quotes, at least 3 levels deep, alternating between double quotes and single quotes.",
+      "shim": false
+    },
+    "words:prime_lengths": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Use only words with lengths that are prime numbers.",
+      "shim": false
+    },
+    "format:newline": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Write each word on a new line.",
+      "shim": false
+    },
+    "format:emoji": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Please use an emoji at the end of every sentence.",
+      "shim": false
+    },
+    "ratio:sentence_words": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Respond with three sentences, all containing the same number of characters but using all different words.",
+      "shim": false
+    },
+    "count:words_japanese": {
+      "parameters": {
+        "N": {
+          "min": 1,
+          "max": 30,
+          "distinct": 30
+        }
+      },
+      "distinct_wordings": 30,
+      "example_wording": "Every 10th word of your response must be in Japanese.",
+      "shim": true
+    },
+    "words:start_verb": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "The response must start with a verb.",
+      "shim": false
+    },
+    "words:repeats": {
+      "parameters": {
+        "small_n": {
+          "min": 1,
+          "max": 5,
+          "distinct": 5
+        }
+      },
+      "distinct_wordings": 5,
+      "example_wording": "The response should not repeat any word more than 1 times.",
+      "shim": false
+    },
+    "sentence:keyword": {
+      "parameters": {
+        "word": {
+          "distinct": 187,
+          "examples": [
+            "a",
+            "active",
+            "address",
+            "annual",
+            "apartment"
+          ]
+        },
+        "N": {
+          "min": 1,
+          "max": 20,
+          "distinct": 20
+        }
+      },
+      "distinct_wordings": 198,
+      "example_wording": "The response must include keyword \"a\" in the 14-th sentence.",
+      "shim": false
+    },
+    "count:pronouns": {
+      "parameters": {
+        "N": {
+          "min": 1,
+          "max": 25,
+          "distinct": 25
+        }
+      },
+      "distinct_wordings": 25,
+      "example_wording": "The response should include at least 1 pronouns.",
+      "shim": false
+    },
+    "words:odd_even_syllables": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Alternate between words with odd and even numbers of syllables.",
+      "shim": false
+    },
+    "words:last_first": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "The last word of each sentence must become the first word of the next sentence.",
+      "shim": false
+    },
+    "words:paragraph_last_first": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Each paragraph must end with the same word it started with, separate paragraphs with a newline.",
+      "shim": false
+    },
+    "sentence:increment": {
+      "parameters": {
+        "small_n": {
+          "min": 1,
+          "max": 5,
+          "distinct": 5
+        }
+      },
+      "distinct_wordings": 5,
+      "example_wording": "Each sentence must contain exactly 1 more words than the previous one.",
+      "shim": false
+    },
+    "words:no_consecutive": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "No two consecutive words can share the same first letter.",
+      "shim": false
+    },
+    "format:line_indent": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Create stairs by incrementally indenting each new line.",
+      "shim": false
+    },
+    "format:quote_unquote": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Every quoted phrase must be followed by an unquoted explanation.",
+      "shim": false
+    },
+    "format:list": {
+      "parameters": {
+        "sep": {
+          "distinct": 4,
+          "examples": [
+            "!?!?",
+            "-",
+            "...",
+            "SEPARATOR"
+          ]
+        }
+      },
+      "distinct_wordings": 4,
+      "example_wording": "Answer with a list of items, instead of bullet points use !?!?.",
+      "shim": false
+    },
+    "format:thesis": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Each section must begin with a thesis statement in italics, use HTML to indicate the italics.",
+      "shim": false
+    },
+    "format:sub-bullets": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Your response must include bullet points denoted by * and at least one sub-bullet point denoted by - for each bullet point.",
+      "shim": false
+    },
+    "format:no_bullets_bullets": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Your answer must contain at least two sentences ending in a period followed by at least two bullet points denoted by *.",
+      "shim": false
+    },
+    "count:keywords_multiple": {
+      "parameters": {
+        "keyword1": {
+          "distinct": 190,
+          "examples": [
+            "age",
+            "angle",
+            "animal",
+            "anything",
+            "anywhere"
+          ]
+        },
+        "keyword2": {
+          "distinct": 181,
+          "examples": [
+            "ability",
+            "account",
+            "action",
+            "anybody",
+            "apartment"
+          ]
+        },
+        "keyword3": {
+          "distinct": 182,
+          "examples": [
+            "accident",
+            "action",
+            "agent",
+            "anxiety",
+            "arrival"
+          ]
+        },
+        "keyword4": {
+          "distinct": 191,
+          "examples": [
+            "ability",
+            "advantage",
+            "advice",
+            "afternoon",
+            "airline"
+          ]
+        },
+        "keyword5": {
+          "distinct": 188,
+          "examples": [
+            "abroad",
+            "act",
+            "amount",
+            "appearance",
+            "article"
+          ]
+        }
+      },
+      "distinct_wordings": 200,
+      "example_wording": "Include keyword age once in your response, keyword community twice in your response, keyword maximum three times in your response, keyword fat five times in your response, and keyword question seven times in your response.",
+      "shim": false
+    },
+    "words:keywords_specific_position": {
+      "parameters": {
+        "keyword": {
+          "distinct": 191,
+          "examples": [
+            "ability",
+            "account",
+            "affair",
+            "alternative",
+            "animal"
+          ]
+        },
+        "n": {
+          "min": 20,
+          "max": 30,
+          "distinct": 11
+        },
+        "m": {
+          "min": 30,
+          "max": 40,
+          "distinct": 11
+        }
+      },
+      "distinct_wordings": 200,
+      "example_wording": "Include keyword ability in the 28-th sentence, as the 35-th word of that sentence.",
+      "shim": false
+    },
+    "words:words_position": {
+      "parameters": {
+        "keyword": {
+          "distinct": 186,
+          "examples": [
+            "abroad",
+            "active",
+            "addition",
+            "advance",
+            "advantage"
+          ]
+        }
+      },
+      "distinct_wordings": 186,
+      "example_wording": "The second word in your response and the second to last word in your response should be the word abroad.",
+      "shim": false
+    },
+    "format:title_case": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Write the entire response in title case (capitalize the first letter of every major word).",
+      "shim": false
+    },
+    "format:output_template": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "Use this exact template for your response: My Answer: [answer] My Conclusion: [conclusion] Future Outlook: [outlook]",
+      "shim": false
+    },
+    "format:no_whitespace": {
+      "parameters": {},
+      "distinct_wordings": 1,
+      "example_wording": "The output should not contain any whitespace.",
+      "shim": false
+    }
+  },
+  "drift": {
+    "rows": 300,
+    "rows_verbatim": 242,
+    "constraints_per_row": {
+      "1": 256,
+      "2": 44
+    },
+    "drift_by_type": {
+      "sentence:keyword": 15,
+      "ratio:sentence_balance": 7,
+      "ratio:sentence_type": 6,
+      "words:alphabet": 6,
+      "words:paragraph_last_first": 6,
+      "sentence:increment": 5,
+      "words:last_first": 5,
+      "repeat:repeat_change": 3,
+      "words:keywords_specific_position": 2,
+      "count:conjunctions": 1,
+      "format:options": 1,
+      "custom:mcq_count_length": 1
+    },
+    "drift_examples": [
+      {
+        "key": "8",
+        "type": "count:conjunctions",
+        "rendered": "Use at least 4 different coordinating conjunctions in the response."
+      },
+      {
+        "key": "10",
+        "type": "words:keywords_specific_position",
+        "rendered": "Include keyword giggle in the 22-th sentence, as the 33-th word of that sentence."
+      },
+      {
+        "key": "11",
+        "type": "words:keywords_specific_position",
+        "rendered": "Include keyword beneath in the 23-th sentence, as the 34-th word of that sentence."
+      },
+      {
+        "key": "60",
+        "type": "repeat:repeat_change",
+        "rendered": "Repeat the request, but change the first word of the repeated request, (do not say anything before repeating the request; the request you need to repeat does no"
+      },
+      {
+        "key": "61",
+        "type": "repeat:repeat_change",
+        "rendered": "Repeat the request, but change the first word of the repeated request, (do not say anything before repeating the request; the request you need to repeat does no"
+      },
+      {
+        "key": "62",
+        "type": "repeat:repeat_change",
+        "rendered": "Repeat the request, but change the first word of the repeated request, (do not say anything before repeating the request; the request you need to repeat does no"
+      },
+      {
+        "key": "71",
+        "type": "sentence:keyword",
+        "rendered": "The response must include keyword \"fleetness\" in the 8-th sentence."
+      },
+      {
+        "key": "72",
+        "type": "sentence:keyword",
+        "rendered": "The response must include keyword \"eat\" in the 6-th sentence."
+      },
+      {
+        "key": "100",
+        "type": "format:options",
+        "rendered": "Answer with one of the following options: yes/no/maybe. Do not give any explanation."
+      },
+      {
+        "key": "149",
+        "type": "sentence:keyword",
+        "rendered": "The response must include keyword \"giraffe\" in the 7-th sentence."
+      },
+      {
+        "key": "150",
+        "type": "sentence:keyword",
+        "rendered": "The response must include keyword \"metricism\" in the 3-th sentence."
+      },
+      {
+        "key": "151",
+        "type": "sentence:keyword",
+        "rendered": "The response must include keyword \"horary\" in the 30-th sentence."
+      },
+      {
+        "key": "152",
+        "type": "sentence:keyword",
+        "rendered": "The response must include keyword \"tinstuff\" in the 6-th sentence."
+      },
+      {
+        "key": "153",
+        "type": "ratio:sentence_balance",
+        "rendered": "Ensure that the ratio of sentence types (declarative, interrogative, exclamatory) is balanced."
+      },
+      {
+        "key": "154",
+        "type": "ratio:sentence_balance",
+        "rendered": "Ensure that the ratio of sentence types (declarative, interrogative, exclamatory) is balanced."
+      },
+      {
+        "key": "155",
+        "type": "ratio:sentence_balance",
+        "rendered": "Ensure that the ratio of sentence types (declarative, interrogative, exclamatory) is balanced."
+      },
+      {
+        "key": "156",
+        "type": "ratio:sentence_balance",
+        "rendered": "Ensure that the ratio of sentence types (declarative, interrogative, exclamatory) is balanced."
+      },
+      {
+        "key": "157",
+        "type": "ratio:sentence_balance",
+        "rendered": "Ensure that the ratio of sentence types (declarative, interrogative, exclamatory) is balanced."
+      },
+      {
+        "key": "158",
+        "type": "ratio:sentence_balance",
+        "rendered": "Ensure that the ratio of sentence types (declarative, interrogative, exclamatory) is balanced."
+      },
+      {
+        "key": "159",
+        "type": "ratio:sentence_balance",
+        "rendered": "Ensure that the ratio of sentence types (declarative, interrogative, exclamatory) is balanced."
+      }
+    ]
+  }
+}

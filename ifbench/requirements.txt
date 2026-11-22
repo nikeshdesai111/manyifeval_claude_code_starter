@@ -1,0 +1,9 @@
+# Extra pins for the IFBench adaptation (on top of the repository's requirements.lock).
+nltk==3.10.4
+emoji==2.16.0
+syllapy==0.8.0
+langdetect==1.0.9
+absl-py==2.5.1
+immutabledict==4.3.1
+PyYAML==6.0.3
+pytest==9.2.0
