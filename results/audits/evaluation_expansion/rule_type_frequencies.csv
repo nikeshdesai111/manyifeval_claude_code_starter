@@ -1,0 +1,16 @@
+type_id,n_test_groups,n_train_groups,test_exact_instances,test_distinct_parameter_settings,test_tasks,expanded_test_prompts_containing,test_groups
+change_case:capital_word_frequency,3,15,3,3,9,2619,g03|g30|g63
+change_case:english_capital,6,20,1,1,18,5238,g02|g09|g35|g48|g52|g68
+change_case:english_lowercase,3,13,1,1,9,2619,g08|g14|g67
+detectable_content:number_placeholders,8,29,4,4,24,6984,g09|g35|g41|g48|g52|g55|g63|g67
+detectable_format:number_bullet_lists,8,28,4,4,24,6984,g02|g03|g08|g09|g14|g41|g48|g55
+detectable_format:title,6,31,1,1,18,5238,g10|g41|g52|g55|g63|g67
+keywords:existence,6,16,6,6,18,5238,g08|g10|g30|g48|g67|g68
+keywords:forbidden_words,9,31,9,9,27,7857,g02|g03|g08|g09|g10|g30|g35|g48|g55
+keywords:frequency,6,20,6,6,18,5238,g02|g03|g09|g41|g52|g55
+keywords:letter_frequency,9,32,9,9,27,7857,g02|g10|g14|g35|g41|g52|g63|g67|g68
+length_constraints:number_paragraphs,4,21,3,3,12,3492,g09|g48|g63|g67
+length_constraints:number_sentences,4,14,4,4,12,3492,g02|g03|g14|g55
+length_constraints:number_words,4,16,4,4,12,3492,g30|g35|g41|g68
+punctuation:no_comma,8,30,1,1,24,6984,g08|g10|g14|g30|g35|g52|g63|g68
+startend:quotation,6,26,1,1,18,5238,g03|g08|g10|g14|g30|g68

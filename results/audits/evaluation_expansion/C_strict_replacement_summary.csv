@@ -1,0 +1,9 @@
+design,k,ordered_pairs_per_group,prompt_pairs_total,target_comparisons_total,potential_from_present_configs,present,pct_of_potential_from_present_configs,full_permutation_universe_pairs,pct_of_full_permutation_universe
+expanded,2,120.0,5400,5400,1800,1800,100.0,1800,100.0
+expanded,3,540.0,24300,48600,8100,8100,100.0,8100,100.0
+expanded,4,336.0,15120,45360,10800,5040,46.67,21600,23.33
+expanded,5,120.0,5400,21600,4500,1800,40.0,27000,6.67
+current_246,2,12.0,540,540,720,180,25.0,1800,10.0
+current_246,3,36.0,1620,3240,2430,540,22.22,8100,6.67
+current_246,4,0.0,0,0,4320,0,0.0,21600,0.0
+current_246,5,120.0,5400,21600,4500,1800,40.0,27000,6.67

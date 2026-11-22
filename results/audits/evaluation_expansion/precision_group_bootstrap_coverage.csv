@@ -1,0 +1,10 @@
+groups,group_effect_distribution,reps,coverage_percentile_bootstrap,coverage_t_interval,bootstrap_width_relative_to_t
+15,normal,2000,0.922,0.946,0.876
+15,t3 (heavy tails),2000,0.898,0.956,0.874
+15,skewed (lognormal),2000,0.834,0.858,0.864
+30,normal,2000,0.94,0.954,0.938
+30,t3 (heavy tails),2000,0.936,0.963,0.937
+30,skewed (lognormal),2000,0.872,0.878,0.929
+45,normal,2000,0.944,0.954,0.956
+45,t3 (heavy tails),2000,0.928,0.952,0.956
+45,skewed (lognormal),2000,0.893,0.892,0.949

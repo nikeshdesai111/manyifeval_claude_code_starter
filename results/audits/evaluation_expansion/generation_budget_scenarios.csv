@@ -1,0 +1,21 @@
+option,description,unique_test_prompts,responses_per_prompt,total_generations_both_llms,already_generated_reusable,new_generations_needed,notes
+current,"frozen 246-config design (already generated, sealed)",11070,20,442800,442800,0,
+A,"expanded 456-config design, 20 responses/prompt",20520,20,820800,442800,378000,"reuse assumes the same backend and sampler (Betty, vLLM 0.25.0, BF16)"
+D,"expanded 456-config design, 40 responses/prompt",20520,40,1641600,442800,1198800,"reuse assumes the same backend and sampler (Betty, vLLM 0.25.0, BF16)"
+D,"expanded 456-config design, 60 responses/prompt",20520,60,2462400,442800,2019600,"reuse assumes the same backend and sampler (Betty, vLLM 0.25.0, BF16)"
+D,"expanded 456-config design, 100 responses/prompt",20520,100,4104000,442800,3661200,"reuse assumes the same backend and sampler (Betty, vLLM 0.25.0, BF16)"
+B,expanded + missing 4-prefixes of k=5 configs,22680,20,907200,442800,464400,
+B,expanded + all 24 orderings of every 4-subset,28620,20,1144800,442800,702000,
+C,expanded design + 5 new rule pools on re-tripled TEST tasks (456 configs each),27360,20,1094400,442800,651600,changes the held-out protocol: needs explicit approval
+C-lite,expanded design + 5 new pools with the 246-config design,24210,20,968400,442800,525600,changes the held-out protocol: needs explicit approval
+C-only,current 246 design + 5 new pools with the 246-config design,14760,20,590400,442800,147600,changes the held-out protocol: needs explicit approval
+C,expanded design + 10 new rule pools on re-tripled TEST tasks (456 configs each),34200,20,1368000,442800,925200,changes the held-out protocol: needs explicit approval
+C-lite,expanded design + 10 new pools with the 246-config design,27900,20,1116000,442800,673200,changes the held-out protocol: needs explicit approval
+C-only,current 246 design + 10 new pools with the 246-config design,18450,20,738000,442800,295200,changes the held-out protocol: needs explicit approval
+C,expanded design + 15 new rule pools on re-tripled TEST tasks (456 configs each),41040,20,1641600,442800,1198800,changes the held-out protocol: needs explicit approval
+C-lite,expanded design + 15 new pools with the 246-config design,31590,20,1263600,442800,820800,changes the held-out protocol: needs explicit approval
+C-only,current 246 design + 15 new pools with the 246-config design,22140,20,885600,442800,442800,changes the held-out protocol: needs explicit approval
+C,expanded design + 30 new rule pools on re-tripled TEST tasks (456 configs each),61560,20,2462400,442800,2019600,changes the held-out protocol: needs explicit approval
+C-lite,expanded design + 30 new pools with the 246-config design,42660,20,1706400,442800,1263600,changes the held-out protocol: needs explicit approval
+C-only,current 246 design + 30 new pools with the 246-config design,33210,20,1328400,442800,885600,changes the held-out protocol: needs explicit approval
+E,expanded + 15 new pools (456 configs each) on re-tripled TEST tasks + missing 4-prefixes in all 30 pools,45360,20,1814400,442800,1371600,changes the held-out protocol: needs explicit approval

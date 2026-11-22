@@ -1,0 +1,5 @@
+k,task_target_position_companion_cells(x3 tasks),valid_cells(both present and absent),configs_with_companion_present_per_cell,configs_with_companion_absent_per_cell,responses_present_side,responses_absent_side,note
+2,2700,2700,1,4,20,80,
+3,4050,4050,8,12,160,240,
+4,5400,5400,18,12,360,240,
+5,6750,6750,16,4,320,80,absent side at k=5 is a single subset (the one omitting the companion)

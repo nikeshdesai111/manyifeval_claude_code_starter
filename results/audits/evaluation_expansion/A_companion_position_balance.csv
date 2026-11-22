@@ -1,0 +1,6 @@
+k,target_position_cells_checked,cells_every_companion_at_every_other_position_equally,cells_unbalanced,note
+1,0,0,0,k<=2: no companion-position balance question
+2,0,0,0,k<=2: no companion-position balance question
+3,2700,2700,0,
+4,3600,3600,0,
+5,2250,2250,0,
