@@ -137,6 +137,8 @@ Example: ABC → ADC. The target A stays at position 1, C stays at position 3, a
 
 ### Type pairs (`rule_type_pair_frequencies.csv`)
 
+The full per-type table and 15 × 15 pair matrix are in *Full rule-type and pair tables* below.
+
 | Test groups containing both | Number of type pairs (of 98 that can co-occur) |
 |---|---:|
 | 0 | 5 |
@@ -148,6 +150,64 @@ Example: ABC → ADC. The target A stays at position 1, C stays at position 3, a
 - Seven pairs can never co-occur, by the ManyIFEval exclusivity rules.
 - Never observed together in TEST: english_lowercase + frequency, english_lowercase + number_words, number_placeholders + quotation, existence + number_sentences, number_paragraphs + quotation.
 - **Prompts are not replications.** A pair held by one group still appears in 534 expanded prompts (21,360 generations), all from the same single pool and three tasks. Report support as groups first, then tasks, then prompts.
+
+### Full rule-type and pair tables
+
+#### Per-type counts (all 15 types)
+
+| Rule type | Short name | TEST groups (of 15) | TRAIN groups (of 57) | Exact TEST instances | TEST tasks | Expanded TEST prompts containing it |
+|---|---|---:|---:|---:|---:|---:|
+| `keywords:forbidden_words` | Forbid | 9 | 31 | 9 | 27 | 7,857 |
+| `keywords:letter_frequency` | Letter | 9 | 32 | 9 | 27 | 7,857 |
+| `detectable_content:number_placeholders` | Placeh | 8 | 29 | 4 | 24 | 6,984 |
+| `detectable_format:number_bullet_lists` | Bullets | 8 | 28 | 4 | 24 | 6,984 |
+| `punctuation:no_comma` | NoComma | 8 | 30 | 1 | 24 | 6,984 |
+| `change_case:english_capital` | Upper | 6 | 20 | 1 | 18 | 5,238 |
+| `detectable_format:title` | Title | 6 | 31 | 1 | 18 | 5,238 |
+| `keywords:existence` | KwExist | 6 | 16 | 6 | 18 | 5,238 |
+| `keywords:frequency` | KwFreq | 6 | 20 | 6 | 18 | 5,238 |
+| `startend:quotation` | Quote | 6 | 26 | 1 | 18 | 5,238 |
+| `length_constraints:number_paragraphs` | Paras | 4 | 21 | 3 | 12 | 3,492 |
+| `length_constraints:number_sentences` | Sents | 4 | 14 | 4 | 12 | 3,492 |
+| `length_constraints:number_words` | Words | 4 | 16 | 4 | 12 | 3,492 |
+| `change_case:capital_word_frequency` | CapFreq | 3 | 15 | 3 | 9 | 2,619 |
+| `change_case:english_lowercase` | Lower | 3 | 13 | 1 | 9 | 2,619 |
+
+#### Pair matrix: number of TEST groups containing both types
+
+Each cell gives the number of the 15 TEST groups whose six-rule pool contains both types. **×** = the pair can never co-occur (ManyIFEval exclusivity rule). **0** = allowed but never observed in TEST. The diagonal shows the type's own group count. Rows and columns are sorted from most to least common type.
+
+| | Forbid | Letter | Placeh | Bullets | NoComma | Upper | Title | KwExist | KwFreq | Quote | Paras | Sents | Words | CapFreq | Lower |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **Forbid** | *9* | 3 | 4 | 6 | 4 | 4 | 2 | 4 | 4 | 4 | 2 | 3 | 2 | 2 | 1 |
+| **Letter** | 3 | *9* | 5 | 3 | 6 | 4 | 5 | 3 | 3 | 3 | 2 | 2 | 3 | 1 | 2 |
+| **Placeh** | 4 | 5 | *8* | 4 | 3 | 4 | 5 | 2 | 4 | **0** | 4 | 1 | 2 | 1 | 1 |
+| **Bullets** | 6 | 3 | 4 | *8* | 2 | 3 | 2 | 2 | 5 | 3 | 2 | 4 | 1 | 1 | 2 |
+| **NoComma** | 4 | 6 | 3 | 2 | *8* | 3 | 3 | 4 | 1 | 5 | 1 | 1 | 3 | 2 | 2 |
+| **Upper** | 4 | 4 | 4 | 3 | 3 | *6* | 1 | 2 | 3 | 1 | 2 | 1 | 2 | × | × |
+| **Title** | 2 | 5 | 5 | 2 | 3 | 1 | *6* | 2 | 3 | 1 | 2 | 1 | 1 | 1 | 1 |
+| **KwExist** | 4 | 3 | 2 | 2 | 4 | 2 | 2 | *6* | × | 4 | 2 | **0** | 2 | 1 | 2 |
+| **KwFreq** | 4 | 3 | 4 | 5 | 1 | 3 | 3 | × | *6* | 1 | 1 | 3 | 1 | 1 | **0** |
+| **Quote** | 4 | 3 | **0** | 3 | 5 | 1 | 1 | 4 | 1 | *6* | **0** | 2 | 2 | 2 | 2 |
+| **Paras** | 2 | 2 | 4 | 2 | 1 | 2 | 2 | 2 | 1 | **0** | *4* | × | × | 1 | 1 |
+| **Sents** | 3 | 2 | 1 | 4 | 1 | 1 | 1 | **0** | 3 | 2 | × | *4* | × | 1 | 1 |
+| **Words** | 2 | 3 | 2 | 1 | 3 | 2 | 1 | 2 | 1 | 2 | × | × | *4* | 1 | **0** |
+| **CapFreq** | 2 | 1 | 1 | 1 | 2 | × | 1 | 1 | 1 | 2 | 1 | 1 | 1 | *3* | × |
+| **Lower** | 1 | 2 | 1 | 2 | 2 | × | 1 | 2 | **0** | 2 | 1 | 1 | **0** | × | *3* |
+
+#### Rarest and most common pairs
+
+| TEST groups | Pairs (TRAIN group count in brackets) |
+|---:|---|
+| 0 (5 pairs) | KwExist + Sents (5); Lower + KwFreq (6); Lower + Words (3); Paras + Quote (12); Placeh + Quote (15) |
+| 1 (28 pairs) | Bullets + Words (9); CapFreq + Bullets (4); CapFreq + KwExist (4); CapFreq + KwFreq (4); CapFreq + Letter (8); CapFreq + Paras (7); CapFreq + Placeh (6); CapFreq + Sents (4); CapFreq + Title (7); CapFreq + Words (1); KwFreq + NoComma (11); KwFreq + Paras (8); KwFreq + Quote (8); KwFreq + Words (6); Lower + Forbid (7); Lower + Paras (5); Lower + Placeh (5); Lower + Sents (4); Lower + Title (9); Paras + NoComma (12); Placeh + Sents (9); Sents + NoComma (8); Title + Quote (7); Title + Sents (7); Title + Words (12); Upper + Quote (7); Upper + Sents (2); Upper + Title (11) |
+| 2 | 28 pairs (full list in the CSV) |
+| 3 | 16 pairs (full list in the CSV) |
+| 4 (14 pairs) | Bullets + Sents (8); Forbid + KwFreq (8); Forbid + NoComma (15); Forbid + Quote (12); KwExist + Forbid (10); KwExist + NoComma (5); KwExist + Quote (7); Placeh + Bullets (12); Placeh + Forbid (14); Placeh + KwFreq (8); Placeh + Paras (6); Upper + Forbid (8); Upper + Letter (9); Upper + Placeh (11) |
+| 5 (5 pairs) | Bullets + KwFreq (9); NoComma + Quote (13); Placeh + Letter (16); Placeh + Title (13); Title + Letter (15) |
+| 6 (2 pairs) | Bullets + Forbid (13); Letter + NoComma (16) |
+
+A pair held by a single group still appears in 534 expanded prompts (21,360 generations), but all of them come from one pool and its three tasks. Full detail, including the group ids for every type and pair, is in [`rule_type_frequencies.csv`](../results/audits/evaluation_expansion/rule_type_frequencies.csv) and [`rule_type_pair_frequencies.csv`](../results/audits/evaluation_expansion/rule_type_pair_frequencies.csv).
 
 ### Is 15 groups enough? [A]
 
