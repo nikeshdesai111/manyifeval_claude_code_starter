@@ -1,5 +1,7 @@
 # Probing-phase storage schema v1.0.0
 
+> **V1 schema (2026-11-14 plan).** Here "B2" means the LoRA-adapted BGE-M3 baseline. The V2 analysis (2026-11-20 amendment) redefines B2 as B1 plus a frozen exact-rule embedding, and keeps its files under `data/probing_features_v2/` and `results/v2/` (see `docs/amendment_v2_2026-11-20.md`, sections 7 and 9).
+
 Everything here is derived from the frozen inputs (`docs/storage_schema.md`) and keyed by the same stable IDs
 (`prompt_id`, `rule_id`, `position`, `group_id`). Code: `src/mife/probing/`. TEST-split files exist only after the
 pre-specification is frozen and unblinding is approved (`results/prespec/FROZEN.json`).

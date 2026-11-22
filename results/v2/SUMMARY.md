@@ -6,10 +6,11 @@ Recipe sha256 `d286c35b2e0c2c73…`, recorded 2026-11-20T16:46:47-0500, before a
 
 ## What changed from V1
 
-- **Predictors:** 7 planned comparisons (3 primary, 4 secondary) plus references, instead of 23 configurations. B2 is now B1 plus a *frozen* exact-rule embedding (no fine-tuning). A1 is the per-layer×head **max** attention over the target-rule span (new training-only extraction). The rule-conditioned attention probe is A1 + exact-rule embedding + structure.
+- **Predictors:** 7 planned comparisons (primary: 1, 2, 3 and 7; secondary: 4, 5 and 6) plus references, instead of 23 configurations. B2 is now B1 plus a *frozen* exact-rule embedding (no fine-tuning). A1 is the per-layer×head **max** attention over the target-rule span (new training-only extraction). The rule-conditioned attention probe is A1 + exact-rule embedding + structure.
 - **Architecture:** every Objective 1 predictor uses 15 per-type ridge-logistic heads with the same structure block. Every Objective 2 predictor uses one shared ridge fractional-logit head on the existing q_hat target. There are no MLP heads.
 - **Fitting:** summed binomial NLL (Objective 1) or fractional logit (Objective 2), with penalty λ/N. There are three penalty slots (fixed structure, tuned prompt representation, tuned rule embedding) on identical grids, a deterministic tie rule, a one-time ×10 boundary expansion, a block-off option for the incremental comparisons, and a sparse-head fallback that also uses group coverage.
 - **Layer search:** widened to 5 rows per generator, selected by H1 + structure, separately per objective.
+- **Naming (B1 / B2):** in V2, B1 = S + P (structure + frozen BGE-M3 prompt embedding) and B2 = S + P + R (B1 + frozen BGE-M3 exact-rule embedding). In V1 (`results/RESULTS.md`, `results/tables/`, `results/cv/`, `docs/probing_schema.md`), **B2 means the LoRA-adapted BGE-M3 baseline**, which V2 retired. The two are different models and are never compared or mixed.
 - **Kept:** the 2026-11-14 freeze, every V1 file, the folds, labels and frozen features. Everything V2 is versioned (`v2-2026-11-20`) under `data/probing_features_v2/` and `results/v2/`.
 
 ## 1. Max-attention extraction (TRAIN prompts only)
@@ -150,31 +151,31 @@ Positive `right_minus_left` = lower training-CV loss for the left-hand predictor
 | llama | 1 | Primary 1 | H1 + structure | B1 | 0.393361 | 0.440064 | 0.0467021 |
 | llama | 1 | Primary 2 | H2 + structure | B2 | 0.371108 | 0.382076 | 0.0109688 |
 | llama | 1 | Primary 3 | Rule-conditioned attention probe | B2 | 0.356952 | 0.382076 | 0.0251247 |
+| llama | 1 | Primary 7 | H2 + structure | Rule-conditioned attention probe | 0.371108 | 0.356952 | -0.0141559 |
 | llama | 1 | Secondary 4 | B1 + H1 | B1 | 0.393873 | 0.440064 | 0.0461905 |
 | llama | 1 | Secondary 5 | B2 + H1 | B2 | 0.372671 | 0.382076 | 0.00940574 |
 | llama | 1 | Secondary 6 | B2 + A1 | B2 | 0.356137 | 0.382076 | 0.0259393 |
-| llama | 1 | Secondary 7 | H2 + structure | Rule-conditioned attention probe | 0.371108 | 0.356952 | -0.0141559 |
 | llama | 2 | Primary 1 | H1 + structure | B1 | 0.016343 | 0.0217161 | 0.00537314 |
 | llama | 2 | Primary 2 | H2 + structure | B2 | 0.0163428 | 0.0181024 | 0.00175963 |
 | llama | 2 | Primary 3 | Rule-conditioned attention probe | B2 | 0.0161523 | 0.0181024 | 0.00195012 |
+| llama | 2 | Primary 7 | H2 + structure | Rule-conditioned attention probe | 0.0163428 | 0.0161523 | -1.905e-04 |
 | llama | 2 | Secondary 4 | B1 + H1 | B1 | 0.0163707 | 0.0217161 | 0.0053454 |
 | llama | 2 | Secondary 5 | B2 + H1 | B2 | 0.0165282 | 0.0181024 | 0.00157417 |
 | llama | 2 | Secondary 6 | B2 + A1 | B2 | 0.0161441 | 0.0181024 | 0.00195829 |
-| llama | 2 | Secondary 7 | H2 + structure | Rule-conditioned attention probe | 0.0163428 | 0.0161523 | -1.905e-04 |
 | qwen | 1 | Primary 1 | H1 + structure | B1 | 0.289243 | 0.318036 | 0.0287932 |
 | qwen | 1 | Primary 2 | H2 + structure | B2 | 0.278812 | 0.283032 | 0.00422056 |
 | qwen | 1 | Primary 3 | Rule-conditioned attention probe | B2 | 0.269491 | 0.283032 | 0.0135417 |
+| qwen | 1 | Primary 7 | H2 + structure | Rule-conditioned attention probe | 0.278812 | 0.269491 | -0.0093211 |
 | qwen | 1 | Secondary 4 | B1 + H1 | B1 | 0.289044 | 0.318036 | 0.0289925 |
 | qwen | 1 | Secondary 5 | B2 + H1 | B2 | 0.27872 | 0.283032 | 0.00431255 |
 | qwen | 1 | Secondary 6 | B2 + A1 | B2 | 0.269658 | 0.283032 | 0.0133743 |
-| qwen | 1 | Secondary 7 | H2 + structure | Rule-conditioned attention probe | 0.278812 | 0.269491 | -0.0093211 |
 | qwen | 2 | Primary 1 | H1 + structure | B1 | 0.0115264 | 0.0146791 | 0.00315264 |
 | qwen | 2 | Primary 2 | H2 + structure | B2 | 0.0114682 | 0.0137244 | 0.00225614 |
 | qwen | 2 | Primary 3 | Rule-conditioned attention probe | B2 | 0.0121365 | 0.0137244 | 0.0015879 |
+| qwen | 2 | Primary 7 | H2 + structure | Rule-conditioned attention probe | 0.0114682 | 0.0121365 | 6.682e-04 |
 | qwen | 2 | Secondary 4 | B1 + H1 | B1 | 0.0114992 | 0.0146791 | 0.0031799 |
 | qwen | 2 | Secondary 5 | B2 + H1 | B2 | 0.0115196 | 0.0137244 | 0.00220478 |
 | qwen | 2 | Secondary 6 | B2 + A1 | B2 | 0.0123576 | 0.0137244 | 0.00136675 |
-| qwen | 2 | Secondary 7 | H2 + structure | Rule-conditioned attention probe | 0.0114682 | 0.0121365 | 6.682e-04 |
 
 ## 7. Objective 2: ordered-slot sensitivity and averaged Objective 1 predictions
 

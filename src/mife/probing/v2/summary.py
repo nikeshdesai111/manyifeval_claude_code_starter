@@ -12,9 +12,10 @@ import pandas as pd
 
 from .versioning import FEAT_V2, RESULTS_V2, read_versioned_json
 
+# Priority split decided by the project owner on 2026-11-22 (amendment section 9): primary = 1, 2, 3, 7.
 COMPARISONS = [("Primary 1", "H1", "B1"), ("Primary 2", "H2", "B2"), ("Primary 3", "RCAP", "B2"),
-               ("Secondary 4", "B1+H1", "B1"), ("Secondary 5", "B2+H1", "B2"), ("Secondary 6", "B2+A1", "B2"),
-               ("Secondary 7", "H2", "RCAP")]
+               ("Primary 7", "H2", "RCAP"),
+               ("Secondary 4", "B1+H1", "B1"), ("Secondary 5", "B2+H1", "B2"), ("Secondary 6", "B2+A1", "B2")]
 LABEL = {"H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "Rule-conditioned attention probe",
          "B1": "B1", "B2": "B2", "B1+H1": "B1 + H1", "B2+H1": "B2 + H1", "B2+A1": "B2 + A1",
          "REF_structure": "Structure-only reference", "XH1": "Other generator's H1 + structure (reference)"}
@@ -47,7 +48,8 @@ def build() -> str:
     rec = read_versioned_json(RESULTS_V2 / "recipe_recorded.json")
     lines += [f"Recipe sha256 `{rec['sha256'][:16]}…`, recorded {rec['recorded_at']}, before any selection reported here.", "",
               "## What changed from V1", "",
-              "- **Predictors:** 7 planned comparisons (3 primary, 4 secondary) plus references, instead of 23 configurations. "
+              "- **Predictors:** 7 planned comparisons (primary: 1, 2, 3 and 7; secondary: 4, 5 and 6) plus references, "
+              "instead of 23 configurations. "
               "B2 is now B1 plus a *frozen* exact-rule embedding (no fine-tuning). A1 is the per-layer×head **max** "
               "attention over the target-rule span (new training-only extraction). The rule-conditioned attention probe "
               "is A1 + exact-rule embedding + structure.",
@@ -59,6 +61,10 @@ def build() -> str:
               "deterministic tie rule, a one-time ×10 boundary expansion, a block-off option for the incremental comparisons, "
               "and a sparse-head fallback that also uses group coverage.",
               "- **Layer search:** widened to 5 rows per generator, selected by H1 + structure, separately per objective.",
+              "- **Naming (B1 / B2):** in V2, B1 = S + P (structure + frozen BGE-M3 prompt embedding) and B2 = S + P + R "
+              "(B1 + frozen BGE-M3 exact-rule embedding). In V1 (`results/RESULTS.md`, `results/tables/`, `results/cv/`, "
+              "`docs/probing_schema.md`), **B2 means the LoRA-adapted BGE-M3 baseline**, which V2 retired. The two are "
+              "different models and are never compared or mixed.",
               "- **Kept:** the 2026-11-14 freeze, every V1 file, the folds, labels and frozen features. Everything V2 is "
               "versioned (`v2-2026-11-20`) under `data/probing_features_v2/` and `results/v2/`.", ""]
 

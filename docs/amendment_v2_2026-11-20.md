@@ -81,3 +81,24 @@ Disclosure: hidden-state methods get a 5-row layer search that the text and atte
 - 2026-11-20 19:00 to 2026-11-21 02:30 (local): the Mac ran short of memory (about 33 GB of swap, mostly from other open applications), and the extraction slowed to between 0.6 and 1.0 s per prompt. The CV processes were deprioritised, then paused (SIGSTOP) until the Qwen extraction finished. The Qwen extraction process was restarted once and resumed from its last committed shard. No extracted value was affected: every committed shard is complete, and the post-run check compares stored values with fresh direct maxima.
 - 2026-11-21 04:00–04:45: a helper shell started a duplicate final Objective 1 run for each generator. The duplicates were killed within minutes. The selection is deterministic (cached CV points, fixed tie rule), so this had no effect.
 - To save time, the Objective 1 attention predictors (RCAP, and B2+A1 against B2's base-round selection) were computed in a separate cache-filling process. Every selection was then made by `cv.run` from the cache.
+
+## 9. Decisions of 2026-11-22 (project owner, after reviewing the revised methodology)
+
+These decisions involve no retraining. Every V2 selection, out-of-fold prediction and refit stands as run.
+
+1. **Priority split changed.** The primary comparisons are now 1, 2, 3 and **7**; the secondary comparisons are 4, 5 and 6. Comparison numbers and definitions are unchanged.
+
+   | # | Priority | Left | Right |
+   |---|---|---|---|
+   | 1 | Primary | S + H (H1 + structure) | S + P (B1) |
+   | 2 | Primary | S + R + H (H2 + structure) | S + R + P (B2) |
+   | 3 | Primary | S + R + A (rule-conditioned attention probe) | S + R + P (B2) |
+   | 7 | Primary | S + R + H (H2 + structure) | S + R + A (rule-conditioned attention probe) |
+   | 4 | Secondary | S + P + H (B1 + H1) | S + P (B1) |
+   | 5 | Secondary | S + R + P + H (B2 + H1) | S + R + P (B2) |
+   | 6 | Secondary | S + R + P + A (B2 + A1) | S + R + P (B2) |
+
+   **Effect on the later test reporting (not run).** The Objective 1 main table has **eight rows**: four primary comparisons × two generators. Previously it had six. Objective 2 follows the same split. Comparisons 4–6 and the reference rows go in the secondary/descriptive table. Intervals remain pointwise and unadjusted, as before.
+2. **Incremental comparisons (4–6) keep the current rule.** The baseline (B1 or B2) is frozen at its head-to-head selection, and only the added block's penalty is tuned (same 6 values plus "off"). No joint re-tuning.
+3. **B1 / B2 naming.** In V2, **B1 = S + P** and **B2 = S + P + R**, both with the frozen, pinned BGE-M3 encoder. In V1 (`results/RESULTS.md`, `results/tables/`, `results/cv/`, `results/predictions/`, `results/models/`, `docs/probing_schema.md`, `src/mife/probing/b2.py`), **"B2" means the LoRA-adapted BGE-M3 baseline**, which V2 retired. They are different models. No V2 artifact uses or loads the adapted encoder. The V1 files are left unchanged as the historical record, and this note, `CLAUDE.md`, `AGENTS.md`, `docs/probing_schema.md` and `results/v2/SUMMARY.md` say which definition applies where.
+4. **No parsed-parameter sensitivity run.** Parsed rule parameters stay out of S in every predictor. The limitation, that no predictor is told a rule's number directly, is noted for the write-up.
