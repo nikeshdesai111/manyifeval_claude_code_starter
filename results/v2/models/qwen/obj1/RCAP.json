@@ -1,0 +1,30 @@
+{
+  "blocks": [
+    [
+      "A1",
+      "P"
+    ],
+    [
+      "ER",
+      "R"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [
+    "detectable_format:title"
+  ],
+  "fitted_as": "RCAP",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "RCAP",
+  "setting": "P=10000,R=1e+07",
+  "version": "v2-2026-11-20",
+  "widths": [
+    1152,
+    1024,
+    20
+  ]
+}

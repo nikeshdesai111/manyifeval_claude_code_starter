@@ -1,0 +1,28 @@
+{
+  "blocks": [
+    [
+      "H12",
+      "P"
+    ],
+    [
+      "ER5",
+      "R"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "H2o",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "H2o",
+  "setting": "P=1000,R=100000",
+  "version": "v2-2026-11-20",
+  "widths": [
+    4096,
+    5120,
+    92
+  ]
+}

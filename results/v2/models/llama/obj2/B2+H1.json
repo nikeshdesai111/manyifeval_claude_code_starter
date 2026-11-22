@@ -1,0 +1,36 @@
+{
+  "blocks": [
+    [
+      "EP",
+      "F_P"
+    ],
+    [
+      "ERmean",
+      "F_R"
+    ],
+    [
+      "S",
+      "S"
+    ],
+    [
+      "H12",
+      "X"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "B2+H1",
+  "fixed": {
+    "F_P": 1000000.0,
+    "F_R": 10000.0
+  },
+  "n_fitting_groups": 57,
+  "predictor": "B2+H1",
+  "setting": "X=1000",
+  "version": "v2-2026-11-20",
+  "widths": [
+    1024,
+    1024,
+    92,
+    4096
+  ]
+}

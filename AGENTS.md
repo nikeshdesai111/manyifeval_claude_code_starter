@@ -9,6 +9,16 @@ The generation phase is complete: bulk generation, verification and pre-generati
 - **Stop points:** B2 projected above 24 h (ask; continue non-B2 work meanwhile); always before unblinding the test set; after the results are written.
 - **Honesty:** every number in `results/RESULTS.md` comes from a saved table in `results/tables/`. Synthetic data is for tests only.
 
+## V2 amendment (2026-11-20): training-only milestone
+
+`docs/amendment_v2_2026-11-20.md` supersedes the 23-configuration plan for Objectives 1 and 2. The V2 code is in `src/mife/probing/v2/`, the recipe in `configs/v2_recipe.yaml` (recorded in `results/v2/recipe_recorded.json` before selection), caches in `data/probing_features_v2/` and results in `results/v2/`. Every V2 artifact carries `version: v2-2026-11-20`, and loaders refuse other versions.
+
+- **Narrow exception to the frozen-feature rule:** a new max-attention extraction (A1max) on **TRAIN prompts only**, using the original frozen models, tokenization, rule token spans and backend (HF eager, BF16, Apple MPS), is authorised (`v2/maxattn.py`). Generations and verifier outcomes are reused. Nothing else may be re-extracted.
+- **Still sealed:** no test-feature extraction, no test-label access, no held-out scoring and no final evaluation freeze until the owner authorises them. The 2026-11-14 freeze (`results/prespec/`), `configs/experiment.yaml` and all V1 results stay unchanged.
+- **Naming:** in V2, B1 = S + P and B2 = S + P + R (both frozen BGE-M3). In V1 files, B2 = the retired LoRA-adapted encoder. Never mix the two (amendment section 9).
+- **Priorities (2026-11-22):** primary comparisons 1, 2, 3 and 7; secondary 4, 5 and 6.
+- **Stop point:** after training-side verification (spec Part 5).
+
 ## Phase 1 (complete): generation milestone
 
 The instructions below governed the generation phase. They remain the record of how the frozen data were produced; where they conflict with the scope above, the scope above applies.

@@ -1,0 +1,23 @@
+{
+  "blocks": [
+    [
+      "H12",
+      "P"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "H1",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "H1",
+  "setting": "P=100000",
+  "version": "v2-2026-11-20",
+  "widths": [
+    4096,
+    20
+  ]
+}
