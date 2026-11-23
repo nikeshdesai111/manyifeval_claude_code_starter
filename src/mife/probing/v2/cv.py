@@ -1,6 +1,6 @@
 """V2 training-only grouped CV, selection, boundary expansion, incremental comparisons and final refits.
 
-Everything is TRAIN-only (data.prompts("train")); folds = results/cv/folds.json (unchanged). The recipe is read
+Everything is TRAIN-only (data.prompts("train")); folds = <active split cv_dir>/folds.json (results/cv_s3 under split S3). The recipe is read
 from configs/v2_recipe.yaml and must have been recorded (results/v2/recipe_recorded.json, same sha256) before any
 selection runs. Each (predictor, setting) out-of-fold vector is cached under results/v2/cv/<model>/obj<o>/points/, so
 the procedure is resumable and later stages reuse earlier fits exactly.
@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from ... import splits
 from ...config import ROOT
 from ...storage import sha256_file, write_json
 from .. import data
@@ -68,7 +69,10 @@ class Data:
         self.model, self.o = model, objective
         self.P = data.prompts("train")
         pid = {x: i for i, x in enumerate(self.P["prompt_id"])}
-        fog = json.loads((data.RESULTS / "cv" / "folds.json").read_text())["fold_of_group"]
+        fold_file = json.loads((splits.cv_dir() / "folds.json").read_text())
+        if fold_file.get("split_version", splits.MANIFEST_VERSION) != splits.version():
+            raise RuntimeError("folds.json was made for another split; run cv.make_folds() for the active split")
+        fog = fold_file["fold_of_group"]
         if objective == 1:
             PR = data.prompt_rules("train")[["prompt_id", "position", "rule_id", "type_id", "group_id"]]
             L = data.labels_prompt_rule(model, "train")[["prompt_id", "position", "rule_id", "v", "n"]]

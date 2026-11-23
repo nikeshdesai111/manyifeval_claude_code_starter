@@ -19,6 +19,10 @@ The generation phase is complete: bulk generation, verification and pre-generati
 - **Priorities (2026-11-22):** primary comparisons 1, 2, 3 and 7; secondary 4, 5 and 6.
 - **Stop point:** after training-side verification (spec Part 5).
 
+## Split amendment S3 (2026-11-23): active split
+
+`docs/amendment_split_s3_2026-11-23.md` (adopted) replaces the 2026-11-14 split for all new work: **22 TEST groups (16,236 prompts) / 50 TRAIN groups (36,900 prompts)**, selected in `configs/active_split.yaml` and applied by `mife.splits` on every manifest read in `mife.probing.data`. The manifest's own `split` column is frozen and still records the old split, so never read it directly. CV uses `results/cv_s3/folds.json` (5 x 10 groups). Where the sections above say "15 TEST groups", "57 TRAIN groups" or `results/cv/folds.json`, read the S3 equivalents for new work. V1 artifacts and V2 caches built before S3 are historical. The test-set discipline is unchanged: S3 TEST groups stay sealed until the owner authorises unblinding.
+
 ## Phase 1 (complete): generation milestone
 
 The instructions below governed the generation phase. They remain the record of how the frozen data were produced; where they conflict with the scope above, the scope above applies.
