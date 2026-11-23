@@ -10,6 +10,17 @@ cd "$(dirname "$0")/../.."
 mkdir -p logs
 M="${1:-llama}"; CHUNKS="${2:-11,10,9,8,7,6,5,4,3,2}"
 echo "$(date '+%F %T') start mac hedge $M chunks $CHUNKS" >> "logs/expansion_s3_mac_$M.log"
-PYTHONPATH=src caffeinate -ims .venv/bin/python -m mife.expansion_s3_mac generate "$M" --chunks "$CHUNKS" \
-  >> "logs/expansion_s3_mac_$M.log" 2>&1
+# Auto-restart after a crash (e.g. a Metal out-of-memory error); finished records are skipped on restart.
+# Generator recycling every RECYCLE records bounds the batched KV-cache growth that caused the first OOM.
+OUT="data/generations/$M/expansion_s3_20261123_mac_mlx"
+for attempt in $(seq 1 "${MAX_RESTARTS:-40}"); do
+  set +e
+  PYTHONPATH=src caffeinate -ims .venv/bin/python -m mife.expansion_s3_mac generate "$M" --chunks "$CHUNKS" \
+    --bsz "${BSZ:-64}" --recycle-every "${RECYCLE:-640}" >> "logs/expansion_s3_mac_$M.log" 2>&1
+  rc=$?
+  set -e
+  [[ $rc == 0 || -e "$OUT/STOP" ]] && break
+  echo "$(date '+%F %T') exit code $rc (attempt $attempt); restarting in 90 s" >> "logs/expansion_s3_mac_$M.log"
+  sleep 90
+done
 echo "$(date '+%F %T') end mac hedge $M" >> "logs/expansion_s3_mac_$M.log"
