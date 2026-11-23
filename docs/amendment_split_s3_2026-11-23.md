@@ -8,7 +8,7 @@ The owner wants a larger evaluation set, about 70/30. Evaluation subanalyses nee
 
 ## 2. The new rule
 
-The related-task units, the balance score and the per-type checks are exactly those of `tasks.split_groups` (§2 of the earlier explanation: units from `RELATED_CLUSTERS`; at least 1 TEST and at least 5 TRAIN groups per type; score = L1 family-share gap + L1 type-share gap against all 72 groups). One check is added:
+The related-task units, the balance score and the per-type checks are exactly those of `tasks.split_groups` (units from `RELATED_CLUSTERS`; at least 1 TEST and at least 5 TRAIN groups per type; score = L1 family-share gap + L1 type-share gap against all 72 groups). One check is added:
 
 - **Pair coverage:** every **compatible** pair of instruction types must co-occur in the six-rule pool of at least `min_pair_test_groups` TEST groups. A pair is compatible when `source.conflicts` allows it: 105 pairs minus the 7 inside the mutually exclusive groups gives 98.
 
