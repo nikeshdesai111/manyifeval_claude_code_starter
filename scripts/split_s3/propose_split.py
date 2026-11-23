@@ -1,6 +1,7 @@
 """Propose the amendment-S3 split from the frozen manifest's pool metadata (no generations, labels or features).
 
     python scripts/split_s3/propose_split.py [--prompts data/manifest/prompts.parquet] [--out results/split_s3]
+    python scripts/split_s3/propose_split.py --config configs/split_s3_no_units.yaml --out results/split_s3_no_units
 
 Writes proposed_split.json and pair_coverage.csv. Does not modify the manifest or its split column.
 """
@@ -36,7 +37,8 @@ def main():
     test, info = V.split_groups_pair_coverage(
         gm, cfg["n_test_groups"], cfg["seed"], min_pair_test_groups=cfg["min_pair_test_groups"],
         min_type_test_groups=cfg["min_type_test_groups"], min_type_train_groups=cfg["min_type_train_groups"],
-        n_restarts=cfg["n_restarts"], max_steps=cfg["max_steps"])
+        n_restarts=cfg["n_restarts"], max_steps=cfg["max_steps"],
+        keep_related_units=cfg.get("keep_related_units", True))
     old_test = sorted(prompts.loc[prompts["split"] == "test", "group_id"].unique())
     per_group = prompts.groupby("group_id").size()
     by_split = {s: {"groups": len(g), "tasks": 3 * len(g), "prompts": int(per_group[list(g)].sum())}
@@ -54,15 +56,17 @@ def main():
                           "old_train_to_test": sorted(test - set(old_test)),
                           "old_min_pair_coverage": min(old_pairs.values()),
                           "old_n_pairs_below_2": sum(v < 2 for v in old_pairs.values())},
-        **{k: v for k, v in info.items() if k not in ("pair_test_groups", "pair_all_groups")},
+        **{k: v for k, v in info.items() if k not in ("pair_test_groups", "pair_all_groups", "pair_train_groups")},
     }
     (out / "proposed_split.json").write_text(json.dumps(summary, indent=2, sort_keys=True, default=str) + "\n")
     rows = [{"type_a": p.split("|")[0], "type_b": p.split("|")[1], "test_groups_s3": c,
-             "test_groups_2026_11_14": old_pairs[p], "all_groups": info["pair_all_groups"][p]}
+             "test_groups_2026_11_14": old_pairs[p], "train_groups_s3": info["pair_train_groups"][p],
+             "all_groups": info["pair_all_groups"][p]}
             for p, c in info["pair_test_groups"].items()]
     pd.DataFrame(rows).sort_values(["test_groups_s3", "type_a", "type_b"]).to_csv(out / "pair_coverage.csv", index=False)
     print(json.dumps({k: summary[k] for k in ("test_groups", "counts", "score", "min_pair_coverage",
-                                                "n_pairs_at_least_3", "n_restarts_admissible")}, indent=1))
+                                                "n_pairs_at_least_3", "n_pairs_absent_from_train",
+                                                "related_units_split", "n_restarts_admissible")}, indent=1))
 
 
 if __name__ == "__main__":

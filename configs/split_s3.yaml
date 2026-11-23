@@ -1,6 +1,7 @@
 # Split amendment S3 (2026-11-23), docs/amendment_split_s3_2026-11-23.md.
 # Proposes a replacement for the 2026-11-14 split (15 test groups). configs/experiment.yaml is not edited.
 amendment: split-s3-2026-11-23
+keep_related_units: true        # RELATED_CLUSTERS groups stay on one side (near-duplicate tasks)
 seed: 20261123
 n_test_groups: 22                 # 22 / 72 = 30.6% of groups and prompts (16,236 test / 36,900 train)
 min_pair_test_groups: 2           # every compatible type pair co-occurs in >= this many TEST pools; 3 is infeasible

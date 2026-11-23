@@ -45,3 +45,18 @@ Random unit fills, as in `tasks.split_groups`, almost never satisfy pair coverag
 - **V2 caches:** these are TRAIN-only (42,066 rows). The 9 groups that move to train have no V2 max-attention features (A1max); extracting them needs authorisation. The 16 groups that move to test must be dropped from the TRAIN caches.
 - **Rare pair:** the `capital_word_frequency` + `number_words` pair appears in TRAIN in 0 pools, because both of its pools are in TEST. Per-type heads are unaffected, since each type keeps at least 10 TRAIN groups.
 - **Pre-specification:** the 2026-11-14 freeze describes 15 test groups and would need a dated revision before any unblinding.
+
+## 7. Variant: related-task units relaxed (for comparison only)
+
+The owner asked on 2026-11-23 what happens when every group is its own unit (`configs/split_s3_no_units.yaml`, `keep_related_units: false`, output in `results/split_s3_no_units/`). All other rules are unchanged.
+
+| | S3 (units kept) | Variant (units relaxed) |
+|---|---|---|
+| Every compatible pair in ≥ 2 test groups | yes | yes |
+| Pairs in ≥ 3 test groups | 66 / 98 (exact ceiling 76) | 65 / 98 (exact ceiling 78) |
+| Balance score | 0.0930 | 0.0918 |
+| Pairs present in TRAIN (≥ 1 group) | 97 / 98 | 97 / 98 |
+| Pairs in only 1 TRAIN group | 2 | 2 |
+| Related units split across train and test | none | 4 (g02/g35, g07/g13, g12/g28/g53/g61/g66, g22/g44) |
+
+The only pair absent from TRAIN in both splits is `capital_word_frequency` + `number_words`. This is unavoidable at a test coverage of ≥ 2, because it occurs in only 2 pools. Relaxing the units gains almost nothing and lets near-duplicate tasks straddle the split, so S3 with units kept remains the recommended split.

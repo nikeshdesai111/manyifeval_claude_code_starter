@@ -72,3 +72,13 @@ def test_real_manifest_reproduces_recorded_proposal_and_old_split():
         n_restarts=cfg["n_restarts"], max_steps=cfg["max_steps"])
     recorded = json.loads((ROOT / "results" / "split_s3" / "proposed_split.json").read_text())
     assert sorted(test) == recorded["test_groups"] and info["min_pair_coverage"] >= 2
+
+
+def test_variant_without_related_units_treats_groups_as_singletons():
+    meta = _synthetic_meta(72, seed=3)
+    meta[0]["task_keys"][0], meta[5]["task_keys"][0] = 1001, 1092  # japan cluster -> g01 + g06
+    m = min(2, min(V.pair_coverage(meta, {g["group_id"] for g in meta}).values()))
+    _, info = V.split_groups_pair_coverage(meta, 24, seed=7, min_pair_test_groups=m, n_restarts=30,
+                                           keep_related_units=False)
+    assert all(len(u) == 1 for u in info["units"]) and len(info["units"]) == 72
+    assert set(info["pair_train_groups"]) == set(info["pair_test_groups"])

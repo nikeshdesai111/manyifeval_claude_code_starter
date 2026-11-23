@@ -2,6 +2,7 @@
   "amendment": "split-s3-2026-11-23",
   "config": {
     "amendment": "split-s3-2026-11-23",
+    "keep_related_units": true,
     "max_steps": 200,
     "min_pair_test_groups": 2,
     "min_type_test_groups": 1,
@@ -10,7 +11,7 @@
     "n_test_groups": 22,
     "seed": 20261123
   },
-  "config_sha256": "abfbaf61bcf26f00c95ddf132a1a61ebe06654df313a913993c80ef96b16c2b9",
+  "config_sha256": "636832491131112a4ee5fffb768730fe1e5cc2d4f93bc4075a6accbb54c789d5",
   "counts": {
     "test": {
       "groups": 22,
@@ -23,17 +24,20 @@
       "tasks": 150
     }
   },
+  "keep_related_units": true,
   "manifest_prompts_sha256": "f63c0aeaeec8872ec22df70f3feccbb4ecf464ee24368a001aace0cc5ccf1b14",
   "min_pair_coverage": 2,
   "min_pair_test_groups": 2,
   "min_type_test_groups": 1,
   "min_type_train_groups": 5,
   "n_compatible_pairs": 98,
+  "n_pairs_absent_from_train": 1,
   "n_pairs_at_least_3": 66,
   "n_restarts": 1000,
   "n_restarts_admissible": 386,
   "n_restarts_filled": 1000,
   "n_test": 22,
+  "related_units_split": [],
   "restart_index": 293,
   "score": 0.09301346801346813,
   "seed": 20261123,

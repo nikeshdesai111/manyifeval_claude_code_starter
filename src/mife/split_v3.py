@@ -53,12 +53,12 @@ def related_units(group_meta: list[dict]) -> list[list[str]]:
 
 
 class _Problem:
-    def __init__(self, group_meta, n_test, min_pair, min_type_test, min_type_train, types=None):
+    def __init__(self, group_meta, n_test, min_pair, min_type_test, min_type_train, types=None, keep_related_units=True):
         self.types = sorted(types or S.TYPES)
         self.pairs = compatible_type_pairs(self.types)
         self.fams = sorted({f for g in group_meta for f in g["families"]})
         self.gids = [g["group_id"] for g in group_meta]
-        self.units = related_units(group_meta)
+        self.units = related_units(group_meta) if keep_related_units else [[g] for g in sorted(self.gids)]
         self.n_test, self.n_groups = n_test, len(group_meta)
         self.min_pair, self.min_type_test, self.min_type_train = min_pair, min_type_test, min_type_train
         ti = {t: i for i, t in enumerate(self.types)}
@@ -140,14 +140,17 @@ class _Problem:
 
 def split_groups_pair_coverage(group_meta: list[dict], n_test: int, seed: int, min_pair_test_groups: int = 2,
                                min_type_test_groups: int = 1, min_type_train_groups: int = 5,
-                               n_restarts: int = 1000, max_steps: int = 200, types=None) -> tuple[set[str], dict]:
+                               n_restarts: int = 1000, max_steps: int = 200, types=None,
+                               keep_related_units: bool = True) -> tuple[set[str], dict]:
     """Seeded multi-start local search for the best-balanced admissible split (see module docstring).
 
     Admissible: every compatible type pair in >= min_pair_test_groups TEST groups, every type in
     >= min_type_test_groups TEST groups and >= min_type_train_groups TRAIN groups, related units kept whole.
     Among admissible splits the lowest balance score wins; ties keep the earliest restart.
+    keep_related_units=False treats every group as its own unit (RELATED_CLUSTERS ignored; variant for comparison).
     """
-    P = _Problem(group_meta, n_test, min_pair_test_groups, min_type_test_groups, min_type_train_groups, types)
+    P = _Problem(group_meta, n_test, min_pair_test_groups, min_type_test_groups, min_type_train_groups, types,
+                 keep_related_units)
     bad = P.infeasible_pairs()
     if bad:
         raise ValueError(f"min_pair_test_groups={min_pair_test_groups} is infeasible: these compatible pairs occur in "
@@ -175,13 +178,17 @@ def split_groups_pair_coverage(group_meta: list[dict], n_test: int, seed: int, m
         "n_restarts_filled": n_filled, "n_restarts_admissible": n_admissible, "seed": seed, "n_test": n_test,
         "min_pair_test_groups": min_pair_test_groups, "min_type_test_groups": min_type_test_groups,
         "min_type_train_groups": min_type_train_groups, "n_compatible_pairs": len(P.pairs),
-        "units": P.units,
+        "keep_related_units": keep_related_units, "units": P.units,
         "pair_test_groups": {f"{a}|{b}": int(c) for (a, b), c in zip(P.pairs, pair)},
         "pair_all_groups": {f"{a}|{b}": int(c) for (a, b), c in zip(P.pairs, P.pair_all)},
         "type_test_groups": {t: int(c) for t, c in zip(P.types, typ)},
         "type_train_groups": {t: int(c) for t, c in zip(P.types, P.type_all - typ)},
         "min_pair_coverage": int(pair.min()),
         "n_pairs_at_least_3": int((pair >= 3).sum()),
+        "pair_train_groups": {f"{a}|{b}": int(c) for (a, b), c in zip(P.pairs, P.pair_all - pair)},
+        "n_pairs_absent_from_train": int(((P.pair_all - pair) == 0).sum()),
+        "related_units_split": [u for u in related_units(group_meta) if len(u) > 1
+                                and 0 < sum(g in test for g in u) < len(u)],
     }
     return set(test), info
 
