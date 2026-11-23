@@ -1,0 +1,409 @@
+{
+  "amendment": "split-s3-2026-11-23",
+  "config": {
+    "amendment": "split-s3-2026-11-23",
+    "max_steps": 200,
+    "min_pair_test_groups": 2,
+    "min_type_test_groups": 1,
+    "min_type_train_groups": 5,
+    "n_restarts": 1000,
+    "n_test_groups": 22,
+    "seed": 20261123
+  },
+  "config_sha256": "abfbaf61bcf26f00c95ddf132a1a61ebe06654df313a913993c80ef96b16c2b9",
+  "counts": {
+    "test": {
+      "groups": 22,
+      "prompts": 16236,
+      "tasks": 66
+    },
+    "train": {
+      "groups": 50,
+      "prompts": 36900,
+      "tasks": 150
+    }
+  },
+  "manifest_prompts_sha256": "f63c0aeaeec8872ec22df70f3feccbb4ecf464ee24368a001aace0cc5ccf1b14",
+  "min_pair_coverage": 2,
+  "min_pair_test_groups": 2,
+  "min_type_test_groups": 1,
+  "min_type_train_groups": 5,
+  "n_compatible_pairs": 98,
+  "n_pairs_at_least_3": 66,
+  "n_restarts": 1000,
+  "n_restarts_admissible": 386,
+  "n_restarts_filled": 1000,
+  "n_test": 22,
+  "restart_index": 293,
+  "score": 0.09301346801346813,
+  "seed": 20261123,
+  "status": "proposed; manifest split column unchanged",
+  "test_groups": [
+    "g03",
+    "g04",
+    "g09",
+    "g11",
+    "g17",
+    "g19",
+    "g21",
+    "g24",
+    "g27",
+    "g30",
+    "g34",
+    "g36",
+    "g37",
+    "g47",
+    "g48",
+    "g54",
+    "g56",
+    "g58",
+    "g62",
+    "g63",
+    "g65",
+    "g68"
+  ],
+  "train_groups": [
+    "g01",
+    "g02",
+    "g05",
+    "g06",
+    "g07",
+    "g08",
+    "g10",
+    "g12",
+    "g13",
+    "g14",
+    "g15",
+    "g16",
+    "g18",
+    "g20",
+    "g22",
+    "g23",
+    "g25",
+    "g26",
+    "g28",
+    "g29",
+    "g31",
+    "g32",
+    "g33",
+    "g35",
+    "g38",
+    "g39",
+    "g40",
+    "g41",
+    "g42",
+    "g43",
+    "g44",
+    "g45",
+    "g46",
+    "g49",
+    "g50",
+    "g51",
+    "g52",
+    "g53",
+    "g55",
+    "g57",
+    "g59",
+    "g60",
+    "g61",
+    "g64",
+    "g66",
+    "g67",
+    "g69",
+    "g70",
+    "g71",
+    "g72"
+  ],
+  "type_test_groups": {
+    "change_case:capital_word_frequency": 6,
+    "change_case:english_capital": 8,
+    "change_case:english_lowercase": 6,
+    "detectable_content:number_placeholders": 11,
+    "detectable_format:number_bullet_lists": 11,
+    "detectable_format:title": 11,
+    "keywords:existence": 7,
+    "keywords:forbidden_words": 11,
+    "keywords:frequency": 8,
+    "keywords:letter_frequency": 11,
+    "length_constraints:number_paragraphs": 8,
+    "length_constraints:number_sentences": 7,
+    "length_constraints:number_words": 7,
+    "punctuation:no_comma": 11,
+    "startend:quotation": 9
+  },
+  "type_train_groups": {
+    "change_case:capital_word_frequency": 12,
+    "change_case:english_capital": 18,
+    "change_case:english_lowercase": 10,
+    "detectable_content:number_placeholders": 26,
+    "detectable_format:number_bullet_lists": 25,
+    "detectable_format:title": 26,
+    "keywords:existence": 15,
+    "keywords:forbidden_words": 29,
+    "keywords:frequency": 18,
+    "keywords:letter_frequency": 30,
+    "length_constraints:number_paragraphs": 17,
+    "length_constraints:number_sentences": 11,
+    "length_constraints:number_words": 13,
+    "punctuation:no_comma": 27,
+    "startend:quotation": 23
+  },
+  "units": [
+    [
+      "g01"
+    ],
+    [
+      "g02",
+      "g35"
+    ],
+    [
+      "g03"
+    ],
+    [
+      "g04"
+    ],
+    [
+      "g05"
+    ],
+    [
+      "g06",
+      "g57"
+    ],
+    [
+      "g07",
+      "g13"
+    ],
+    [
+      "g08"
+    ],
+    [
+      "g09"
+    ],
+    [
+      "g10"
+    ],
+    [
+      "g11"
+    ],
+    [
+      "g12",
+      "g28",
+      "g53",
+      "g61",
+      "g66"
+    ],
+    [
+      "g14"
+    ],
+    [
+      "g15"
+    ],
+    [
+      "g16"
+    ],
+    [
+      "g17"
+    ],
+    [
+      "g18"
+    ],
+    [
+      "g19"
+    ],
+    [
+      "g20"
+    ],
+    [
+      "g21"
+    ],
+    [
+      "g22",
+      "g44"
+    ],
+    [
+      "g23"
+    ],
+    [
+      "g24"
+    ],
+    [
+      "g25"
+    ],
+    [
+      "g26"
+    ],
+    [
+      "g27"
+    ],
+    [
+      "g29",
+      "g40"
+    ],
+    [
+      "g30"
+    ],
+    [
+      "g31"
+    ],
+    [
+      "g32"
+    ],
+    [
+      "g33"
+    ],
+    [
+      "g34"
+    ],
+    [
+      "g36"
+    ],
+    [
+      "g37"
+    ],
+    [
+      "g38"
+    ],
+    [
+      "g39"
+    ],
+    [
+      "g41"
+    ],
+    [
+      "g42"
+    ],
+    [
+      "g43"
+    ],
+    [
+      "g45"
+    ],
+    [
+      "g46"
+    ],
+    [
+      "g47"
+    ],
+    [
+      "g48"
+    ],
+    [
+      "g49"
+    ],
+    [
+      "g50"
+    ],
+    [
+      "g51"
+    ],
+    [
+      "g52"
+    ],
+    [
+      "g54"
+    ],
+    [
+      "g55"
+    ],
+    [
+      "g56"
+    ],
+    [
+      "g58"
+    ],
+    [
+      "g59"
+    ],
+    [
+      "g60"
+    ],
+    [
+      "g62"
+    ],
+    [
+      "g63"
+    ],
+    [
+      "g64"
+    ],
+    [
+      "g65"
+    ],
+    [
+      "g67"
+    ],
+    [
+      "g68"
+    ],
+    [
+      "g69"
+    ],
+    [
+      "g70"
+    ],
+    [
+      "g71"
+    ],
+    [
+      "g72"
+    ]
+  ],
+  "vs_2026_11_14": {
+    "kept_in_test": [
+      "g03",
+      "g09",
+      "g30",
+      "g48",
+      "g63",
+      "g68"
+    ],
+    "old_min_pair_coverage": 0,
+    "old_n_pairs_below_2": 33,
+    "old_test_groups": [
+      "g02",
+      "g03",
+      "g08",
+      "g09",
+      "g10",
+      "g14",
+      "g30",
+      "g35",
+      "g41",
+      "g48",
+      "g52",
+      "g55",
+      "g63",
+      "g67",
+      "g68"
+    ],
+    "old_test_to_train": [
+      "g02",
+      "g08",
+      "g10",
+      "g14",
+      "g35",
+      "g41",
+      "g52",
+      "g55",
+      "g67"
+    ],
+    "old_train_to_test": [
+      "g04",
+      "g11",
+      "g17",
+      "g19",
+      "g21",
+      "g24",
+      "g27",
+      "g34",
+      "g36",
+      "g37",
+      "g47",
+      "g54",
+      "g56",
+      "g58",
+      "g62",
+      "g65"
+    ]
+  }
+}
