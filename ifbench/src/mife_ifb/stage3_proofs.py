@@ -104,6 +104,14 @@ PROOFS: dict[tuple[str, str], tuple[str, str]] = {
     ("format:emoji", "words:alphabet"): ("plain", "Every sentence must end (or the next start) with an emoji; emoji are "
                                          "not punctuation, so a whitespace word holds one, and the alphabet plain check "
                                          "needs every word to be letters only."),
+    # ---- letters-only words ----
+    ("count:conjunctions", "words:consonants"): ("plain", "Of the seven conjunctions only 'and' has two adjacent "
+                                                 "consonants, so every conjunction word is a form of 'and'; the plain "
+                                                 "check folds case and punctuation, so it counts one conjunction, and "
+                                                 "small_n is at least 2 (FACT conjunction_clusters)."),
+    ("count:numbers", "words:alphabet"): ("plain", "count:numbers needs at least one digit run (N >= 1); the alphabet "
+                                          "plain check needs every word to be letters only after removing punctuation, "
+                                          "and digits are not punctuation."),
     # ---- title case and HTML italics ----
     ("format:thesis", "format:title_case"): ("official", "The thesis needs '<i>' or '<em>'; nltk word_tokenize splits "
                                              "'<' and '>' off, leaving a lower-case token 'i' or 'em', which fails "
@@ -175,7 +183,12 @@ def _fact_italic_tag_tokens() -> bool:
     return "i" in toks and "em" in toks
 
 
-FACTS = {"punkt_needs_whitespace": _fact_punkt_needs_whitespace, "template_vowels": _fact_template_vowels,
+def _fact_conjunction_clusters() -> bool:
+    from .lexicon import CONJUNCTIONS, _cluster
+    return [c for c in CONJUNCTIONS if _cluster(c)] == ["and"]
+
+
+FACTS = {"conjunction_clusters": _fact_conjunction_clusters, "punkt_needs_whitespace": _fact_punkt_needs_whitespace, "template_vowels": _fact_template_vowels,
          "italic_tag_tokens": _fact_italic_tag_tokens}
 
 

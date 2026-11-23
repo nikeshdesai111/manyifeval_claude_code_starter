@@ -7,8 +7,8 @@ and `tests/test_ifb_isolation.py` checks that. The plan and Nicky's decisions ar
 | Stage | Status |
 |---|---|
 | 1. Load IFBench, freeze plain-meaning checks | done, reviewed (`docs/stage1_report.md`) |
-| 2. Witness builder | done, awaiting review (`docs/stage2_report.md`, `docs/stage2_builder_limits.md`) |
-| 3. 50-pair timing, 903-pair audit, six-rule pilot | not started |
+| 2. Witness builder | done, reviewed (`docs/stage2_report.md`, `docs/stage2_builder_limits.md`) |
+| 3. 50-pair timing, 861-pair audit, six-rule pilot | done, awaiting review (`docs/stage3_report.md`) |
 | 4. Tasks, families, groups | not started |
 | 5. Pool sampling with D3, split | not started |
 | 6. 100-prompt pilot | not started |
@@ -22,6 +22,9 @@ python -m venv .venv && .venv/bin/pip install -r requirements.txt
 scripts/fetch_source.sh             # pinned IFBench checkout + checksum-verified NLTK data (no NLTK downloader)
 .venv/bin/python -m pytest -q       # unit tests
 .venv/bin/python scripts/stage1_report.py
+.venv/bin/python scripts/stage3_audit.py final --workers 4   # resumable; data/stage3/ is git-ignored
+.venv/bin/python scripts/stage3_six_pilot.py 300 --workers 4
+.venv/bin/python scripts/stage3_summary.py && .venv/bin/python scripts/stage3_report.py
 ```
 
 ## Layout

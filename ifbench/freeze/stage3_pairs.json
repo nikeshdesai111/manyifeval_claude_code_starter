@@ -1,0 +1,9627 @@
+[
+ {
+  "pair": [
+   "count:unique_word_count",
+   "count:word_count_range"
+  ],
+  "success": 29,
+  "draws": 50,
+  "share": 0.58,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "count:word_count_range"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "count:word_count_range"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "ratio:overlap"
+  ],
+  "success": 3,
+  "draws": 50,
+  "share": 0.06,
+  "seconds": 6605.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "count:word_count_range"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "count:word_count_range"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:emoji"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 2.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "count:word_count_range"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:list"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "count:word_count_range"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:keywords_specific_position"
+  ],
+  "success": 42,
+  "draws": 50,
+  "share": 0.84,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:word_count_range",
+   "format:no_whitespace"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "count:unique_word_count"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "count:unique_word_count"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "ratio:overlap"
+  ],
+  "success": 8,
+  "draws": 50,
+  "share": 0.16,
+  "seconds": 3861.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "count:unique_word_count"
+  ],
+  "success": 26,
+  "draws": 50,
+  "share": 0.52,
+  "seconds": 4.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:alphabet"
+  ],
+  "success": 17,
+  "draws": 50,
+  "share": 0.34,
+  "seconds": 6.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "count:unique_word_count"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:emoji"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 1.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "count:unique_word_count"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 1.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:list"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "count:unique_word_count"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:unique_word_count",
+   "format:no_whitespace"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "count:unique_word_count counts distinct whitespace words; a text without whitespace has one, and N is at least 2."
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "ratio:stop_words"
+  ],
+  "success": 33,
+  "draws": 50,
+  "share": 0.66,
+  "seconds": 24.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "ratio:stop_words"
+  ],
+  "success": 47,
+  "draws": 50,
+  "share": 0.94,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:stop_words",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "ratio:stop_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "ratio:sentence_type"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "balance needs #. = #? = #!; type needs #. = 2 * #?. Together #? = 0, but the plain checks need at least one question."
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "ratio:sentence_type"
+  ],
+  "success": 7,
+  "draws": 50,
+  "share": 0.14,
+  "seconds": 575.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "ratio:sentence_type"
+  ],
+  "success": 39,
+  "draws": 50,
+  "share": 0.78,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_type",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "ratio:sentence_type"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "ratio:sentence_type"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Text without whitespace is one sentence for NLTK sent_tokenize (Punkt needs whitespace after the terminal mark; FACT punkt_needs_whitespace). The plain check needs at least one question and two statements."
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "ratio:sentence_balance"
+  ],
+  "success": 5,
+  "draws": 50,
+  "share": 0.1,
+  "seconds": 690.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "ratio:sentence_balance"
+  ],
+  "success": 38,
+  "draws": 50,
+  "share": 0.76,
+  "seconds": 0.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_balance",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "ratio:sentence_balance"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "ratio:sentence_balance"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Text without whitespace is one sentence for NLTK sent_tokenize (Punkt needs whitespace after the terminal mark; FACT punkt_needs_whitespace). The plain check needs at least one '.', '?' and '!' sentence."
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "count:person_names"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "ratio:overlap"
+  ],
+  "success": 40,
+  "draws": 50,
+  "share": 0.8,
+  "seconds": 168.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "count:numbers"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:consonants"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Of the seven conjunctions only 'and' has two adjacent consonants, so every conjunction word is a form of 'and'; the plain check folds case and punctuation, so it counts one conjunction, and small_n is at least 2 (FACT conjunction_clusters)."
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "count:punctuation"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:emoji"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "count:pronouns"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:list"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "count:keywords_multiple"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:conjunctions",
+   "format:no_whitespace"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "count:conjunctions counts distinct whitespace words; a text without whitespace is one word, and small_n is at least 2 (randint(2, 6))."
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "ratio:overlap"
+  ],
+  "success": 32,
+  "draws": 50,
+  "share": 0.64,
+  "seconds": 572.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "count:person_names"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:vowel"
+  ],
+  "success": 10,
+  "draws": 50,
+  "share": 0.2,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:consonants"
+  ],
+  "success": 28,
+  "draws": 50,
+  "share": 0.56,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 4.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "count:punctuation"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:prime_lengths"
+  ],
+  "success": 16,
+  "draws": 50,
+  "share": 0.32,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:emoji"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "ratio:sentence_words"
+  ],
+  "success": 16,
+  "draws": 50,
+  "share": 0.32,
+  "seconds": 70.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "count:pronouns"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:odd_even_syllables"
+  ],
+  "success": 30,
+  "draws": 50,
+  "share": 0.6,
+  "seconds": 233.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:last_first"
+  ],
+  "success": 45,
+  "draws": 50,
+  "share": 0.9,
+  "seconds": 71.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:paragraph_last_first"
+  ],
+  "success": 38,
+  "draws": 50,
+  "share": 0.76,
+  "seconds": 44.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:list"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "count:person_names"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:person_names",
+   "format:no_whitespace"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "ratio:overlap"
+  ],
+  "success": 36,
+  "draws": 50,
+  "share": 0.72,
+  "seconds": 196.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:alphabet"
+  ],
+  "success": 1,
+  "draws": 50,
+  "share": 0.02,
+  "seconds": 154.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:vowel"
+  ],
+  "success": 11,
+  "draws": 50,
+  "share": 0.22,
+  "seconds": 46.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:consonants"
+  ],
+  "success": 5,
+  "draws": 50,
+  "share": 0.1,
+  "seconds": 158.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "sentence:alliteration_increment"
+  ],
+  "success": 11,
+  "draws": 50,
+  "share": 0.22,
+  "seconds": 415.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:palindrome"
+  ],
+  "success": 31,
+  "draws": 50,
+  "share": 0.62,
+  "seconds": 351.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "ratio:overlap"
+  ],
+  "success": 29,
+  "draws": 50,
+  "share": 0.58,
+  "seconds": 565.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "ratio:overlap"
+  ],
+  "success": 32,
+  "draws": 50,
+  "share": 0.64,
+  "seconds": 906.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "ratio:overlap"
+  ],
+  "success": 30,
+  "draws": 50,
+  "share": 0.6,
+  "seconds": 469.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:prime_lengths"
+  ],
+  "success": 3,
+  "draws": 50,
+  "share": 0.06,
+  "seconds": 252.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "ratio:overlap"
+  ],
+  "success": 38,
+  "draws": 50,
+  "share": 0.76,
+  "seconds": 102.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "ratio:overlap"
+  ],
+  "success": 7,
+  "draws": 50,
+  "share": 0.14,
+  "seconds": 193.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "ratio:sentence_words"
+  ],
+  "success": 1,
+  "draws": 50,
+  "share": 0.02,
+  "seconds": 90.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:start_verb"
+  ],
+  "success": 33,
+  "draws": 50,
+  "share": 0.66,
+  "seconds": 489.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:repeats"
+  ],
+  "success": 40,
+  "draws": 50,
+  "share": 0.8,
+  "seconds": 9.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "sentence:keyword"
+  ],
+  "success": 17,
+  "draws": 50,
+  "share": 0.34,
+  "seconds": 2741.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "ratio:overlap"
+  ],
+  "success": 31,
+  "draws": 50,
+  "share": 0.62,
+  "seconds": 464.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:odd_even_syllables"
+  ],
+  "success": 2,
+  "draws": 50,
+  "share": 0.04,
+  "seconds": 797.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:last_first"
+  ],
+  "success": 7,
+  "draws": 50,
+  "share": 0.14,
+  "seconds": 113.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:paragraph_last_first"
+  ],
+  "success": 1,
+  "draws": 50,
+  "share": 0.02,
+  "seconds": 417.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "sentence:increment"
+  ],
+  "success": 12,
+  "draws": 50,
+  "share": 0.24,
+  "seconds": 518.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:no_consecutive"
+  ],
+  "success": 33,
+  "draws": 50,
+  "share": 0.66,
+  "seconds": 245.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "ratio:overlap"
+  ],
+  "success": 41,
+  "draws": 50,
+  "share": 0.82,
+  "seconds": 238.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "ratio:overlap"
+  ],
+  "success": 37,
+  "draws": 50,
+  "share": 0.74,
+  "seconds": 73.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "ratio:overlap"
+  ],
+  "success": 33,
+  "draws": 50,
+  "share": 0.66,
+  "seconds": 691.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "ratio:overlap"
+  ],
+  "success": 37,
+  "draws": 50,
+  "share": 0.74,
+  "seconds": 64.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "ratio:overlap"
+  ],
+  "success": 35,
+  "draws": 50,
+  "share": 0.7,
+  "seconds": 82.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "ratio:overlap"
+  ],
+  "success": 26,
+  "draws": 50,
+  "share": 0.52,
+  "seconds": 769.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "ratio:overlap"
+  ],
+  "success": 32,
+  "draws": 50,
+  "share": 0.64,
+  "seconds": 105.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:keywords_specific_position"
+  ],
+  "status": "unsupported_by_builder",
+  "why": "timed_out",
+  "top_reasons": [
+   [
+    "50 draws did not finish within an hour",
+    0
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "ratio:overlap",
+   "words:words_position"
+  ],
+  "success": 2,
+  "draws": 50,
+  "share": 0.04,
+  "seconds": 209.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "ratio:overlap"
+  ],
+  "success": 1,
+  "draws": 50,
+  "share": 0.02,
+  "seconds": 345.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "ratio:overlap"
+  ],
+  "success": 32,
+  "draws": 50,
+  "share": 0.64,
+  "seconds": 263.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "ratio:overlap"
+  ],
+  "success": 2,
+  "draws": 50,
+  "share": 0.04,
+  "seconds": 1901.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:alphabet"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "count:numbers needs at least one digit run (N >= 1); the alphabet plain check needs every word to be letters only after removing punctuation, and digits are not punctuation."
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "count:punctuation"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:emoji"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 1.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "count:pronouns"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:list"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "count:numbers"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:numbers",
+   "format:no_whitespace"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:vowel"
+  ],
+  "success": 2,
+  "draws": 50,
+  "share": 0.04,
+  "seconds": 271.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:alphabet"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Some sentence after the first needs an alliteration score of at least 1, i.e. two adjacent words with one first letter; alphabet forbids that. The plain check needs two sentences."
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:alphabet"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Every sentence must end (or the next start) with an emoji; emoji are not punctuation, so a whitespace word holds one, and the alphabet plain check needs every word to be letters only."
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:start_verb"
+  ],
+  "success": 45,
+  "draws": 50,
+  "share": 0.9,
+  "seconds": 0.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 23.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:last_first"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Across a sentence boundary the same word is repeated, so two adjacent words share a first letter; alphabet needs the next letter. The plain check needs two sentences."
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:alphabet"
+  ],
+  "success": 38,
+  "draws": 50,
+  "share": 0.76,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:alphabet"
+  ],
+  "success": 19,
+  "draws": 50,
+  "share": 0.38,
+  "seconds": 0.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:alphabet"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:keywords_specific_position"
+  ],
+  "success": 29,
+  "draws": 50,
+  "share": 0.58,
+  "seconds": 80.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:alphabet",
+   "words:words_position"
+  ],
+  "success": 16,
+  "draws": 50,
+  "share": 0.32,
+  "seconds": 66.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:alphabet"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.3,
+  "status": "unsupported_by_builder",
+  "why": "loophole_only",
+  "top_reasons": [
+   [
+    "verify words:alphabet: official verifier fails",
+    1200
+   ]
+  ],
+  "note": "'My' then 'Answer' breaks the letter sequence unless 'My' is glued to a preceding word."
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:alphabet"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:palindrome",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:prime_lengths",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:vowel"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "words:vowel needs exactly one line, so format:newline allows one word, but the plain checks need at least 5 words (vowel) and 2 (newline)."
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:start_verb",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:repeats",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:vowel"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:vowel"
+  ],
+  "success": 15,
+  "draws": 50,
+  "share": 0.3,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:odd_even_syllables",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:paragraph_last_first",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:no_consecutive",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:vowel"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "words:vowel needs one line; the line_indent plain check needs three."
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:vowel"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "words:vowel needs one line; format:list needs two separator lines."
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:vowel"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "words:vowel needs one line; the plain check needs a bullet line and a sub-bullet line."
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:vowel"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "words:vowel needs one line; the verifier needs sentence lines followed by at least two '*' lines."
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:vowel"
+  ],
+  "success": 7,
+  "draws": 50,
+  "share": 0.14,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:vowel"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:vowel",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:vowel"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:vowel"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "The labels, lower-cased, contain a, e, i, o and u; words:vowel allows three vowels (FACT template_vowels)."
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:vowel"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "The plain check needs at least 5 whitespace words."
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:palindrome"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "only 3 palindromes pass the word filters (need 10)",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:consonants"
+  ],
+  "success": 31,
+  "draws": 50,
+  "share": 0.62,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:consonants"
+  ],
+  "success": 10,
+  "draws": 50,
+  "share": 0.2,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:keywords_specific_position"
+  ],
+  "success": 34,
+  "draws": 50,
+  "share": 0.68,
+  "seconds": 34.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:consonants",
+   "words:words_position"
+  ],
+  "success": 39,
+  "draws": 50,
+  "share": 0.78,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:consonants"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "loophole_only",
+  "top_reasons": [
+   [
+    "verify words:consonants: official verifier fails",
+    1200
+   ]
+  ],
+  "note": "'Future' has no consonant cluster unless it is glued to the previous word ('grow.Future')."
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:consonants"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 1.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:no_consecutive"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "As above: alliteration needs two adjacent words with one first letter; no_consecutive forbids it."
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "sentence:alliteration_increment"
+  ],
+  "success": 37,
+  "draws": 50,
+  "share": 0.74,
+  "seconds": 0.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 1.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:alliteration_increment",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.7,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "sentence:alliteration_increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "sentence:alliteration_increment"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Text without whitespace is one sentence for NLTK sent_tokenize (Punkt needs whitespace after the terminal mark; FACT punkt_needs_whitespace). The plain check needs at least two sentences."
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:palindrome",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:palindrome"
+  ],
+  "success": 43,
+  "draws": 50,
+  "share": 0.86,
+  "seconds": 27.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:palindrome",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:palindrome",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:odd_even_syllables",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:palindrome",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:no_consecutive",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:palindrome",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:palindrome"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:palindrome"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "words:palindrome needs 10 whitespace words that are palindromes."
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:emoji"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "count:punctuation"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:list"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "count:punctuation"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:punctuation",
+   "format:no_whitespace"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:start_verb"
+  ],
+  "success": 40,
+  "draws": 50,
+  "share": 0.8,
+  "seconds": 2.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:parentheses",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "format:parentheses"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quotes",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "format:quotes"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:prime_lengths",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:prime_lengths",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:prime_lengths"
+  ],
+  "success": 27,
+  "draws": 50,
+  "share": 0.54,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:odd_even_syllables",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:paragraph_last_first",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:no_consecutive",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:prime_lengths"
+  ],
+  "success": 35,
+  "draws": 50,
+  "share": 0.7,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:prime_lengths"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.3,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:prime_lengths: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:prime_lengths"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "required word 'sort' fails the word filters",
+    24
+   ],
+   [
+    "required word 'dare' fails the word filters",
+    24
+   ],
+   [
+    "required word 'wear' fails the word filters",
+    24
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:prime_lengths"
+  ],
+  "success": 22,
+  "draws": 50,
+  "share": 0.44,
+  "seconds": 67.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:prime_lengths",
+   "words:words_position"
+  ],
+  "success": 25,
+  "draws": 50,
+  "share": 0.5,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:prime_lengths"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:prime_lengths"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "loophole_only",
+  "top_reasons": [
+   [
+    "verify words:prime_lengths: official verifier fails",
+    1200
+   ]
+  ],
+  "note": "'Answer' has 6 letters unless glued to the slot text ('Answer:a')."
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:prime_lengths"
+  ],
+  "success": 3,
+  "draws": 50,
+  "share": 0.06,
+  "seconds": 1.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:paragraph_last_first"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "One word per line makes every paragraph one word; the plain check needs three words per paragraph."
+ },
+ {
+  "pair": [
+   "format:newline",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:newline"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:output_template"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Each label holds two words on one line ('My Answer:'); the newline plain check needs one word per line."
+ },
+ {
+  "pair": [
+   "format:newline",
+   "format:no_whitespace"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "'\\n' is whitespace, and format:newline needs at least two words, one per line (plain), so a line break is needed."
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:emoji"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:last_first"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.3,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:last_first: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:paragraph_last_first"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:paragraph_last_first: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:list"
+  ],
+  "success": 38,
+  "draws": 50,
+  "share": 0.76,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:emoji"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:emoji",
+   "format:no_whitespace"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:start_verb"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "sentence:keyword"
+  ],
+  "success": 9,
+  "draws": 50,
+  "share": 0.18,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "ratio:sentence_words"
+  ],
+  "success": 23,
+  "draws": 50,
+  "share": 0.46,
+  "seconds": 55.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:last_first"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "last_first repeats a word across each sentence boundary; sentence_words needs all words different (both lower-case)."
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:paragraph_last_first"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "Each paragraph starts and ends with the same word; sentence_words needs all words different. A paragraph of one word is ruled out by the plain check."
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 1.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "ratio:sentence_words"
+  ],
+  "success": 16,
+  "draws": 50,
+  "share": 0.32,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "ratio:sentence_words"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "exactly three sentences, but another rule needs more",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "ratio:sentence_words"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "exactly three sentences, but another rule needs more",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "ratio:sentence_words"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 84.0,
+  "status": "unsupported_by_builder",
+  "why": "loophole_only",
+  "top_reasons": [
+   [
+    "exactly three sentences, but another rule needs more",
+    807
+   ],
+   [
+    "could not equalize sentence lengths",
+    314
+   ],
+   [
+    "verify count:keywords_multiple: official verifier fails",
+    56
+   ]
+  ],
+  "note": "Repeated keywords break 'all words different' unless copies are joined by hyphens."
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:keywords_specific_position"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "sentence_words needs exactly three sentences; the keyword sentence n is 20..30."
+ },
+ {
+  "pair": [
+   "ratio:sentence_words",
+   "words:words_position"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "The keyword is the 2nd and 2nd-to-last word; sentence_words needs all words different (plain words_position needs 4 words, so they are two tokens)."
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "ratio:sentence_words"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "ratio:sentence_words"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "'My' occurs twice in the labels; ratio:sentence_words needs all words different after lower-casing."
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "ratio:sentence_words"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "Text without whitespace is one sentence for NLTK sent_tokenize (Punkt needs whitespace after the terminal mark; FACT punkt_needs_whitespace). ratio:sentence_words needs exactly three sentences."
+ },
+ {
+  "pair": [
+   "words:repeats",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:odd_even_syllables",
+   "words:start_verb"
+  ],
+  "success": 47,
+  "draws": 50,
+  "share": 0.94,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:paragraph_last_first",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:no_consecutive",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:start_verb"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "layout puts a non-verb first",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:start_verb"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "layout puts a non-verb first",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:start_verb"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 4.4,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:start_verb: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 1.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:start_verb",
+   "words:words_position"
+  ],
+  "success": 47,
+  "draws": 50,
+  "share": 0.94,
+  "seconds": 1.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:start_verb"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:start_verb"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "layout puts a non-verb first",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:start_verb"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:odd_even_syllables",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:repeats"
+  ],
+  "success": 42,
+  "draws": 50,
+  "share": 0.84,
+  "seconds": 18.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:paragraph_last_first",
+   "words:repeats"
+  ],
+  "success": 38,
+  "draws": 50,
+  "share": 0.76,
+  "seconds": 24.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:no_consecutive",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:repeats"
+  ],
+  "success": 43,
+  "draws": 50,
+  "share": 0.86,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:repeats"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "loophole_only",
+  "top_reasons": [
+   [
+    "'shirt' is required 5 times but words may repeat at most 3 times",
+    24
+   ],
+   [
+    "'aside' is required 5 times but words may repeat at most 4 times",
+    24
+   ],
+   [
+    "'air' is required 5 times but words may repeat at most 4 times",
+    24
+   ]
+  ],
+  "note": "The 7-times keyword exceeds the repeat cap (at most 5) unless copies are joined by hyphens ('shirt-shirt' is two keyword matches but one word for words:repeats)."
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:repeats",
+   "words:words_position"
+  ],
+  "success": 36,
+  "draws": 50,
+  "share": 0.72,
+  "seconds": 25.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:repeats"
+  ],
+  "success": 41,
+  "draws": 50,
+  "share": 0.82,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:repeats"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "sentence:keyword"
+  ],
+  "success": 33,
+  "draws": 50,
+  "share": 0.66,
+  "seconds": 1.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:keyword",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "sentence:keyword"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "sentence:keyword"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Text without whitespace is one sentence for NLTK sent_tokenize (Punkt needs whitespace after the terminal mark; FACT punkt_needs_whitespace). So N >= 2 fails the verifier; for N = 1 the plain check needs sentence 1 to have two whitespace words."
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:odd_even_syllables"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 48.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 4.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 5.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:list"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "count:pronouns"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:pronouns",
+   "format:no_whitespace"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:odd_even_syllables"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "The repeated boundary word gives two adjacent words with the same syllable count, so the parities do not alternate."
+ },
+ {
+  "pair": [
+   "words:odd_even_syllables",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 20.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:no_consecutive",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:odd_even_syllables"
+  ],
+  "success": 29,
+  "draws": 50,
+  "share": 0.58,
+  "seconds": 0.9,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:odd_even_syllables"
+  ],
+  "success": 47,
+  "draws": 50,
+  "share": 0.94,
+  "seconds": 37.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 7.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:odd_even_syllables",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 5.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:odd_even_syllables"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.1,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:odd_even_syllables: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:odd_even_syllables"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:no_consecutive"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "The repeated boundary word gives two adjacent words with one first letter. The plain check needs two sentences."
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:last_first"
+  ],
+  "success": 25,
+  "draws": 50,
+  "share": 0.5,
+  "seconds": 0.8,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:last_first"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:last_first: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 13.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:last_first",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:last_first"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.3,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:last_first: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:last_first"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Text without whitespace is one sentence for NLTK sent_tokenize (Punkt needs whitespace after the terminal mark; FACT punkt_needs_whitespace). The plain check needs at least two sentences."
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:no_consecutive",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:paragraph_last_first"
+  ],
+  "success": 40,
+  "draws": 50,
+  "share": 0.8,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:paragraph_last_first"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:paragraph_last_first: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:paragraph_last_first"
+  ],
+  "success": 1,
+  "draws": 50,
+  "share": 0.02,
+  "seconds": 43.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:paragraph_last_first",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:paragraph_last_first"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:paragraph_last_first"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "verify words:paragraph_last_first: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:paragraph_last_first"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "The plain check needs at least three whitespace words per paragraph."
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "sentence:increment"
+  ],
+  "success": 37,
+  "draws": 50,
+  "share": 0.74,
+  "seconds": 0.6,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 1.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "sentence:increment",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "sentence:increment"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "sentence:increment"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "Text without whitespace is one sentence for NLTK sent_tokenize (Punkt needs whitespace after the terminal mark; FACT punkt_needs_whitespace). The plain check needs at least two sentences."
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:no_consecutive",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:no_consecutive"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:list"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:line_indent"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:line_indent",
+   "format:no_whitespace"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "The plain check needs at least three non-empty lines; line breaks are whitespace."
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "format:sub-bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:quote_unquote"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:quote_unquote",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "format:quote_unquote"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:thesis"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "hand_witness",
+  "top_reasons": [
+   [
+    "verify format:list: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:sub-bullets"
+  ],
+  "success": 13,
+  "draws": 50,
+  "share": 0.26,
+  "seconds": 1.0,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:no_bullets_bullets"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "hand_witness",
+  "top_reasons": [
+   [
+    "verify format:list: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:list"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:keywords_specific_position"
+  ],
+  "success": 20,
+  "draws": 50,
+  "share": 0.4,
+  "seconds": 4.2,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:output_template"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "hand_witness",
+  "top_reasons": [
+   [
+    "verify format:list: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:list",
+   "format:no_whitespace"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "format:list needs two lines starting with the separator, so a line break."
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "format:thesis"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "hand_witness",
+  "top_reasons": [
+   [
+    "verify format:sub-bullets: no '*' bullet",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "format:thesis"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.4,
+  "status": "unsupported_by_builder",
+  "why": "hand_witness",
+  "top_reasons": [
+   [
+    "verify format:no_bullets_bullets: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:thesis"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:thesis",
+   "format:title_case"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "The thesis needs '<i>' or '<em>'; nltk word_tokenize splits '<' and '>' off, leaving a lower-case token 'i' or 'em', which fails title case (FACT italic_tag_tokens)."
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "format:thesis"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "hand_witness",
+  "top_reasons": [
+   [
+    "verify format:thesis: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "format:thesis"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "The plain check needs an italic thesis of at least three whitespace words."
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "format:sub-bullets"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "After the first '*' line every line must start with '*' (no_bullets_bullets verifier); the sub-bullets plain check needs a '-' line after each bullet."
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:sub-bullets"
+  ],
+  "success": 49,
+  "draws": 50,
+  "share": 0.98,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:sub-bullets",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "format:sub-bullets"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.3,
+  "status": "unsupported_by_builder",
+  "why": "hand_witness",
+  "top_reasons": [
+   [
+    "verify format:sub-bullets: no '*' bullet",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "format:sub-bullets"
+  ],
+  "status": "proven_conflict",
+  "basis": "plain",
+  "argument": "The plain check needs a '*' bullet line followed by a '-' sub-bullet line, so a line break."
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:no_bullets_bullets"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "format:output_template"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 1.2,
+  "status": "unsupported_by_builder",
+  "why": "hand_witness",
+  "top_reasons": [
+   [
+    "verify format:no_bullets_bullets: official verifier fails",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_bullets_bullets",
+   "format:no_whitespace"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "The verifier splits on '\\n'; one line is either all sentences (no bullets) or one bullet with no sentences before it. Both fail."
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:output_template"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "count:keywords_multiple",
+   "format:no_whitespace"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "words:keywords_specific_position",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.5,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.4,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:keywords_specific_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.3,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:keywords_specific_position"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "Text without whitespace is one sentence for NLTK sent_tokenize (Punkt needs whitespace after the terminal mark; FACT punkt_needs_whitespace). The keyword sentence n is drawn from 20..30."
+ },
+ {
+  "pair": [
+   "format:title_case",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "words:words_position"
+  ],
+  "success": 0,
+  "draws": 50,
+  "share": 0.0,
+  "seconds": 0.0,
+  "status": "unsupported_by_builder",
+  "why": "no_witness_no_proof",
+  "top_reasons": [
+   [
+    "layout words occupy the second word",
+    1200
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "words:words_position"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:output_template",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "format:title_case"
+  ],
+  "success": 50,
+  "draws": 50,
+  "share": 1.0,
+  "seconds": 0.1,
+  "status": "compatible"
+ },
+ {
+  "pair": [
+   "format:no_whitespace",
+   "format:output_template"
+  ],
+  "status": "proven_conflict",
+  "basis": "official",
+  "argument": "The template labels 'My Answer:', 'My Conclusion:', 'Future Outlook:' contain spaces."
+ }
+]

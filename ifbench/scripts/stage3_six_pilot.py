@@ -24,8 +24,14 @@ SEED = 20261125
 
 
 def blocked_pairs():
-    rows = [json.loads(l) for l in (IFB / "data" / "stage3" / "full.jsonl").open()]
-    return {frozenset(r["pair"]) for r in rows if not r["compatible"]}
+    """Proven conflicts plus every pair with no witness in the final pairwise run."""
+    from mife_ifb import stage3_proofs
+    rows = [json.loads(l) for l in (IFB / "data" / "stage3" / "final.jsonl").open()]
+    from stage3_summary import TIMED_OUT
+    covered = {tuple(r["pair"]) for r in rows} | set(stage3_proofs.proven()) | TIMED_OUT
+    assert covered == set(A.all_pairs()), "final run is incomplete"
+    return ({frozenset(r["pair"]) for r in rows if not r["compatible"]} | {frozenset(p) for p in stage3_proofs.proven()}
+            | {frozenset(p) for p in TIMED_OUT})
 
 
 def sample_pool(rng, types, blocked):
@@ -46,7 +52,11 @@ def run_pool(args):
     for kw in rules.values():
         kw.pop("reference_text", None)
     t0 = time.time()
-    r = witness.build_witness(rules, task_text=task, seed=i, attempts=24)
+    try:
+        r = witness.build_witness(rules, task_text=task, seed=i, attempts=24)
+    except Exception as e:  # recorded, not hidden
+        r = witness.Result(ok=False)
+        r.reasons[f"BUILDER ERROR {type(e).__name__}: {e}"] += 1
     return {"i": i, "pool": pool, "params": rules, "ok": r.ok, "attempt": r.attempt, "sec": round(time.time() - t0, 2),
             "reasons": r.reasons.most_common(3), "text": r.text, "task": task,
             "words": len(r.text.split()) if r.text else None, "chars": len(r.text) if r.text else None}
