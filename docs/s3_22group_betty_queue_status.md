@@ -59,3 +59,10 @@ sacct -u desai7 -S 2026-11-23 -X --format=JobID,JobName%22,State,Elapsed,ExitCod
 | Llama expansion array, chunks 0–11 | 11110486 | 2026-11-23 06:39 | PENDING |
 | Qwen TRAIN-only preflight (node-local weights) | 11148891 | 2026-11-23 14:20 | PENDING (Priority) |
 | Qwen expansion array, chunks 0–11 (node-local weights) | 11148892 | 2026-11-23 14:20 | PENDING |
+
+## Llama: complete (2026-11-23)
+
+- Array 11110486: all 12 tasks COMPLETED between 12:41 and 17:39 EST (7–10 min each, about 35,000 output tok/s), 0 failures. Preflight 11110485 COMPLETED (400 TRAIN records, PREFLIGHT_OK).
+- `check-complete llama` on Betty and on the Mac: 277,200 / 277,200 worklist records present exactly once with their recorded seeds; 0 missing, 0 duplicates, 0 invalid provenance, 0 empty responses, 0 records outside the worklist.
+- Fetched to the Mac (`expansion_s3_stage.sh fetch llama`): 48 files, MD5-identical to Betty (312 MB).
+- Qwen preflight 11148891 COMPLETED (node-local weights, 5/5 shard checksums OK, 400 TRAIN records). Qwen array 11148892 pending.
