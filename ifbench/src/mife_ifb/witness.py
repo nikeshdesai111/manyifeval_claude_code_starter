@@ -85,6 +85,9 @@ class Plan:
     stop_fill: bool = True
     equal_chars: bool = False
     minimal: bool = False
+    emoji_attach: bool = False
+    tight: bool = False
+    interro: bool = False
 
 
 @dataclass
@@ -99,11 +102,12 @@ class Result:
 # Planning
 # ---------------------------------------------------------------------------------------------
 
-def _static_ok(plan: Plan, w: str) -> bool:
+def _static_ok(plan: Plan, w: str, last: bool = False) -> bool:
     f = lx.feat(w)
     if plan.vowels is not None and not f.vowels <= plan.vowels:
         return False
-    if plan.prime and (f.length not in lx.PRIMES or not w.isalpha()):
+    extra = 1 if (last and plan.emoji_attach) else 0   # an emoji attached to a sentence's last word adds one character
+    if plan.prime and (f.length + extra not in lx.PRIMES or not any(c.isalpha() for c in w)):
         return False
     if plan.cluster and not f.cluster:
         return False
@@ -143,6 +147,13 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
     plan.quotes = "format:quotes" in T
     plan.qu = "format:quote_unquote" in T
     plan.equal_chars = "ratio:sentence_words" in T
+    shape = bool({"words:alphabet", "words:prime_lengths", "words:consonants", "words:odd_even_syllables",
+                  "words:no_consecutive"} & set(T))
+    # with word-shape rules, emoji and list/bullet markers are attached to a word instead of standing alone,
+    # because the shape verifiers read every whitespace-separated token as a word
+    plan.emoji_attach = plan.emoji and shape
+    plan.tight = shape or plan.newline
+    plan.interro = plan.punct and plan.equal_chars
     plan.max_rep = T["words:repeats"]["small_n"] if "words:repeats" in T else None
     stop_cap = T["ratio:stop_words"]["percentage"] if "ratio:stop_words" in T else None
     plan.stop_fill = stop_cap is None
@@ -187,9 +198,20 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
     if "words:palindrome" in T:
         required += pick(lx.PALINDROMES, 10, "palindromes")
     if "count:numbers" in T:
+        if "words:alphabet" in T:
+            raise Infeasible("a number cannot start with a letter (alphabet rule)")
         if _need_letters(T):
-            raise Infeasible("numbers are not words for a word-shape rule")
-        nums = [str(x) for x in rng.sample(range(2, 99), T["count:numbers"]["N"])]
+            # numbers written as ordinals ("3rd", "21st"): a digit run plus letters, so they are words
+            def ordinal(x):
+                suf = "th" if 10 <= x % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(x % 10, "th")
+                return f"{x}{suf}"
+            pool = [ordinal(x) for x in range(2, 99)]
+            pool = [w for w in pool if _static_ok_pre(T, w)]
+            if len(pool) < T["count:numbers"]["N"]:
+                raise Infeasible("too few ordinal numbers pass the word filters")
+            nums = rng.sample(pool, T["count:numbers"]["N"])
+        else:
+            nums = [str(x) for x in rng.sample(range(2, 99), T["count:numbers"]["N"])]
         required += nums
     kw_sentence = None
     if "sentence:keyword" in T:
@@ -262,6 +284,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         base_lo = max(base_lo, 4)
     if plan.punct:
         base_lo = max(base_lo, 4)
+    base_hi = max(base_hi, base_lo)
 
     def lengths_for(n, l0):
         if inc:
@@ -282,8 +305,14 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         mins = [max(m, 3) for m in mins]
     if "words:words_position" in T:
         mins[-1] = max(mins[-1], 3)
+        if "words:keywords_specific_position" in T:
+            k = T["words:keywords_specific_position"]
+            if k["n"] - 1 == n - 1:  # keep the keyword pin clear of the second-to-last word
+                mins[-1] = max(mins[-1], k["m"] + 2)
     if plan.parens or plan.quotes:
         mins[0] = max(mins[0], 7)
+    if plan.punct:
+        mins[0] = max(mins[0], 6)
 
     def fix_mins(lengths):
         if inc:
@@ -299,7 +328,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
     stop_req += 2 if layout == "output_template" else 0
     need_total = len(required) + n
     if "count:unique_word_count" in T:
-        need_total = max(need_total, T["count:unique_word_count"]["N"] + 3)
+        need_total = max(need_total, T["count:unique_word_count"]["N"] + 3 + len(required) - len(set(required)))
     if stop_cap is not None and stop_req:
         need_total = max(need_total, math.ceil(stop_req * 100 / max(stop_cap, 0.5)) + 2)
     if plan.alpha and required:
@@ -347,14 +376,11 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
                 plan.allit = [0] + [i + 1 for i in range(1, n)]
         else:
             if not fixed_n:
+                step = mult * (2 if layout == "sub-bullets" and mult % 2 else 1) if layout == "sub-bullets" else mult
+                if layout == "sub-bullets" and step % 2:
+                    step *= 2
                 while target / n > 18:
-                    n += mult
-                    lengths.append(rng.randint(base_lo, base_hi))
-                    mins.append(2)
-                    if plan.allit is not None:
-                        plan.allit.append(len(plan.allit) + 1)
-                        mins[-1] = plan.allit[-1] + 1
-                    if layout == "sub-bullets" and n % 2:
+                    for _ in range(step):
                         n += 1
                         lengths.append(rng.randint(base_lo, base_hi))
                         mins.append(2)
@@ -369,6 +395,9 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
                     lengths[i] -= 1
                 elif all(a <= b for a, b in zip(lengths, mins)):
                     raise Infeasible("minimum sentence lengths exceed the word-count range")
+    if plan.alpha and plan.para_lf:
+        # first word == last word of a paragraph while letters advance by one per word: 26k + 1 words
+        lengths = [27] * n
     plan.n, plan.lengths = n, lengths
 
     # ---- sentence ends ----
@@ -386,7 +415,10 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
             terms += t
     else:
         terms = ["."] * n
-    if plan.punct:
+    if plan.interro:
+        terms = [".", "?", "!"]
+        rng.shuffle(terms)
+    elif plan.punct:
         if "?" not in terms:
             terms[1] = "?" if "ratio:sentence_type" not in T else terms[1]
         if "?" not in terms:
@@ -412,8 +444,6 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
                 a, b = (cand[0], cand[1]) if cand[1] != n - 1 else (cand[1], cand[0])
                 terms[a] = "!"
                 terms[b] = "?!"  # never text-final: nltk splits a final '?!' into '?' and '!'
-    if layout == "no_bullets_bullets":
-        terms[0] = terms[1] = "." if terms[0] in ".!?" else terms[0]
     plan.terms = terms
     n = plan.n
 
@@ -424,7 +454,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         plan.lines = [[0], [1], list(range(2, n))]
     elif layout == "thesis":
         plan.lines = [[0] + list(range(1, n))] if not (plan.indent or plan.para_lf) else [[0, 1]] + [[i] for i in range(2, n)]
-    elif layout in ("list", "sub-bullets") or plan.indent or plan.para_lf:
+    elif layout in ("list", "sub-bullets") or plan.indent or (plan.para_lf and "words:vowel" not in T):
         plan.lines = [[i] for i in range(n)]
     else:
         plan.lines = [list(range(n))]
@@ -444,8 +474,12 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         lead = _lead_words(plan, 0)
         if lead > 1:
             raise Infeasible("layout words occupy the second word")
+        for key in ((0, 1 - lead), (n - 1, plan.lengths[n - 1] - 2)):
+            if key in pins and pins[key] != kwd:
+                raise Infeasible("two position rules pin different words to one slot")
         pins[(0, 1 - lead)] = kwd
-        pins[(n - 1, -2)] = kwd
+        if (n - 1, plan.lengths[n - 1] - 2) not in pins:
+            pins[(n - 1, -2)] = kwd
     if "words:start_verb" in T:
         if layout in ("output_template", "thesis") or plan.sep:
             raise Infeasible("layout puts a non-verb first")
@@ -531,6 +565,12 @@ class _Search:
         if not vocab:
             raise Infeasible("the word filters leave no filler words")
         self.vocab = vocab
+        self.vocab_last = vocab
+        if plan.emoji_attach and plan.prime:
+            self.vocab_last = [w for w in lx.vocabulary() if w not in plan.forbid and _static_ok(plan, w, last=True)]
+        self.by_first_last = {}
+        for w in self.vocab_last:
+            self.by_first_last.setdefault(w[0], []).append(w)
         self.by_first = {}
         for w in vocab:
             self.by_first.setdefault(w[0], []).append(w)
@@ -571,7 +611,7 @@ class _Search:
 
     def rel_ok(self, s, i, w, prev):
         p = self.p
-        if not _static_ok(p, w):
+        if not _static_ok(p, w, last=(i == p.lengths[s] - 1)):
             return False
         if prev is None:
             return True
@@ -602,13 +642,15 @@ class _Search:
     def filler(self, s, i):
         p = self.p
         prev = self.prev(s, i)
-        pool = self.vocab
+        last = i == p.lengths[s] - 1
+        pool = self.vocab_last if last else self.vocab
+        byf = self.by_first_last if last else self.by_first
         if prev is not None:
             pf = lx.feat(prev).first
             if p.alpha and pf.isalpha():
-                pool = self.by_first.get(ALPHA[(ALPHA.index(pf) + 1) % 26], [])
+                pool = byf.get(ALPHA[(ALPHA.index(pf) + 1) % 26], [])
             elif p.allit is not None and i > 0 and i < p.allit[s]:
-                pool = self.by_first.get(pf, [])
+                pool = byf.get(pf, [])
         k = min(len(pool), 30)
         cand = self.rng.sample(pool, k) if k else []
         cand.sort(key=lambda w: self.counts[w] > 0)
@@ -709,16 +751,24 @@ def _case(plan: Plan, words: list[str], first_in_sentence: bool = True) -> list[
 
 
 def render(plan: Plan, stream: list[list[str]], rng: random.Random) -> str:
-    sents = []
+    return finalize(plan, compose(plan, stream, rng))
+
+
+def compose(plan: Plan, stream: list[list[str]], rng: random.Random) -> list[str]:
+    """Lines of text before the whole-text layouts (one word per line, stairs, no whitespace)."""
+    sents, bodies = [], []
     emo = lx.EMOJI[:]
     rng.shuffle(emo)
     wrap_s = 0
     for s, words in enumerate(stream):
         toks = _case(plan, words)
         if plan.punct and s == 0 and len(toks) >= 4:
-            toks[0] += ","
-            toks[1] += ";"
-            toks[2] += ":"
+            k = 1 if len(toks) >= 5 else 0   # keep the first word bare (first-word rules read it)
+            toks[k] += ","
+            toks[k + 1] += ";"
+            toks[k + 2] += ":"
+            if plan.interro and len(toks) >= k + 5:
+                toks[k + 3] += "\u203d"      # the interrobang character, inside the sentence
         if plan.parens and s == wrap_s and len(toks) >= 7:
             toks[1] = "(" + toks[1]
             toks[2] = "[" + toks[2]
@@ -736,7 +786,8 @@ def render(plan: Plan, stream: list[list[str]], rng: random.Random) -> str:
             toks[2] = toks[2] + '"'
         body = " ".join(toks)
         if plan.emoji:
-            body += " " + emo[s % len(emo)]
+            body += ("" if plan.emoji_attach else " ") + emo[s % len(emo)]
+        bodies.append(body)
         sents.append(body + plan.terms[s])
     lines = []
     for li, grp in enumerate(plan.lines):
@@ -744,17 +795,27 @@ def render(plan: Plan, stream: list[list[str]], rng: random.Random) -> str:
         if plan.layout == "output_template":
             text = TEMPLATE[li] + " " + text
         elif plan.layout == "thesis" and li == 0:
-            first = sents[grp[0]]
-            text = "<i>" + first + "</i>" + ("" if len(grp) == 1 else " " + " ".join(sents[i] for i in grp[1:]))
+            # terminal punctuation after the closing tag, so the sentence still ends in . ? or !
+            text = "<i>" + bodies[grp[0]] + "</i>" + plan.terms[grp[0]] + ("" if len(grp) == 1 else " " + " ".join(sents[i] for i in grp[1:]))
         elif plan.layout == "list":
-            text = plan.sep + " " + text
+            text = plan.sep + ("" if plan.tight else " ") + text
         elif plan.layout == "sub-bullets":
-            text = ("* " if li % 2 == 0 else "- ") + text
+            text = ("*" if li % 2 == 0 else "-") + ("" if plan.tight else " ") + text
         elif plan.layout == "no_bullets_bullets" and li > 0:
-            text = "* " + text
+            text = "*" + ("" if plan.tight else " ") + text
         lines.append(text)
+    return lines
+
+
+def finalize(plan: Plan, lines: list[str]) -> str:
     if plan.newline:
-        toks = [t for ln in lines for t in ln.split()]
+        toks = []
+        for li, ln in enumerate(lines):
+            for j, t in enumerate(ln.split()):
+                # after the first bullet every line must be a bullet line, so each word carries the marker
+                if plan.layout == "no_bullets_bullets" and li > 0 and j > 0:
+                    t = "*" + t
+                toks.append(t)
         lines = toks
     if plan.indent:
         lines = [" " * (2 * k) + ln for k, ln in enumerate(lines)]
@@ -826,20 +887,34 @@ def _overlap_value(text: str, ref: str) -> float:
     return 100.0 * len(g & r) / len(g) if g else 0.0
 
 
-def _fit_overlap(text: str, ref: str, pct: int, rng: random.Random, alone_ok: bool = False) -> str | None:
-    """Append (or prepend) a span of the task text so the trigram overlap is within pct +/- 2."""
-    if abs(_overlap_value(text, ref) - pct) <= 2:
-        return text
+def _fit_overlap(plan: Plan, lines: list[str], ref: str, pct: int, rng: random.Random,
+                 alone_ok: bool = False) -> str | None:
+    """Insert a span of the task text (as its own sentence) so the trigram overlap is within pct +/- 2.
+
+    The span may go at the start, the end, or after the first line; whole-text layouts are applied
+    after insertion, so one-word-per-line, stairs and no-whitespace texts stay well-formed.
+    """
+    base = finalize(plan, lines)
+    if abs(_overlap_value(base, ref) - pct) <= 2:
+        return base
     words = ref.split()
     spans = [(a, b) for a in range(len(words)) for b in range(a + 3, len(words) + 1)]
     rng.shuffle(spans)
     for a, b in spans[:3000]:
         raw = " ".join(words[a:b])
-        span = raw.rstrip(".?!,;:")
-        cands = [text + " " + span + ".", span + ". " + text]
+        span = raw.rstrip(".?!,;:") + "."
+        cands = [lines[:-1] + [lines[-1] + " " + span], [span + " " + lines[0]] + lines[1:]]
+        if len(lines) > 1:
+            cands.append([lines[0] + " " + span] + lines[1:])
+        else:
+            import re as _re
+            m = _re.search(r"[.?!] ", lines[0])
+            if m:
+                cands.append([lines[0][:m.end()] + span + " " + lines[0][m.end():]])
+        texts = [finalize(plan, c) for c in cands]
         if alone_ok:
-            cands += [raw, span + "."]
-        for cand in cands:
+            texts += [raw, span]
+        for cand in texts:
             if abs(_overlap_value(cand, ref) - pct) <= 2 and pm.check("ratio:overlap", cand, {}, ref)[0]:
                 return cand
     return None
@@ -871,9 +946,10 @@ def build_witness(rules, task_text: str | None = None, seed: int = 0, attempts: 
                 raise Infeasible("search found no word sequence")
             if plan.equal_chars and not _equalize(plan, srch, rng):
                 raise Infeasible("could not equalize sentence lengths")
-            text = render(plan, srch.stream, rng)
+            lines = compose(plan, srch.stream, rng)
+            text = finalize(plan, lines)
             if "ratio:overlap" in rules:
-                text = _fit_overlap(text, task_text, rules["ratio:overlap"]["percentage"], rng,
+                text = _fit_overlap(plan, lines, task_text, rules["ratio:overlap"]["percentage"], rng,
                                     alone_ok=set(rules) <= {"ratio:overlap", "count:word_count_range", "words:repeats", "ratio:stop_words"})
                 if text is None:
                     raise Infeasible("no task-text span puts the overlap in the window")
