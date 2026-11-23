@@ -152,10 +152,15 @@ def run(model_key: str, shard_size: int = 1024, max_prompts: int | None = None, 
             "n_layers": prev.get("n_layers") or (L if model is not None else None),
             "n_heads": prev.get("n_heads") or (Hh if model is not None else None),
             "n_prompts": len(all_done), "n_train_prompts": len(data.prompt_ids("train")),
-            "storage_bytes": nbytes, "sessions": sessions, "status": "complete" if len(all_done) == len(data.prompt_ids("train")) else "partial",
+            "n_train_prompts_missing": len(set(data.prompt_ids("train")) - all_done),
+            "storage_bytes": nbytes, "sessions": sessions,
+            "status": "complete" if set(data.prompt_ids("train")) <= all_done else "partial",
             "torch_version": torch.__version__, "transformers_version": __import__("transformers").__version__,
             "frozen_features_meta": {k: data.feature_meta(model_key)[k] for k in ("torch_version", "transformers_version", "backend", "dtype")},
-            "definition": "A1max[l,h,j] = max_{t in rule span j} attention_l[h, final prompt token, t]; raw BF16 bits"}
+            "definition": "A1max[l,h,j] = max_{t in rule span j} attention_l[h, final prompt token, t]; raw BF16 bits",
+            "split_independent": True,
+            "note": "per-prompt values do not depend on the split; n_prompts counts every committed prompt, including "
+                    "prompts extracted while they were TRAIN under an earlier split (never read while they are TEST)"}
     for k in ("torch_version", "transformers_version"):
         if meta[k] != meta["frozen_features_meta"][k]:
             raise SystemExit(f"{k} {meta[k]} differs from the frozen feature run ({meta['frozen_features_meta'][k]})")

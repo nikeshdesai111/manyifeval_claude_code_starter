@@ -1,0 +1,405 @@
+{
+  "base_grids": {
+    "P": [
+      100.0,
+      1000.0,
+      10000.0,
+      100000.0,
+      1000000.0,
+      10000000.0
+    ],
+    "R": [
+      100.0,
+      1000.0,
+      10000.0,
+      100000.0,
+      1000000.0,
+      10000000.0
+    ]
+  },
+  "boundary_hits_base_round": [],
+  "edges_after_expansion": [],
+  "expansions": [],
+  "fallbacks_fired": [],
+  "final_grids": {
+    "P": [
+      100.0,
+      1000.0,
+      10000.0,
+      100000.0,
+      1000000.0,
+      10000000.0
+    ],
+    "R": [
+      100.0,
+      1000.0,
+      10000.0,
+      100000.0,
+      1000000.0,
+      10000000.0
+    ]
+  },
+  "hidden_row": 12,
+  "hidden_row_scores": {
+    "12": 0.4137778426198886,
+    "16": 0.4445742744264128,
+    "24": 0.46862322673824797,
+    "33": 0.45184052846899264,
+    "8": 0.4483613860292794
+  },
+  "model": "llama",
+  "objective": 1,
+  "other_generator_row": 18,
+  "other_generator_row_scores": {
+    "14": 0.42839483942550954,
+    "18": 0.3974069675719985,
+    "27": 0.451886236516184,
+    "37": 0.48339206674327945,
+    "9": 0.4611867805278008
+  },
+  "other_row_convention": {
+    "14": {
+      "depth_fraction": 0.3889,
+      "meaning": "output of decoder layer 14"
+    },
+    "18": {
+      "depth_fraction": 0.5,
+      "meaning": "output of decoder layer 18"
+    },
+    "27": {
+      "depth_fraction": 0.75,
+      "meaning": "output of decoder layer 27"
+    },
+    "37": {
+      "depth_fraction": 1.0,
+      "meaning": "output of decoder layer 36 BEFORE the final norm"
+    },
+    "9": {
+      "depth_fraction": 0.25,
+      "meaning": "output of decoder layer 9"
+    }
+  },
+  "row_convention": {
+    "12": {
+      "depth_fraction": 0.375,
+      "meaning": "output of decoder layer 12"
+    },
+    "16": {
+      "depth_fraction": 0.5,
+      "meaning": "output of decoder layer 16"
+    },
+    "24": {
+      "depth_fraction": 0.75,
+      "meaning": "output of decoder layer 24"
+    },
+    "33": {
+      "depth_fraction": 1.0,
+      "meaning": "output of decoder layer 32 BEFORE the final norm"
+    },
+    "8": {
+      "depth_fraction": 0.25,
+      "meaning": "output of decoder layer 8"
+    }
+  },
+  "selected": {
+    "B1": {
+      "baseline": null,
+      "blocks": [
+        [
+          "EP",
+          "P"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.48204020339663617,
+      "fixed": {},
+      "fold_losses": [
+        0.3389410385173203,
+        0.38279635732083844,
+        0.5148326413035095,
+        0.4823110389488265,
+        0.691319940892686
+      ],
+      "hidden_row": null,
+      "n_features": 1044,
+      "note": null,
+      "setting": "P=100000"
+    },
+    "B1+H1": {
+      "baseline": "B1",
+      "blocks": [
+        [
+          "EP",
+          "F_P"
+        ],
+        [
+          "S",
+          "S"
+        ],
+        [
+          "H12",
+          "X"
+        ]
+      ],
+      "cv_loss": 0.4130742446468678,
+      "fixed": {
+        "F_P": 100000.0
+      },
+      "fold_losses": [
+        0.333506088107078,
+        0.3777787804553029,
+        0.44641979640100576,
+        0.39788736328813445,
+        0.5097791949828181
+      ],
+      "hidden_row": 12,
+      "n_features": 5140,
+      "note": null,
+      "setting": "X=10000"
+    },
+    "B2": {
+      "baseline": null,
+      "blocks": [
+        [
+          "EP",
+          "P"
+        ],
+        [
+          "ER",
+          "R"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.40125375950126346,
+      "fixed": {},
+      "fold_losses": [
+        0.31383929555673407,
+        0.3544457945697181,
+        0.4322002557970556,
+        0.3768211729643687,
+        0.5289622786184413
+      ],
+      "hidden_row": null,
+      "n_features": 2068,
+      "note": null,
+      "setting": "P=100000,R=100000"
+    },
+    "B2+A1": {
+      "baseline": "B2",
+      "blocks": [
+        [
+          "EP",
+          "F_P"
+        ],
+        [
+          "ER",
+          "F_R"
+        ],
+        [
+          "S",
+          "S"
+        ],
+        [
+          "A1",
+          "X"
+        ]
+      ],
+      "cv_loss": 0.38209246565140065,
+      "fixed": {
+        "F_P": 100000.0,
+        "F_R": 100000.0
+      },
+      "fold_losses": [
+        0.31488936183932603,
+        0.34140139461527347,
+        0.40735517108180613,
+        0.34750489527815065,
+        0.49931150544244673
+      ],
+      "hidden_row": null,
+      "n_features": 3092,
+      "note": null,
+      "setting": "X=10000"
+    },
+    "B2+H1": {
+      "baseline": "B2",
+      "blocks": [
+        [
+          "EP",
+          "F_P"
+        ],
+        [
+          "ER",
+          "F_R"
+        ],
+        [
+          "S",
+          "S"
+        ],
+        [
+          "H12",
+          "X"
+        ]
+      ],
+      "cv_loss": 0.3849446655688371,
+      "fixed": {
+        "F_P": 100000.0,
+        "F_R": 100000.0
+      },
+      "fold_losses": [
+        0.3093800807094134,
+        0.34059052375918586,
+        0.4185470005999263,
+        0.36690874569855214,
+        0.4892969770771078
+      ],
+      "hidden_row": 12,
+      "n_features": 6164,
+      "note": null,
+      "setting": "X=100000"
+    },
+    "H1": {
+      "baseline": null,
+      "blocks": [
+        [
+          "H12",
+          "P"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.4137778426198886,
+      "fixed": {},
+      "fold_losses": [
+        0.3132917990447521,
+        0.35573775349451003,
+        0.4613741451610688,
+        0.3944415662891368,
+        0.5440439491099754
+      ],
+      "hidden_row": 12,
+      "n_features": 4116,
+      "note": null,
+      "setting": "P=100000"
+    },
+    "H2": {
+      "baseline": null,
+      "blocks": [
+        [
+          "H12",
+          "P"
+        ],
+        [
+          "ER",
+          "R"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.3933861870786473,
+      "fixed": {},
+      "fold_losses": [
+        0.3137656518015883,
+        0.3474829239482132,
+        0.42233213101974265,
+        0.37782379916388853,
+        0.5055264294598039
+      ],
+      "hidden_row": 12,
+      "n_features": 5140,
+      "note": null,
+      "setting": "P=100000,R=100000"
+    },
+    "RCAP": {
+      "baseline": null,
+      "blocks": [
+        [
+          "A1",
+          "P"
+        ],
+        [
+          "ER",
+          "R"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.3896536515819065,
+      "fixed": {},
+      "fold_losses": [
+        0.3268522832622752,
+        0.33018612033669525,
+        0.42332691925221433,
+        0.3409579514959378,
+        0.5269449835624097
+      ],
+      "hidden_row": null,
+      "n_features": 2068,
+      "note": null,
+      "setting": "P=10000,R=1e+06"
+    },
+    "REF_structure": {
+      "baseline": null,
+      "blocks": [
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.5034967416285102,
+      "fixed": {},
+      "fold_losses": [
+        0.340888680388924,
+        0.4225657193299422,
+        0.522153109652011,
+        0.4957773372369356,
+        0.7360988615347382
+      ],
+      "hidden_row": null,
+      "n_features": 20,
+      "note": null,
+      "setting": "none"
+    },
+    "XH1": {
+      "baseline": null,
+      "blocks": [
+        [
+          "XH18",
+          "P"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.3974069675719985,
+      "fixed": {},
+      "fold_losses": [
+        0.3321530806258442,
+        0.3479519616045679,
+        0.4432043149668185,
+        0.3762292652654326,
+        0.4874962153973293
+      ],
+      "hidden_row": 18,
+      "n_features": 4116,
+      "note": null,
+      "setting": "P=10000"
+    }
+  },
+  "split": "split-s3-2026-11-23",
+  "version": "v2-2026-11-20",
+  "with_attention": true
+}

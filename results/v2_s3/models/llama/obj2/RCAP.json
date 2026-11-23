@@ -1,0 +1,29 @@
+{
+  "blocks": [
+    [
+      "A1mean",
+      "P"
+    ],
+    [
+      "ERmean",
+      "R"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "RCAP",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "RCAP",
+  "setting": "P=1000,R=10000",
+  "split": "split-s3-2026-11-23",
+  "version": "v2-2026-11-20",
+  "widths": [
+    1024,
+    1024,
+    92
+  ]
+}

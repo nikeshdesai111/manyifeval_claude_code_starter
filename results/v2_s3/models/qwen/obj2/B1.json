@@ -1,0 +1,24 @@
+{
+  "blocks": [
+    [
+      "EP",
+      "P"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "B1",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "B1",
+  "setting": "P=100000",
+  "split": "split-s3-2026-11-23",
+  "version": "v2-2026-11-20",
+  "widths": [
+    1024,
+    92
+  ]
+}

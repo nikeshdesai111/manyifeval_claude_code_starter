@@ -10,7 +10,7 @@ import json
 
 import pandas as pd
 
-from .versioning import FEAT_V2, RESULTS_V2, read_versioned_json
+from .versioning import FEAT_V2, RESULTS_V2, SPLIT, read_versioned_json
 
 # Priority split decided by the project owner on 2026-11-22 (amendment section 9): primary = 1, 2, 3, 7.
 COMPARISONS = [("Primary 1", "H1", "B1"), ("Primary 2", "H2", "B2"), ("Primary 3", "RCAP", "B2"),
@@ -37,14 +37,19 @@ def _md(df: pd.DataFrame) -> str:
 
 
 def build() -> str:
+    from ... import splits
+    from .. import data
+    N_TRAIN = data.prompts("train")["group_id"].nunique()
+    N_TEST = len(splits.test_groups())
     T = RESULTS_V2 / "tables"
     T.mkdir(parents=True, exist_ok=True)
     lines = ["# V2 training-only milestone: summary", "",
-             "Training-only. The 15 TEST groups were not read: no TEST features, labels or scores. Every loss below is a "
-             "**training-CV** value (5 grouped folds over the 57 TRAIN groups). These values were used to select settings, "
+             f"Split: `{SPLIT}`. Training-only. The {N_TEST} TEST groups were not read: no TEST features, labels or scores. "
+             "Every loss below is a "
+             f"**training-CV** value (5 grouped folds over the {N_TRAIN} TRAIN groups). These values were used to select settings, "
              "so they document the selection and are not held-out performance estimates. "
              "Amendment: `docs/amendment_v2_2026-11-20.md`; recipe: `configs/v2_recipe.yaml` "
-             "(recorded in `results/v2/recipe_recorded.json`).", ""]
+             f"(recorded in `results/{RESULTS_V2.name}/recipe_recorded.json`).", ""]
     rec = read_versioned_json(RESULTS_V2 / "recipe_recorded.json")
     lines += [f"Recipe sha256 `{rec['sha256'][:16]}…`, recorded {rec['recorded_at']}, before any selection reported here.", "",
               "## What changed from V1", "",
@@ -202,11 +207,11 @@ def build() -> str:
     lines += ["## 7. Objective 2: ordered-slot sensitivity and averaged Objective 1 predictions", "",
               _md(X) if len(X) else "(not run)", ""]
     lines += ["## 8. Where the outputs are", "",
-              "- OOF predictions (every tested setting plus `selected`): `results/v2/predictions/<model>/obj<o>/<predictor>.parquet`; "
+              f"- OOF predictions (every tested setting plus `selected`): `results/{RESULTS_V2.name}/predictions/<model>/obj<o>/<predictor>.parquet`; "
               "Objective 2 ordered-slot: `.../obj2/ordered/`; averaged Objective 1: `.../obj2/avg_obj1/`.",
-              "- Selections: `results/v2/cv/<model>/obj<o>/selection.json` (+ `selection_ordered.json`, `avg_obj1_reference.json`).",
-              "- Refitted heads (all 57 TRAIN groups): `results/v2/models/<model>/obj<o>/<predictor>.npz/.json`.",
-              "- Tables: `results/v2/tables/`. Caches: `data/probing_features_v2/`.",
+              f"- Selections: `results/{RESULTS_V2.name}/cv/<model>/obj<o>/selection.json` (+ `selection_ordered.json`, `avg_obj1_reference.json`).",
+              f"- Refitted heads (all {N_TRAIN} TRAIN groups): `{RESULTS_V2.relative_to(RESULTS_V2.parents[1])}/models/<model>/obj<o>/<predictor>.npz/.json`.",
+              f"- Tables: `results/{RESULTS_V2.name}/tables/`. Caches: `data/probing_features_v2/` (split-dependent ones under `split_s3/` for S3).",
               "- Parquet, NumPy and npz files are git-ignored and stay on the Mac; JSON, CSV and Markdown are committed.", ""]
     md = "\n".join(lines)
     (RESULTS_V2 / "SUMMARY.md").write_text(md)

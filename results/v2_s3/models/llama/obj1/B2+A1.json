@@ -1,0 +1,37 @@
+{
+  "blocks": [
+    [
+      "EP",
+      "F_P"
+    ],
+    [
+      "ER",
+      "F_R"
+    ],
+    [
+      "S",
+      "S"
+    ],
+    [
+      "A1",
+      "X"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "B2+A1",
+  "fixed": {
+    "F_P": 100000.0,
+    "F_R": 100000.0
+  },
+  "n_fitting_groups": 57,
+  "predictor": "B2+A1",
+  "setting": "X=10000",
+  "split": "split-s3-2026-11-23",
+  "version": "v2-2026-11-20",
+  "widths": [
+    1024,
+    1024,
+    20,
+    1024
+  ]
+}
