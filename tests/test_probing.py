@@ -65,9 +65,23 @@ def test_per_type_head_routing_sees_only_its_type():
     assert (covered == 1).all()  # every row is scored exactly once, by its own type's head
 
 
+@pytest.fixture
+def manifest_split(monkeypatch):
+    """V1 artifacts (folds in results/cv/, caches in data/probing_features/) belong to the 2026-11-14 manifest split:
+    test them under that split even when configs/active_split.yaml selects another one (amendment S3)."""
+    from mife import splits
+    from mife.probing import data
+    monkeypatch.setattr(splits, "active", lambda: {"version": splits.MANIFEST_VERSION})
+    for f in (splits.split_of_group, data._manifest_all):
+        f.cache_clear()
+    yield
+    for f in (splits.split_of_group, data._manifest_all):
+        f.cache_clear()
+
+
 # --------------------------------------------------------------------------------------------------- folds
 @pytest.mark.skipif(not HAVE_DATA, reason="needs the frozen manifest")
-def test_folds_grouped_deterministic_and_sized():
+def test_folds_grouped_deterministic_and_sized(manifest_split):
     a, b = cv.make_folds(write=False), cv.make_folds(write=False)
     assert a["folds"] == b["folds"]
     sizes = sorted(len(f) for f in a["folds"])
@@ -107,7 +121,7 @@ def test_linear_head_recovers_signal_and_scaler_uses_fitting_rows():
 
 # ---------------------------------------------------------------------------------- Objective 2 slots / masks
 @pytest.mark.skipif(not (DATA_DIR / "probing_features" / "shared" / "S2_train.npy").exists(), reason="needs caches")
-def test_objective2_slots_follow_prompt_order_with_masks():
+def test_objective2_slots_follow_prompt_order_with_masks(manifest_split):
     from mife.probing import data, features
     P = data.prompts("train")
     S2 = np.load(features.cache_dir() / "S2_train.npy")

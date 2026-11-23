@@ -11,12 +11,20 @@ from pathlib import Path
 
 import numpy as np
 
+from ... import splits
 from ...config import DATA_DIR, ROOT
 from ...storage import write_json, write_npy
 
 VERSION = "v2-2026-11-20"
-FEAT_V2 = DATA_DIR / "probing_features_v2"
-RESULTS_V2 = ROOT / "results" / "v2"
+SPLIT = splits.version()                      # active group split (configs/active_split.yaml)
+_TAG = {splits.MANIFEST_VERSION: ""}.get(SPLIT, "_s3" if SPLIT == "split-s3-2026-11-23" else None)
+if _TAG is None:
+    raise RuntimeError(f"no V2 path tag for split {SPLIT!r}")
+FEAT_V2 = DATA_DIR / "probing_features_v2"   # split-independent per-prompt features (max attention) live here
+# Split-dependent caches (row order = that split's TRAIN prompts) and all results get their own tree per split, so the
+# 2026-11-14-split V2 run (results/v2/, data/probing_features_v2/{shared,llama,qwen}) stays untouched.
+FEAT_SPLIT = FEAT_V2 if _TAG == "" else FEAT_V2 / "split_s3"
+RESULTS_V2 = ROOT / "results" / f"v2{_TAG}"
 
 # Definitions of every V2 block. A V1 block with the same short name has a different definition string.
 DEFINITIONS = {
@@ -42,8 +50,8 @@ def meta_path(path: Path) -> Path:
 
 def save_array(arr: np.ndarray, path: Path, kind: str, **extra) -> None:
     write_npy(arr, path)
-    write_json({"version": VERSION, "kind": kind, "definition": DEFINITIONS.get(kind, kind), "shape": list(arr.shape),
-                "dtype": str(arr.dtype), **extra}, meta_path(path))
+    write_json({"version": VERSION, "split": SPLIT, "kind": kind, "definition": DEFINITIONS.get(kind, kind),
+                "shape": list(arr.shape), "dtype": str(arr.dtype), **extra}, meta_path(path))
 
 
 def check_meta(path: Path, kind: str) -> dict:
@@ -53,6 +61,8 @@ def check_meta(path: Path, kind: str) -> dict:
     m = json.loads(mp.read_text())
     if m.get("version") != VERSION:
         raise VersionMismatch(f"{path}: version {m.get('version')!r} != {VERSION!r}")
+    if m.get("split", splits.MANIFEST_VERSION) != SPLIT:
+        raise VersionMismatch(f"{path}: built for split {m.get('split', splits.MANIFEST_VERSION)!r}, active split is {SPLIT!r}")
     if m.get("kind") != kind:
         raise VersionMismatch(f"{path}: kind {m.get('kind')!r} != expected {kind!r}")
     if m.get("definition") != DEFINITIONS.get(kind, kind):
@@ -66,11 +76,13 @@ def load_array(path: Path, kind: str, mmap: bool = False) -> np.ndarray:
 
 
 def write_versioned_json(obj: dict, path: Path) -> None:
-    write_json({"version": VERSION, **obj}, path)
+    write_json({"version": VERSION, "split": SPLIT, **obj}, path)
 
 
 def read_versioned_json(path: Path) -> dict:
     d = json.loads(Path(path).read_text())
     if d.get("version") != VERSION:
         raise VersionMismatch(f"{path}: version {d.get('version')!r} != {VERSION!r}")
+    if d.get("split", splits.MANIFEST_VERSION) != SPLIT and not d.get("split_independent"):
+        raise VersionMismatch(f"{path}: written for split {d.get('split', splits.MANIFEST_VERSION)!r}, active is {SPLIT!r}")
     return d
