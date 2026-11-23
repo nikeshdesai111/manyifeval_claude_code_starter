@@ -1,6 +1,6 @@
 # S3 expansion: Betty queue status
 
-**Status: NOT SUBMITTED** (2026-11-23). Every check up to submission has passed, and the owner approved queueing. The submission from Claude's session was blocked by the session's permission guard, so the commands below are waiting to be run from Betty. The Qwen run also waits on Betty storage (below).
+**Status: Llama SUBMITTED** (2026-11-23 06:39 UTC, approved by the owner in the project thread): preflight job **11110485**, generation array **11110486_[0-11]** on dgx-b200, both PENDING (Priority). **Qwen: NOT SUBMITTED**, because it waits for Betty storage (below).
 
 ## Checked on Betty (login node, 2026-11-23)
 
@@ -53,4 +53,8 @@ sacct -u desai7 -S 2026-11-23 -X --format=JobID,JobName%22,State,Elapsed,ExitCod
 
 ## Job IDs
 
-None yet. Job IDs are recorded here at submission.
+| Job | ID | Submitted (UTC) | State at submission |
+|---|---|---|---|
+| Llama TRAIN-only preflight | 11110485 | 2026-11-23 06:39 | PENDING (Priority) |
+| Llama expansion array, chunks 0–11 | 11110486 | 2026-11-23 06:39 | PENDING |
+| Qwen | — | not submitted | waiting for storage |
