@@ -16,7 +16,7 @@ OUT="data/generations/$M/expansion_s3_20261123_mac_mlx"
 for attempt in $(seq 1 "${MAX_RESTARTS:-40}"); do
   set +e
   PYTHONPATH=src caffeinate -ims .venv/bin/python -m mife.expansion_s3_mac generate "$M" --chunks "$CHUNKS" \
-    --bsz "${BSZ:-64}" --recycle-every "${RECYCLE:-640}" >> "logs/expansion_s3_mac_$M.log" 2>&1
+    --bsz "${BSZ:-40}" --recycle-every "${RECYCLE:-640}" >> "logs/expansion_s3_mac_$M.log" 2>&1
   rc=$?
   set -e
   [[ $rc == 0 || -e "$OUT/STOP" ]] && break
