@@ -1,0 +1,5 @@
+contrast,group,p,n,mc_sd_pp(one task),analytic_sd_pp(one task),reps
+B1_3to4_strict_append,g02,0.18,20,0.636,0.633,4000
+B1_3to4_strict_append,g02,0.1,20,0.494,0.494,4000
+A_k5_last_minus_first,g02,0.18,20,1.104,1.109,4000
+A_k5_last_minus_first,g02,0.1,20,0.877,0.866,4000

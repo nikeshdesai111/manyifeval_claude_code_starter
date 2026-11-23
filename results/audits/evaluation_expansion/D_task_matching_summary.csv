@@ -1,0 +1,2 @@
+groups,tasks,task_pairs_total,prompt_pairs_total,target_comparisons_total,all_pool_tasks_match,all_current_configs_identical,groups_with_3_distinct_families
+15,45,45,20520,78570,True,True,15

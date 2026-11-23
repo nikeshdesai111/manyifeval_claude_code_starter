@@ -1,0 +1,16 @@
+type_id,observed_share_of_72_pools,simulated_share
+change_case:capital_word_frequency,0.25,0.2908
+change_case:english_capital,0.3611,0.2899
+change_case:english_lowercase,0.2222,0.2907
+detectable_content:number_placeholders,0.5139,0.4975
+detectable_format:number_bullet_lists,0.5,0.5026
+detectable_format:title,0.5139,0.5008
+keywords:existence,0.3056,0.3775
+keywords:forbidden_words,0.5556,0.4976
+keywords:frequency,0.3611,0.3766
+keywords:letter_frequency,0.5694,0.5037
+length_constraints:number_paragraphs,0.3472,0.2912
+length_constraints:number_sentences,0.25,0.2927
+length_constraints:number_words,0.2778,0.2874
+punctuation:no_comma,0.5278,0.4998
+startend:quotation,0.4444,0.5013

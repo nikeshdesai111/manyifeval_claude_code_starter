@@ -1,0 +1,6 @@
+k,"all_C(6,k)_subsets_present_in_every_group",subsets_per_group,subsets_containing_target,configs_with_target_at_fixed_position_per_task,configs_with_target_at_fixed_position_per_task_max,responses_per_task_target_position_cell,target_position_cells_total(x3 tasks),companion_presence_cv_within_cell(max),share_of_target_cells_with_each_companion
+1,True,6,1,1,1,20,270,,0.0
+2,True,15,5,5,5,100,540,0.0,0.2
+3,True,20,10,20,20,400,810,0.0,0.4
+4,True,15,10,30,30,600,1080,0.0,0.6
+5,True,6,5,20,20,400,1350,0.0,0.8
