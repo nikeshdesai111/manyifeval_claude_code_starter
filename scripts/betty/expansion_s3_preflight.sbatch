@@ -16,6 +16,7 @@ export MIFE_REPO="$(pwd)"
 source scripts/betty/env.sh
 mife_activate
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+[[ "${MIFE_NODELOCAL_WEIGHTS:-0}" == 1 ]] && source scripts/betty/expansion_s3_nodelocal_weights.sh
 mkdir -p data/env
 python -m mife.cli env-report "data/env/${M}_expansion_s3_preflight_job${SLURM_JOB_ID}.json"
 python -m mife.expansion_s3 smoke "$M" --prompts 20

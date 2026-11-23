@@ -8,6 +8,8 @@
 # into data/generations/<model>/expansion_s3_20261123/. Never writes into run main. Resumable per (prompt, sample):
 # resubmitting a task skips records already written with their recorded seed. Before resubmitting, check that no
 # task of the same chunk is still running (squeue -u $USER), so two jobs never write the same chunk at once.
+# Weights on node-local disk instead of home (downloaded + checksum-verified per task):
+#   sbatch --export=ALL,MIFE_NODELOCAL_WEIGHTS=1 --array=0-11 scripts/betty/expansion_s3_array.sbatch qwen
 # Resubmit selected chunks:  sbatch --array=2,4 scripts/betty/expansion_s3_array.sbatch qwen
 #SBATCH --job-name=mife-exp-s3
 #SBATCH --account=zives-cis-academic-curri
@@ -24,6 +26,7 @@ export MIFE_REPO="$(pwd)"
 source scripts/betty/env.sh
 mife_activate
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+[[ "${MIFE_NODELOCAL_WEIGHTS:-0}" == 1 ]] && source scripts/betty/expansion_s3_nodelocal_weights.sh
 C="${SLURM_ARRAY_TASK_ID:?submit as an array}"
 echo "model=$M chunk=$C job=${SLURM_ARRAY_JOB_ID}/${C} host=$(hostname)"
 mkdir -p data/env

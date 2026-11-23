@@ -1,6 +1,6 @@
 # S3 expansion: Betty queue status
 
-**Status: Llama SUBMITTED** (2026-11-23 06:39 UTC, approved by the owner in the project thread): preflight job **11110485**, generation array **11110486_[0-11]** on dgx-b200, both PENDING (Priority). **Qwen: NOT SUBMITTED**, because it waits for Betty storage (below).
+**Status: Llama and Qwen SUBMITTED** (2026-11-23). Llama: preflight **11110485**, array **11110486_[0-11]** (weights in home). Qwen: preflight **11148891**, array **11148892_[0-11]**, with weights downloaded per task to node-local disk and checksum-verified (`MIFE_NODELOCAL_WEIGHTS=1`, `scripts/betty/expansion_s3_nodelocal_weights.sh`), because home cannot hold both generators' weights. Slurm estimate at 09:15 EST: Llama starts about 2026-11-27 21:20 UTC. If the GPU nodes cannot reach Hugging Face, the Qwen tasks fail before generating anything and need home-staged weights instead.
 
 ## Checked on Betty (login node, 2026-11-23)
 
@@ -57,4 +57,5 @@ sacct -u desai7 -S 2026-11-23 -X --format=JobID,JobName%22,State,Elapsed,ExitCod
 |---|---|---|---|
 | Llama TRAIN-only preflight | 11110485 | 2026-11-23 06:39 | PENDING (Priority) |
 | Llama expansion array, chunks 0–11 | 11110486 | 2026-11-23 06:39 | PENDING |
-| Qwen | — | not submitted | waiting for storage |
+| Qwen TRAIN-only preflight (node-local weights) | 11148891 | 2026-11-23 14:20 | PENDING (Priority) |
+| Qwen expansion array, chunks 0–11 (node-local weights) | 11148892 | 2026-11-23 14:20 | PENDING |
