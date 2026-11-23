@@ -1,0 +1,217 @@
+task_key,rule_family,rule,matched,families_with_cues,hand_family,hand_ambiguous,hand_alt_family,agree,agree_with_alt,task_text
+19,CREATIVE,in_creative_form,in the form of a funny riddle,CREATIVE,CREATIVE,1,INFO,1,1,Create a blog post for professionals in the field of computer science in the form of a funny riddle.
+24,CREATIVE,make_creative_form,write a story,CREATIVE,CREATIVE,0,,1,1,The Legend of the Sword and the Fairy is a movie in which Wan Wan is a villain. Write a story about Wan Wan's character.
+30,INFO,default,,,INFO,0,,1,1,What are the common signs and symptoms of abdominal and pelvic dissemination of ovarian cancer?
+102,CREATIVE,make_creative_form,write a dialogue,CREATIVE,CREATIVE,0,,1,1,"Write a dialogue between two people, one is dressed up in a ball gown and the other is dressed down in sweats. The two are going to a nightly event."
+122,INFO,default,,,INFO,0,,1,1,Write a blog post about the history of the internet and how it has impacted our lives.
+127,TRANSFORM,text_below_starting_point,text below,TRANSFORM,TRANSFORM,0,,1,1,"Take the text below as a starting point, and make it a complete article: ""You may have to meet with a helper to work out a parenting plan. The first would be to estimate how many time you have everyday for parenting, and is that enough...."""
+136,TRANSFORM,elaborate_on_supplied,elaborate on this,TRANSFORM,TRANSFORM,1,INFO,1,1,A nucleus is a cluster of protons and neutrons. Elaborate on this.
+152,INFO,default,,,INFO,0,,1,1,Write an essay on the topic of navigable freeway.
+163,PRACTICAL,functional_document,itinerary,PRACTICAL,PRACTICAL,0,,1,1,"Create a 5 day itinerary for a trip to Mesa, Arizona."
+164,INFO,default,,,INFO,1,ANALYTICAL,1,1,Write an essay about the updates of the latest episode of your favorite TV show.
+179,PRACTICAL,functional_document,proposal,PRACTICAL,PERSUASIVE,0,,0,0,A filmmaker is trying to get financing for a film about the history of the Internet. Write an essay to be used in the proposal to potential investors.
+201,CREATIVE,make_creative_form,write a story,CREATIVE,CREATIVE,0,,1,1,Write a story from a perspective of a man.
+209,PRACTICAL,how_to_steps,the best way to,PRACTICAL,PRACTICAL,1,INFO,1,1,Write a blog post about the best way to get a good night's sleep.
+218,PRACTICAL,plan_trip,plan a 12-day trip,PRACTICAL,PRACTICAL,0,,1,1,"Plan a 12-day trip to Italy for professionals in finance, including Rome, Florence, and Venice."
+219,ANALYTICAL,opinion_judgement,do you think,ANALYTICAL,ANALYTICAL,0,,1,1,Do you think Kareena Kapoor is a good actor?
+251,PRACTICAL,functional_document,resume,PRACTICAL,PRACTICAL,0,,1,1,can you write a resume for helene?
+260,PRACTICAL,functional_document,resume,PRACTICAL,PRACTICAL,0,,1,1,Write a resume for a refinery operator who has 5 years of experience working in the chemical industry.
+292,PRACTICAL,correspondence,write a funny email,PRACTICAL,PRACTICAL,1,CREATIVE,1,1,Write a funny email to your friend about the ingredients of a good life.
+295,PRACTICAL,correspondence,write me a letter,PRACTICAL,CREATIVE,1,PRACTICAL,0,1,Write me a letter about the mandates and instructions of the King.
+296,INFO,default,,,CREATIVE,1,PERSUASIVE,0,0,Write an elaborate compliment to Kruger.
+301,PRACTICAL,how_to_steps,how to,PRACTICAL,PRACTICAL,1,INFO,1,1,Explain to me how to ride a bike like I am a kid.
+331,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,"Write a song about a man who rents a room in a house with a bunch of other people, and he absolutely hated it."
+343,PERSUASIVE,pitch,pitch,PERSUASIVE,PERSUASIVE,0,,1,1,Give me a startup pitch for a company that provides a service that creates trusts for people online.
+1001,PRACTICAL,functional_document,itinerary,PRACTICAL,PRACTICAL,0,,1,1,"I am planning a trip to Japan, and I would like thee to write an itinerary for my journey."
+1005,PRACTICAL,functional_document,resume,PRACTICAL,PRACTICAL,0,,1,1,Write a resume for a fresh high school graduate who is seeking their first job.
+1019,TRANSFORM,question_about_given_sentence,given the sentence,TRANSFORM,TRANSFORM,1,ANALYTICAL,1,1,"Given the sentence ""Two young boys with toy guns and horns."" can you ask a question?"
+1040,PRACTICAL,functional_document,resume,PRACTICAL,PRACTICAL,0,,1,1,Write me a resume for Matthias Algiers.
+1051,PRACTICAL,correspondence,write a letter,PRACTICAL,PERSUASIVE,1,PRACTICAL,0,1,Write a letter to a friend ask them to go and vote.
+1069,PRACTICAL,functional_document,template,PRACTICAL,PRACTICAL,0,,1,1,Write an email template that invites a group of participants to a meeting.
+1072,INFO,default,,,INFO,1,PERSUASIVE,1,1,Write a blog post about the benefits of sleeping in a hammock.
+1082,CREATIVE,make_creative_form,write a story,CREATIVE,CREATIVE,0,,1,1,Write a story about a man who wakes up one day and realizes that he's inside a video game.
+1087,ANALYTICAL,critique_review,review,ANALYTICAL,ANALYTICAL,0,,1,1,"Write a detailed review of the movie ""The Social Network""."
+1092,INFO,default,,,INFO,1,CREATIVE,1,1,Write a blog post about a trip to Japan.
+1132,CREATIVE,make_creative_form,write the lyrics,CREATIVE,CREATIVE,0,,1,1,Write the lyrics to a hit song by the rock band 'The Gifted and The Not Gifted'.
+1153,INFO,default,,,INFO,1,PERSUASIVE,1,1,Write a social media post for students of Islamic history about the hajj pilgrimage.
+1203,INFO,default,,,INFO,0,,1,1,What happened when the Tang dynasty of China was in power?
+1216,INFO,default,,,INFO,0,,1,1,What sentiments existed in the Croatian and Serbian nations towards the Austrian Empire at the end of the 19th century?
+1217,PERSUASIVE,advertising,ad,PERSUASIVE,PERSUASIVE,0,,1,1,"Write an ad copy for a new product, a digital photo frame that connects to your social media accounts and displays your photos."
+1236,PERSUASIVE,advertising,advertisement,PERSUASIVE,PERSUASIVE,0,,1,1,Write an advertisement for a new line of comfortable armchairs designed to withstand the scrutiny of any interior designer.
+1251,CREATIVE,make_creative_form,write a poem,CREATIVE,CREATIVE,0,,1,1,Write a poem about the beauty of eucalyptus trees and their many uses.
+1258,TRANSFORM,fragment_no_task,in the style of,TRANSFORM,TRANSFORM,1,CREATIVE,1,1,in the style of a President of the United States.
+1262,TRANSFORM,elaborate_on_supplied,elaborate on the following,TRANSFORM,TRANSFORM,0,,1,1,"Can you elaborate on the following text: ""Increased axle weight increased the damage to the road""?"
+1265,INFO,default,,,INFO,0,,1,1,Write an essay about how aluminium cans are used in food storage.
+1268,INFO,default,,,CREATIVE,1,PRACTICAL,0,0,Can you give me an example for a journal entry about stress management? Tell me how you come up with the example.
+1286,ANALYTICAL,comparison,difference between,ANALYTICAL,ANALYTICAL,0,,1,1,What is the difference between the 13 colonies and the other British colonies in North America?
+1287,INFO,default,,,INFO,0,,1,1,How did a man named John of Brienne become the King of Jerusalem?
+1300,PRACTICAL,functional_document,proposal,PRACTICAL,PRACTICAL,1,PERSUASIVE,1,1,Write a proposal for a new research project that investigates how language evolves over time.
+1314,INFO,default,,,INFO,1,TRANSFORM,1,1,"Which of the following is not a fish: salmon or avocado? Answer this easy question first, then expand into an interesting article about salmon and avocado."
+1322,ANALYTICAL,comparison,pros and cons,ANALYTICAL,ANALYTICAL,0,,1,1,What are the pros and cons of kotlin vs java?
+1325,INFO,default,,,INFO,1,CREATIVE,1,1,Write a funny article about why the dinosaurs went extinct.
+1361,CREATIVE,make_creative_form,compose song,CREATIVE,CREATIVE,0,,1,1,Compose song lyrics about a socio-economic problem.
+1372,INFO,default,,,INFO,1,PERSUASIVE,1,1,Draft a blog post about Ripley's Aquarium.
+1377,PRACTICAL,functional_document,planning doc,PRACTICAL,PRACTICAL,0,,1,1,Write a planning doc for a software engineer task.
+1381,CREATIVE,make_creative_form,write me a funny song,CREATIVE|PRACTICAL,CREATIVE,0,,1,1,Write me a funny song for a proposal to build a new playground at my local elementary school.
+1389,PRACTICAL,correspondence,write a letter,PRACTICAL,PRACTICAL,1,CREATIVE,1,1,Write a letter to your friend who recently moved away.
+1402,PRACTICAL,advice_recommendation,recommend,PRACTICAL,PRACTICAL,1,ANALYTICAL,1,1,I'm interested in a college with open enrollment and a regional accreditation. Which college would you recommend?
+1436,CREATIVE,make_creative_form,write a story,CREATIVE,CREATIVE,0,,1,1,Write a story about commandos who are in the middle of the night in a sector.
+1466,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,"Write a song that critiques the song ""We Are Never Ever Getting Back Together"" by Taylor Swift."
+1498,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song about tomatoes and brothers. It should be funny and appropriate for teenagers.
+1512,INFO,default,,,CREATIVE,0,,0,0,Generate a forum thread about several people waiting to hear the latest local news.
+1531,PRACTICAL,functional_document,proposal,PRACTICAL,PRACTICAL,1,PERSUASIVE,1,1,Come up with a proposal for a new research project on how to improve the quality of life for people with disabilities.
+1535,PRACTICAL,functional_document,cover letter,PRACTICAL,PRACTICAL,0,,1,1,Write a cover letter for a job application as a tour guide in Beijing.
+1551,PRACTICAL,functional_document,cover letters,PRACTICAL,PRACTICAL,0,,1,1,I want to apply for a job as a software engineer at Google. Can you write me two different cover letters -- a concise version and a long version?
+1566,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song about regrets.
+1580,CREATIVE,make_creative_form,write a story,CREATIVE,CREATIVE,0,,1,1,Write a story for kids about how a person learns to ride a bike.
+1593,CREATIVE,make_creative_form,compose a poem,CREATIVE,CREATIVE,0,,1,1,Compose a poem about my friend Barnet.
+1634,PRACTICAL,functional_document,rubric,PRACTICAL,PRACTICAL,0,,1,1,Make a rubric for a home theater installation targeting moms.
+1643,ANALYTICAL,opinion_judgement,what are your thoughts,ANALYTICAL,ANALYTICAL,0,,1,1,"""Coincidence is God's way of remaining anonymous"". What are your thoughts on this quote?"
+1653,PERSUASIVE,advertising,advertisement,PERSUASIVE|PRACTICAL,PERSUASIVE,1,PRACTICAL,1,1,I work in the marketing department and I need your help. I need a template for an advertisement for a new product which is a portable camera.
+1658,PRACTICAL,functional_document,resume,PRACTICAL,PRACTICAL,0,,1,1,Create a resume for a 20-year-old college student with no work experience.
+1667,INFO,default,,,INFO,0,,1,1,Can you write me an essay about the history of Martin Van Buren's presidency?
+1670,PRACTICAL,functional_document,rubric,PRACTICAL,PRACTICAL,0,,1,1,Write a rubric for evaluating a musical composition.
+1733,CREATIVE,make_creative_form,write a fairy tale,CREATIVE,CREATIVE,0,,1,1,Write a fairy tale about a princess and a dragon.
+1779,PRACTICAL,functional_document,itinerary,PRACTICAL,PRACTICAL,0,,1,1,Write an itinerary for a trip to a grocery store in Lima to buy some local goods.
+1781,PRACTICAL,functional_document,resume,PRACTICAL,PRACTICAL,0,,1,1,Hallucinate a resume for a glass artist in Adelaide.
+1802,ANALYTICAL,opinion_judgement,is that a good,ANALYTICAL,ANALYTICAL,0,,1,1,Gandalf was a wizard who fought in the War of the Ring. Is that a good explanation for a 10 year old?
+1813,PRACTICAL,advice_recommendation,recommendation,PRACTICAL,PRACTICAL,1,ANALYTICAL,1,1,I want to write a reflective essay on how my life has changed since I started college. Do you have any recommendation?
+1834,PRACTICAL,how_to_steps,how to,PRACTICAL|ANALYTICAL,ANALYTICAL,1,PRACTICAL,0,1,I asked a friend about how to remove rust from my bike chain. He told me to pour coke on it and then scrub it with a steel wool. Is this a good way to remove rust?
+1837,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song about miniatures.
+1845,PRACTICAL,how_to_steps,how to,PRACTICAL,PRACTICAL,1,INFO,1,1,I was hoping you could help me out with a few things. I wish to learn about how to pay my taxes. Can you summarize the process for me? Please reply in details.
+1857,PERSUASIVE,marketing_post,"company named ""grid"", and they want a catchy tweet",PERSUASIVE,PERSUASIVE,0,,1,1,"I work for a software development company named ""grid"", and they want a catchy tweet."
+1858,PRACTICAL,correspondence,write a very angry letter,PRACTICAL,PERSUASIVE,1,CREATIVE,0,0,Write a very angry letter to someone who's been trying to convince you that 1+1=3.
+1880,INFO,default,,,INFO,0,,1,1,Write a article about the morphology of the Ukrainian language.
+1883,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song about being excited to go on vacation.
+1908,ANALYTICAL,opinion_judgement,what do you think,ANALYTICAL,ANALYTICAL,0,,1,1,"What do you think about this statement: ""Wizards are more powerful than sorcerers because they study magic instead of being born with it."
+1928,TRANSFORM,elaborate_on_supplied,elaborate on the following,TRANSFORM,TRANSFORM,1,CREATIVE,1,1,"Elaborate on the following sentence into a formal story: ""My dog is brown, and my cat is black""."
+1934,INFO,default,,,ANALYTICAL,1,INFO,0,1,Why star wars is so popular?
+1936,PRACTICAL,functional_document,rubric,PRACTICAL,PRACTICAL,0,,1,1,Write a rubric for evaluating the performance of a customer service representative.
+1964,PERSUASIVE,advertising,advertisement,PERSUASIVE,PERSUASIVE,0,,1,1,"Write an advertisement for a company called ""Drags and Races""."
+1967,INFO,default,,,PRACTICAL,1,TRANSFORM,0,0,What are some startup ideas that could help improve the lives of people in developing regions?
+1996,CREATIVE,make_creative_form,write a story,CREATIVE,CREATIVE,0,,1,1,Write a story about the importance of understanding the truths that are not obvious.
+2010,ANALYTICAL,critique_review,review,ANALYTICAL,ANALYTICAL,0,,1,1,Write a review of IBM's 1956 chess program.
+2028,INFO,default,,,INFO,0,,1,1,Are the weather conditions in the Arctic very cold most of the year?
+2041,PRACTICAL,correspondence,write an email,PRACTICAL,PRACTICAL,0,,1,1,"Write an email to my ""friend"" Jake, asking how is everything going."
+2069,INFO,default,,,INFO,0,,1,1,A psychologist is a professional who examines people's behaviors and mental processes. Can you tell me more about psychologists?
+2084,INFO,default,,,INFO,0,,1,1,"If you gulped down 100 grams of pure caffeine, would you die? Please answer as if you were explaining this to a group of students."
+2097,INFO,default,,,INFO,0,,1,1,Write an essay on the 2000 presidential election.
+2100,INFO,default,,,CREATIVE,1,ANALYTICAL,0,0,What kind of fashion would Frankenstein's bride wear?
+2107,TRANSFORM,complete_supplied,complete the following,TRANSFORM,TRANSFORM,0,,1,1,"Complete the following sentence: ""The panda is a big animal. It is black and white. It eats bamboo."""
+2139,CREATIVE,make_creative_form,compose a song,CREATIVE,CREATIVE,0,,1,1,Compose a song that can be sung by a professional singer.
+2142,PRACTICAL,functional_document,proposal,PRACTICAL,PRACTICAL,1,CREATIVE,1,1,"Write a proposal for a new university course on ""The History of the World, as Told by Dogs""."
+2143,TRANSFORM,expand_supplied,expand it,TRANSFORM,TRANSFORM,0,,1,1,"""I'm sorry to inform you that I can't make it to the meeting today. I apologize for any inconvenience this may cause."" Please expand it."
+2162,ANALYTICAL,comparison,differences between,ANALYTICAL,ANALYTICAL,0,,1,1,What are the main differences between the Adventist and Baptist denominations?
+2164,PERSUASIVE,product_description,product description,PERSUASIVE,PERSUASIVE,0,,1,1,"Write a product description for a new line of dog toys, called ""the squeaker"". It's made of latex, and is designed for dogs of all ages and species. It's also available in a variety of colors and shapes."
+2169,INFO,default,,,ANALYTICAL,1,INFO,0,1,Why didn't the 2022 winter olympics have the best ratings?
+2180,CREATIVE,rap_style,in a rap style,CREATIVE|ANALYTICAL,CREATIVE,1,INFO,1,1,Explain the difference between a city and a village in a rap style to a kid.
+2209,PRACTICAL,functional_document,proposal,PRACTICAL,PERSUASIVE,1,PRACTICAL,0,1,Write an academic proposal to a customer who's interested in implementing a new feature for their product.
+2229,PERSUASIVE,pitch,pitch,PERSUASIVE,PERSUASIVE,0,,1,1,"A sales pitch for moms is needed for a new kind of diaper that is designed to be more comfortable for babies. The sales pitch should be funny, engaging, and focus on the benefits of the new diaper without mentioning the price."
+2243,INFO,default,,,INFO,0,,1,1,Who built the first artificial ice rink?
+2246,PRACTICAL,advice_recommendation,which subdistrict should i,PRACTICAL,PRACTICAL,1,ANALYTICAL,1,1,"I want to travel to the Subic Bay Freeport Zone, which subdistrict should I stay in? Give me an angry recommendation."
+2247,INFO,default,,,INFO,0,,1,1,Write an essay about Alvin and the Chipmunks.
+2275,PERSUASIVE,pitch,pitch,PERSUASIVE,PERSUASIVE,0,,1,1,Create a startup pitch for a new startup that will help people to find the best places to live. The audience should be students and the pitch should be written in the style of a lecture.
+2284,INFO,default,,,INFO,0,,1,1,Can you tell me about the Hamptons?
+2292,PERSUASIVE,pitch,pitch deck,PERSUASIVE,PERSUASIVE,0,,1,1,Breach Posterior is a startup that has a cure for cancer. Write a casual pitch deck for it that's targeted towards moms.
+2303,ANALYTICAL,comparison,is different from,ANALYTICAL,INFO,1,ANALYTICAL,0,1,"Write a casual blog post about how the outer solar system is different from the inner solar system, and what that means for the possibility of life."
+2304,INFO,default,,,PERSUASIVE,1,CREATIVE,0,0,Write an essay as if you are the president of the United States targeting moms as your audience.
+2311,INFO,default,,,INFO,0,,1,1,Why are there 396 calories in a serving of 32 grams of unsalted almonds?
+2323,PERSUASIVE,advertising,advertisement,PERSUASIVE,PERSUASIVE,0,,1,1,Write a funny advertisement for a hair salon that is offering a 25% discount on all services.
+2328,PERSUASIVE,pitch,pitch,PERSUASIVE,PERSUASIVE,0,,1,1,Write a startup pitch for a time capsule service.
+2341,INFO,default,,,ANALYTICAL,0,,0,0,Is praying for someone's health a good idea?
+2350,PRACTICAL,functional_document,rubric,PRACTICAL|ANALYTICAL,PRACTICAL,0,,1,1,Create a rubric to evaluate the performance of a new employee named Clarissa.
+2357,PRACTICAL,functional_document,itinerary,PRACTICAL,PRACTICAL,0,,1,1,Write a travel itinerary for a trip to Paris that is suitable for teenagers with short attention spans.
+2374,PRACTICAL,functional_document,proposal,PRACTICAL,PRACTICAL,1,PERSUASIVE,1,1,Write a project proposal for how to use machine learning and AI to improve the quality of education in developing countries.
+2386,TRANSFORM,expand_supplied,expand the following,TRANSFORM,TRANSFORM,0,,1,1,"Can you expand the following sentences: ""I have never seen a localized version of the software. I have seen an international version."""
+2391,PRACTICAL,how_to_steps,the best way to,PRACTICAL,PRACTICAL,0,,1,1,What's the best way to get to the train station?
+2392,PRACTICAL,functional_document,itinerary,PRACTICAL,PRACTICAL,0,,1,1,Create an itinerary for a 3-day trip to Moscow.
+2416,PRACTICAL,functional_document,itinerary,PRACTICAL,PRACTICAL,0,,1,1,Write a one week itinerary for a trip to the United States with a focus on overcoming the challenges faced by the country.
+2432,INFO,default,,,CREATIVE,1,PRACTICAL,0,0,"My best friend drowned yesterday and I'm so sad. Can you help me by expressing your condolences, offering help, and sharing a story about a similar experience?"
+2441,INFO,default,,,PERSUASIVE,1,INFO,0,1,Write speech-like paragraphs on the US elections.
+2447,CREATIVE,make_creative_form,write a rubric in the form of a poem,CREATIVE|PRACTICAL|ANALYTICAL,CREATIVE,1,PRACTICAL,1,1,Write a rubric in the form of a poem for how to evaluate a poem.
+2457,INFO,default,,,INFO,1,TRANSFORM,1,1,Write a summary for kids that explains why we want to honour Thayer for his contributions to the field of artificial intelligence.
+2471,INFO,default,,,INFO,1,CREATIVE,1,1,Write a college academic paper about President of the United States being stressed.
+2531,PERSUASIVE,product_description,product description,PERSUASIVE,PERSUASIVE,0,,1,1,Create a product description for a product that will help me to stop snoring.
+2532,PRACTICAL,correspondence,write an email,PRACTICAL,PRACTICAL,1,CREATIVE,1,1,Write an email to your friend about what triggers you.
+2567,PRACTICAL,how_to_steps,how to,PRACTICAL,PRACTICAL,0,,1,1,Write a blog post about how to train a dog that is geared towards kids.
+2571,ANALYTICAL,comparison,better way,ANALYTICAL,ANALYTICAL,0,,1,1,"Which of the following is a better way to describe supporting ecological landscapes: (A) the practice of using the natural features of a landscape to create a more sustainable environment, or (B) the practice of using the natural features of a landscape to create a more aesthetically pleasing environment?"
+2589,INFO,default,,,INFO,0,,1,1,Write paragraphs that lists the average length of various animal specimens from smallest to largest.
+2617,INFO,default,,,INFO,1,CREATIVE,1,1,Tulsa is a professional dog walker. Write a description for Tulsa's day-to-day work.
+2653,INFO,default,,,INFO,1,ANALYTICAL,1,1,Please write the answer to this question: To what constituency was David Cameron appealing when he announced his plans for a referendum on British membership of the European Union?
+2667,TRANSFORM,elaborate_on_supplied,elaborate on the following,TRANSFORM,TRANSFORM,0,,1,1,"Please elaborate on the following text: ""It's not a bug, it's a feature!"""
+2674,PRACTICAL,functional_document,itinerary,PRACTICAL,PRACTICAL,0,,1,1,A young couple that just got married is going to Seattle for two days. They're flying from New York. Could you write them an itinerary?
+2691,PRACTICAL,functional_document,cover letter,PRACTICAL,PRACTICAL,0,,1,1,Write a cover letter for a job in Ventura that is funny and would be enjoyed by someone named Darius.
+2716,PRACTICAL,functional_document,cover letter,PRACTICAL,PRACTICAL,0,,1,1,Write a cover letter for a job in a tech company.
+2728,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song about the benefits of eating your vegetables.
+2749,INFO,default,,,PERSUASIVE,1,INFO,0,1,Write a blog post about the benefits of using a digital marketing agency.
+2751,INFO,default,,,INFO,1,PERSUASIVE,1,1,Write a description for the Pixel 3A smartphone.
+2765,PRACTICAL,functional_document,proposal,PRACTICAL,PRACTICAL,1,PERSUASIVE,1,1,Write a proposal for a research project on the impact of the liberian civil war on the country's economy.
+2768,PRACTICAL,functional_document,template,PRACTICAL,PRACTICAL,0,,1,1,Write a template that I can use to ask my manager about the budgets for the next quarter.
+2779,TRANSFORM,rephrase_supplied,ways to say the following,TRANSFORM,TRANSFORM,0,,1,1,"Make a list of ways to say the following sentence more professionally: ""Hey bautista, let me know if you need any help with the graphs."""
+2787,PRACTICAL,how_to_steps,what are the steps,PRACTICAL,PRACTICAL,0,,1,1,What are the steps to get the GNSS timestamp on Android? Explain this to teenagers.
+2807,PERSUASIVE,advertising,ad,PERSUASIVE,PERSUASIVE,0,,1,1,Write a weird ad for a copyright infringement lawyer who represents witches.
+2817,CREATIVE,make_creative_form,make it a weird poem,CREATIVE|PERSUASIVE,CREATIVE,1,PERSUASIVE,1,1,"Write a startup pitch for ""Ward and Guerre"". Make it a weird poem that explains why the pitch is good."
+2825,PRACTICAL,how_to_steps,how can you,PRACTICAL,PRACTICAL,1,INFO,1,1,How can you get to know someone on a deep level in a romantic relationship?
+2829,INFO,default,,,CREATIVE,1,INFO,0,1,Why did the man travel from Saskatoon to Helsinki to buy a piano?
+2832,PERSUASIVE,pitch,pitch,PERSUASIVE,PERSUASIVE,0,,1,1,Imagine you're a 19 year old and you're making a video game. The game is about a boy who has to save the world from a villain. Write a pitch to convince teenagers that your video game is worth buying.
+2853,CREATIVE,make_creative_form,write a poem,CREATIVE,CREATIVE,0,,1,1,"Write a poem about flooding in Donnell, TX."
+2870,PRACTICAL,functional_document,rubric,PRACTICAL|ANALYTICAL,PRACTICAL,0,,1,1,Write a rubric for teenagers on how to review a book.
+2871,CREATIVE,make_creative_form,write a poem,CREATIVE,CREATIVE,0,,1,1,Write a poem about the history of reductions in the context of the church. Make it conversational and specific.
+2887,INFO,default,,,INFO,0,,1,1,Write a brief about limping in ASEAN countries.
+2941,CREATIVE,make_creative_form,write a funny poem,CREATIVE,CREATIVE,0,,1,1,Write a funny poem for kids about a product that you would like to sell.
+2943,CREATIVE,make_creative_form,write the conversation,CREATIVE,CREATIVE,0,,1,1,"Darth Vader is angry with you, his server, because you assassinated a fake Jedi. Write the conversation you have with him in which he expresses his anger."
+2969,PERSUASIVE,advertising,copy for an ad,PERSUASIVE,PERSUASIVE,0,,1,1,Write a copy for an ad selling a sloop. It's a small sailboat with one mast that's easy to sail and understand.
+2985,ANALYTICAL,opinion_judgement,do you think,ANALYTICAL,ANALYTICAL,0,,1,1,Why do you think Google engineers stay at Google more often than moving to Microsoft?
+2997,PRACTICAL,functional_document,template,PRACTICAL,PERSUASIVE,1,PRACTICAL,0,1,"You feel strongly about a local issue that involves the environment, pollution, and climate change. Write a template for a letter to the editor of a newspaper."
+3025,INFO,default,,,INFO,0,,1,1,Can you tell me why there are oval race tracks in the desert?
+3041,PERSUASIVE,pitch,pitch,PERSUASIVE,PERSUASIVE,0,,1,1,Write a creative and persuasive startup pitch for a business that helps people with chronic illnesses find and manage in-home care.
+3081,CREATIVE,make_creative_form,re-create a story,CREATIVE,CREATIVE,0,,1,1,"Can you re-create a story from a fictional newspaper with title: ""A man mysteriously died in his house, and police are investigating""?"
+3098,PRACTICAL,how_to_steps,how to,PRACTICAL,PRACTICAL,0,,1,1,Write a blog post about 'how to improve your writing skills'.
+3109,CREATIVE,make_creative_form,write a fiction,CREATIVE,CREATIVE,0,,1,1,Write a fiction about adulthood.
+3126,PRACTICAL,how_to_steps,how to,PRACTICAL,PRACTICAL,0,,1,1,"Write an article named ""How to conduct a job interview""."
+3150,ANALYTICAL,comparison,difference between,ANALYTICAL,ANALYTICAL,0,,1,1,What's the difference between a 2-stroke and a 4-stroke motor?
+3156,PRACTICAL,correspondence,help me write a letter,PRACTICAL,PRACTICAL,1,PERSUASIVE,1,1,"I have been trying to get a refund for a product I bought online, but the company is refusing to return my money. Can you help me write a letter to them?"
+3166,PRACTICAL,how_to_steps,what are the steps,PRACTICAL,PRACTICAL,0,,1,1,What are the steps to be followed for the documentation of a GM in SAP?
+3186,INFO,default,,,ANALYTICAL,1,INFO,0,1,Write an article about how intra-team conflict affected sports teams.
+3188,CREATIVE,role_play,pretend that you are,CREATIVE,CREATIVE,0,,1,1,Pretend that you are a fortune teller who has just been arrested and is being interrogated by the police. Tell them that you can really read into the future.
+3204,INFO,default,,,INFO,1,CREATIVE,1,1,Write an essay about the reasons why slavery was abolished in the United States as if you are the president of the United States.
+3221,PRACTICAL,plan_trip,plan a 2 week europe trip,PRACTICAL,PRACTICAL,0,,1,1,"Plan a 2 week Europe trip and visit London, Paris, and Rome."
+3245,PERSUASIVE,x_is_the_best,is the best,PERSUASIVE,PERSUASIVE,0,,1,1,"Write an article with title ""Layton is the best city in the world"""
+3256,CREATIVE,make_creative_form,write a poem,CREATIVE,CREATIVE,0,,1,1,Write a poem about a curious cat.
+3280,ANALYTICAL,comparison,difference between,ANALYTICAL,ANALYTICAL,1,CREATIVE,1,1,What's the difference between the Apple and Albania?
+3294,TRANSFORM,q_and_a_unspecified,give me q and as.,TRANSFORM,TRANSFORM,1,INFO,1,1,Give me Q and As.
+3315,PRACTICAL,functional_document,itinerary,PRACTICAL,PRACTICAL,0,,1,1,Students are travelling to UCI for 3 days. Create a hilarious itinerary for them.
+3326,CREATIVE,make_creative_form,write a conversation,CREATIVE,CREATIVE,0,,1,1,Write a conversation between two people about the importance of education.
+3329,PRACTICAL,functional_document,rubric,PRACTICAL,PRACTICAL,0,,1,1,Hey! I need a rubric for evaluating the performance and price of a laptop.
+3345,CREATIVE,make_creative_form,i want a weird poem,CREATIVE,CREATIVE,0,,1,1,I want a weird poem that I can send to my friend Steve in Australia. It should be about why there are no kangaroo invasions in the US.
+3350,PRACTICAL,functional_document,proposal,PRACTICAL,PRACTICAL,0,,1,1,I need to write a research proposal for a project on the effects of social media on the mental health of teenagers.
+3362,TRANSFORM,expand_supplied,"expanding """,TRANSFORM|PERSUASIVE,PERSUASIVE,1,TRANSFORM,0,1,"Create an ad copy by expanding ""Get 40 miles per gallon on the highway"" in the form of a QA with a weird style."
+3380,PRACTICAL,functional_document,job description,PRACTICAL,PRACTICAL,0,,1,1,"Create a job description for a clifford blu employee who works at the cash register, and also monitors the shelves for stock level."
+3414,TRANSFORM,elaborate_on_supplied,"elaborate on """,TRANSFORM,TRANSFORM,0,,1,1,"Can you elaborate on ""I froze when I was jogging""?"
+3415,PERSUASIVE,advertising,ad,PERSUASIVE|PRACTICAL,PERSUASIVE,1,PRACTICAL,1,1,Write a template for a newspaper ad for a dog cage.
+3424,CREATIVE,make_creative_form,write a story,CREATIVE,CREATIVE,0,,1,1,Write a story about a family that goes camping in the woods.
+3425,ANALYTICAL,comparison,differences between,ANALYTICAL,ANALYTICAL,1,INFO,1,1,Write an essay on the differences between Sunni and Shi'a Muslims.
+3428,INFO,default,,,INFO,1,TRANSFORM,1,1,Write sentences about tax filing.
+3445,PRACTICAL,how_to_steps,how to,PRACTICAL,PRACTICAL,1,ANALYTICAL,1,1,How to tell others that your major is computer science?
+3455,PERSUASIVE,persuade,persuasive,PERSUASIVE|PRACTICAL,PERSUASIVE,0,,1,1,"Write a persuasive email to a teenager who lives in Aberdeen, Scotland. The main point is to encourage them to volunteer at a local soup kitchen."
+3478,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song about Layton.
+3479,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song for the person named 'Guerrero'.
+3513,PRACTICAL,functional_document,resume,PRACTICAL,PRACTICAL,0,,1,1,"Write a resume for a software engineer with 5+ years of experience in the Bay Area, CA."
+3534,INFO,default,,,CREATIVE,1,PERSUASIVE,0,0,Write a tweet storm about a time when you found out that the earth is indeed not flat.
+3536,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song about innovation with a positive tone that is appealing to teenagers.
+3538,PERSUASIVE,marketing_post,post for a startup,PERSUASIVE,PERSUASIVE,0,,1,1,Write a social media post for a startup that provides a platform for running realistic physics simulation.
+3540,ANALYTICAL,critique_review,critique,ANALYTICAL,ANALYTICAL,0,,1,1,critique this startup pitch: Stephenson and Hong Kong will be the first-ever digital marketplace where users can buy and sell products from all over the world Stephenson and Hong Kong will be a onestopshop for all of your shopping needs and we will offer a variety of features that will make shopping online easier and more convenient than ever before.
+3565,ANALYTICAL,opinion_judgement,mean to you,ANALYTICAL,ANALYTICAL,1,INFO,1,1,"What does the word ""jock"" mean to you?"
+3572,TRANSFORM,brainstorm_name,brainstorm a name,TRANSFORM,TRANSFORM,1,PRACTICAL,1,1,Brainstorm a name for a company that collects and analyzes public transportation fares.
+3595,CREATIVE,make_creative_form,write a poem,CREATIVE,CREATIVE,0,,1,1,Write a poem about the beauty of a rose.
+3606,CREATIVE,make_creative_form,compose a movie plot,CREATIVE,CREATIVE,0,,1,1,"Can you compose a movie plot that involves dream, fist fighting, and superpower?"
+3608,PRACTICAL,functional_document,cover letter,PRACTICAL,PRACTICAL,0,,1,1,Write a cover letter for a job application to a company which perhaps has a bad reputation.
+3631,CREATIVE,make_creative_form,write a song,CREATIVE|PRACTICAL,CREATIVE,0,,1,1,Write a song about how to make a peanut butter and jelly sandwich.
+3672,PERSUASIVE,x_is_the_best,the best place to,PERSUASIVE,PERSUASIVE,0,,1,1,Why is Algiers the best place to go on vacation?
+3690,ANALYTICAL,critique_review,critique,ANALYTICAL,ANALYTICAL,0,,1,1,"Critique the following ad copy for a new dating app: ""Meet your new match! Cohen is a free app that matches you with others based on your interests and location. With Cohen, you can find love, friendship, or just someone to swing with. Download Cohen today and start meeting new people!"""
+3691,INFO,default,,,CREATIVE,0,,0,0,Blog post from the perspective of a 16 year old girl who is being followed by a stranger.
+3697,PERSUASIVE,pitch,pitch deck,PERSUASIVE,PERSUASIVE,0,,1,1,Give me a pitch deck for a startup that lets me send letters to people in my territory that I don't know personally.
+3703,TRANSFORM,complete_supplied,finish the sentence,TRANSFORM,TRANSFORM,0,,1,1,"Given the sentence ""The dog barked at the cat, but the cat ignored it because the"". Can you finish the sentence?"
+3709,PERSUASIVE,advertising,advertisement,PERSUASIVE,PERSUASIVE,0,,1,1,"Write an advertisement for a perfume called ""Rhapsody"". It's a perfume with a fresh citrus scent."
+3719,CREATIVE,make_creative_form,write a song,CREATIVE,CREATIVE,0,,1,1,Write a song about choking on a piece of chicken in the Potomac River.
+3732,INFO,default,,,PRACTICAL,1,INFO,0,1,"What are the best things to do in Rochester, New York?"
