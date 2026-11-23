@@ -1,0 +1,58 @@
+{
+  "base_ordering": "frozen subsets: frozen chain-prefix base; new subsets: chain-label order (A..F)",
+  "coa_version": "coa/v1-sharply-2-transitive",
+  "created_unix": 1795414493.995807,
+  "expanded_manifest_sha256": "80895b63e8061e4aa298663feec68776e306195afa1ed1e6b34d980819dcdf92",
+  "frozen_manifest_prompts_sha256": "f63c0aeaeec8872ec22df70f3feccbb4ecf464ee24368a001aace0cc5ccf1b14",
+  "n_new": 13860,
+  "n_new_by_k": {
+    "2": 1188,
+    "3": 5544,
+    "4": 7128
+  },
+  "n_original": 16236,
+  "n_prompt_rule_rows": 115236,
+  "n_prompts": 30096,
+  "new_prompt_id_scheme": "{group}-s{chain labels}-k{k}-o{coa_row:02d}-t{task}",
+  "not_read": [
+    "generations",
+    "verification",
+    "features",
+    "predictions",
+    "any TEST outcome"
+  ],
+  "prompt_rules_parquet_sha256": "78e85c5cbd44c94e93e6b5d21d9cbb3e8b86f90231ff38e81fdda805f476dff7",
+  "prompts_parquet_sha256": "fc4fb439088cc4649944d756d4484031ad0523de3ab7f67ca9c3befac1ce1d71",
+  "reads": [
+    "data/manifest/{prompts,prompt_rules}.parquet",
+    "data/manifest/rule_pools.jsonl",
+    "configs/active_split.yaml via mife.splits",
+    "pinned ManyIFEval task texts"
+  ],
+  "split_version": "split-s3-2026-11-23",
+  "test_groups": [
+    "g03",
+    "g04",
+    "g10",
+    "g11",
+    "g14",
+    "g17",
+    "g19",
+    "g20",
+    "g21",
+    "g24",
+    "g27",
+    "g30",
+    "g33",
+    "g36",
+    "g48",
+    "g54",
+    "g56",
+    "g58",
+    "g62",
+    "g63",
+    "g64",
+    "g65"
+  ],
+  "version": "expansion-s3-2026-11-23"
+}
