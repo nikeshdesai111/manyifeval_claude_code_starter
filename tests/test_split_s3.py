@@ -69,7 +69,9 @@ def test_real_manifest_reproduces_recorded_proposal_and_old_split():
     test, info = V.split_groups_pair_coverage(
         meta, cfg["n_test_groups"], cfg["seed"], min_pair_test_groups=cfg["min_pair_test_groups"],
         min_type_test_groups=cfg["min_type_test_groups"], min_type_train_groups=cfg["min_type_train_groups"],
-        n_restarts=cfg["n_restarts"], max_steps=cfg["max_steps"])
+        n_restarts=cfg["n_restarts"], max_steps=cfg["max_steps"],
+        keep_related_units=cfg["keep_related_units"], min_pair_train_groups=cfg["min_pair_train_groups"],
+        allow_pair_exceptions=cfg["allow_pair_exceptions"], exception_priority=cfg["exception_priority"])  # ~5 min
     recorded = json.loads((ROOT / "results" / "split_s3" / "proposed_split.json").read_text())
     assert sorted(test) == recorded["test_groups"] and info["min_pair_coverage"] >= 2
 
@@ -82,3 +84,18 @@ def test_variant_without_related_units_treats_groups_as_singletons():
                                            keep_related_units=False)
     assert all(len(u) == 1 for u in info["units"]) and len(info["units"]) == 72
     assert set(info["pair_train_groups"]) == set(info["pair_test_groups"])
+
+
+def test_active_split_assignment_is_the_adopted_s3_split():
+    from mife import splits
+
+    if splits.version() == splits.MANIFEST_VERSION:
+        pytest.skip("manifest split active")
+    sog = splits.split_of_group()
+    rec = json.loads((ROOT / splits.active()["assignment"]).read_text())
+    assert sum(v == "test" for v in sog.values()) == len(rec["test_groups"]) == 22
+    folds = json.loads((splits.cv_dir() / "folds.json").read_text())
+    assert sorted(g for f in folds["folds"] for g in f) == rec["train_groups"]
+    assert rec["min_pair_coverage"] >= 2 and rec["pair_exceptions"] == [
+        {"pair": "change_case:capital_word_frequency|length_constraints:number_words", "all_groups": 2,
+         "required_test": 2, "required_train": 0}]

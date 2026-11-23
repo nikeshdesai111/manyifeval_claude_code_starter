@@ -1,12 +1,18 @@
+# ADOPTED S3 split (2026-11-23): every compatible pair in >= 2 TEST and >= 1 TRAIN groups, one documented exception.
 # Split amendment S3 (2026-11-23), docs/amendment_split_s3_2026-11-23.md.
 # Proposes a replacement for the 2026-11-14 split (15 test groups). configs/experiment.yaml is not edited.
 amendment: split-s3-2026-11-23
+status: adopted by the project owner 2026-11-23
 keep_related_units: true        # RELATED_CLUSTERS groups stay on one side (near-duplicate tasks)
 seed: 20261123
 n_test_groups: 22                 # 22 / 72 = 30.6% of groups and prompts (16,236 test / 36,900 train)
 min_pair_test_groups: 2           # every compatible type pair co-occurs in >= this many TEST pools; 3 is infeasible
                                   # (capital_word_frequency + number_words occurs in only 2 of the 72 pools)
+min_pair_train_groups: 1          # every compatible pair also co-occurs in >= 1 TRAIN pool
+allow_pair_exceptions: true       # a pair in fewer than 2 + 1 pools cannot meet both minima
+exception_priority: test          # owner 2026-11-23: such a pair keeps 2 TEST groups and may have 0 TRAIN
+                                  # (only capital_word_frequency + number_words, which occurs in 2 of 72 pools)
 min_type_test_groups: 1           # unchanged from the 2026-11-14 split
 min_type_train_groups: 5          # unchanged from the 2026-11-14 split
-n_restarts: 1000
+n_restarts: 20000
 max_steps: 200

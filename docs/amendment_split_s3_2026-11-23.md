@@ -1,62 +1,68 @@
-# Split amendment S3 (2026-11-23): ~70/30 split with test-side type-pair coverage
+# Split amendment S3 (2026-11-23): 70/30 split with type-pair coverage in test and train
 
-**Status:** proposed at the project owner's request on 2026-11-23. Not yet adopted. Nothing in `data/` is rewritten. The manifest `split` column, `configs/experiment.yaml`, the 2026-11-14 freeze (`results/prespec/`), the CV folds (`results/cv/folds.json`) and all V1/V2 caches and results are unchanged.
+**Status: adopted by the project owner on 2026-11-23.** The probing code now uses the S3 split, selected in `configs/active_split.yaml`. The frozen manifest files are not rewritten: their `split` column still records the 2026-11-14 split, and `mife.splits` overlays the S3 group assignment whenever `mife.probing.data` reads the manifest. `configs/experiment.yaml`, the 2026-11-14 pre-specification (`results/prespec/`), the V1 folds (`results/cv/folds.json`) and every V1/V2 cache and result are left as they are. They are historical artifacts of the 2026-11-14 split.
 
 ## 1. Why
 
-The owner wants a larger evaluation set, about 70/30. Evaluation subanalyses need enough TEST pools in which two rule types occur together. Training only needs enough data to fit the probes. The 2026-11-14 split (15 test groups) has a minimum pair coverage of **0**. Of the 98 compatible type pairs, 5 never co-occur in a TEST pool and 28 co-occur in only one.
+The owner wants a larger evaluation set, about 70/30. Evaluation subanalyses need TEST pools in which two rule types occur together, and each pair should also be seen in training. Training only needs enough data to fit the probes. The 2026-11-14 split (15 test groups) has a minimum TEST pair coverage of **0**. Of the 98 compatible type pairs, 5 never co-occur in a TEST pool and 28 co-occur in only one.
 
-## 2. The new rule
+## 2. Rules
 
-The related-task units, the balance score and the per-type checks are exactly those of `tasks.split_groups` (units from `RELATED_CLUSTERS`; at least 1 TEST and at least 5 TRAIN groups per type; score = L1 family-share gap + L1 type-share gap against all 72 groups). One check is added:
+Unchanged from `tasks.split_groups`:
+- Related-task units (`RELATED_CLUSTERS`) stay on one side.
+- Every type is in at least 1 TEST and at least 5 TRAIN groups.
+- The balance score is the L1 family-share gap plus the L1 type-share gap against all 72 groups. Lower is better.
 
-- **Pair coverage:** every **compatible** pair of instruction types must co-occur in the six-rule pool of at least `min_pair_test_groups` TEST groups. A pair is compatible when `source.conflicts` allows it: 105 pairs minus the 7 inside the mutually exclusive groups gives 98.
+Added (`configs/split_s3.yaml`):
+- **Test pairs:** every compatible pair of types (98 = 105 minus the 7 inside the mutually exclusive groups) co-occurs in the six-rule pool of at least `min_pair_test_groups = 2` TEST groups.
+- **Train pairs:** every compatible pair co-occurs in at least `min_pair_train_groups = 1` TRAIN group.
+- **Exception (owner's decision, 2026-11-23):** `change_case:capital_word_frequency` + `length_constraints:number_words` occurs in only 2 of the 72 pools, so it cannot meet both minima. With `exception_priority: test` it keeps 2 TEST groups and has 0 TRAIN groups. It is the only pair that needed an exception.
 
 ## 3. Feasibility (pool metadata only)
 
-Pools are fixed per group, so coverage can only come from choosing groups. The checks below were run with an exact CP-SAT solver on pool types and families from `data/manifest/prompts.parquet`. No generations, labels or features were read.
+These checks used an exact CP-SAT solver on pool types and families from `data/manifest/prompts.parquet`. No generations, labels or features were read.
 
 | Requirement | Result |
 |---|---|
-| Pair coverage ≥ 3 | **Infeasible at any size.** `change_case:capital_word_frequency` + `length_constraints:number_words` occurs in only 2 of the 72 pools. With that pair exempt, the best achievable minimum at 22 or 24 test groups is still 2. |
-| Pair coverage ≥ 2, free choice | Feasible from **20** test groups upward. 15 or 18 groups reach only 1. |
-| Pair coverage ≥ 2, keeping the current 15 test groups and adding more | Not reachable at 22 (best minimum is 1). It needs 24 or more groups, and then only with the rare pair exempt. |
-| Most pairs at ≥ 3 with ≥ 2 enforced, 22 groups | At most 76 of 98 (exact optimum). The proposed split, which optimises balance instead, has 66. |
-
-So the threshold defaults to **2**. It is configurable in `configs/split_s3.yaml`.
+| Test pair coverage ≥ 3 | Infeasible at any size (the rare pair above). Even with it exempt, the best minimum at 22 or 24 test groups is 2. |
+| Test pair coverage ≥ 2 | Feasible from 20 test groups upward. Not reachable at 22 if the 15 old test groups must stay in test. |
+| Pairs at ≥ 3 in test, with ≥ 2 enforced, 22 groups | At most 76 of 98 (78 if related units are relaxed). |
 
 ## 4. Search
 
-Random unit fills, as in `tasks.split_groups`, almost never satisfy pair coverage 2: at 22 groups, 0 of 20,000 draws did. `split_v3.split_groups_pair_coverage` therefore runs 1,000 seeded restarts (seed 20261123). Each restart is a random unit fill, then best-improvement swaps of equal-size units minimising (hard shortfall, balance score). Among admissible results the lowest score wins, and ties keep the earliest restart. Re-running reproduces the same split exactly (`tests/test_split_s3.py`).
+Plain random unit fills, the method of `tasks.split_groups`, never satisfy these constraints: at 22 groups, 0 of 20,000 draws did. `split_v3.split_groups_pair_coverage` therefore makes 20,000 seeded random draws (seed 20261123), each a random unit fill like the original. Each draw is then improved by best-improvement swaps of equal-size units, minimising (hard shortfall, balance score). Among the draws that end admissible, the lowest score wins, and ties keep the earliest draw. Re-running reproduces the split exactly (`tests/test_split_s3.py`).
 
-## 5. Proposed split (`results/split_s3/proposed_split.json`)
+## 5. Adopted split (`results/split_s3/proposed_split.json`, `pair_coverage.csv`)
 
-- **Test (22 groups, 66 tasks, 16,236 prompts):** g03, g04, g09, g11, g17, g19, g21, g24, g27, g30, g34, g36, g37, g47, g48, g54, g56, g58, g62, g63, g65, g68.
-- **Train (50 groups, 150 tasks, 36,900 prompts).**
-- **Coverage:** minimum pair coverage 2, and 66 of 98 pairs reach at least 3 (`results/split_s3/pair_coverage.csv`). Each type is in 6 to 11 TEST groups and at least 10 TRAIN groups.
-- **Balance score:** 0.093, compared with 0.139 for the 2026-11-14 split. 386 of the 1,000 restarts were admissible.
-- **Change from 2026-11-14:** 6 old test groups stay in test (g03, g09, g30, g48, g63, g68). 9 move to train (g02, g08, g10, g14, g35, g41, g52, g55, g67). 16 train groups move to test.
+- **Test, 22 groups (66 tasks, 16,236 prompts):** g03, g04, g10, g11, g14, g17, g19, g20, g21, g24, g27, g30, g33, g36, g48, g54, g56, g58, g62, g63, g64, g65.
+- **Train, 50 groups (150 tasks, 36,900 prompts):** the other 50 groups.
+- **Test pair coverage:** every compatible pair is in 2 to 8 TEST groups, and 63 of 98 pairs are in 3 or more.
+- **Train pair coverage:** 97 of 98 pairs are in at least 1 TRAIN group. Two pairs (`english_capital` + `number_sentences`, `english_lowercase` + `number_words`) are in exactly 1. The rare pair is in 0.
+- **Types:** each type is in 6 to 12 TEST groups and at least 10 TRAIN groups.
+- **Balance:** score 0.0871, compared with 0.1389 for the 2026-11-14 split. 7,916 of the 20,000 draws were admissible.
+- **Change from 2026-11-14:** 6 old test groups stay in test (g03, g10, g14, g30, g48, g63). 9 move to train, and 16 groups move from train to test. No related unit is split.
 
-## 6. Consequences if adopted (not done in this change)
+## 6. Variants kept for comparison
 
-- **Manifest:** rewrite the `split` column in the manifest files, or add a split-version overlay, and update `manifest_summary.json`. Row order and prompt IDs do not change.
-- **CV:** rebuild the folds over the 50 new TRAIN groups and update `tests/test_no_test_leakage.py`.
-- **Previously trained models:** the 16 groups that move to test were used for TRAIN-side CV and selection in V1 and V2. The owner accepted this on 2026-11-23 ("leakage does not matter right now"). Report it with any result.
-- **V2 caches:** these are TRAIN-only (42,066 rows). The 9 groups that move to train have no V2 max-attention features (A1max); extracting them needs authorisation. The 16 groups that move to test must be dropped from the TRAIN caches.
-- **Rare pair:** the `capital_word_frequency` + `number_words` pair appears in TRAIN in 0 pools, because both of its pools are in TEST. Per-type heads are unaffected, since each type keeps at least 10 TRAIN groups.
-- **Pre-specification:** the 2026-11-14 freeze describes 15 test groups and would need a dated revision before any unblinding.
+| | **Adopted S3** (`split_s3`) | Test minimum only (`split_s3_test_only`) | Test minimum only, units relaxed (`split_s3_no_units`) |
+|---|---|---|---|
+| Pairs in ≥ 2 test groups | 98 | 98 | 98 |
+| Pairs in ≥ 3 test groups | 63 | 66 | 65 |
+| Pairs in ≥ 1 train group | 97 (rare pair excepted) | 97 | 97 |
+| Balance score | 0.0871 | 0.0930 | 0.0918 |
+| Related units split | none | none | 4 |
 
-## 7. Variant: related-task units relaxed (for comparison only)
+The two earlier variants used 1,000 restarts. In both, the only pair absent from training is the rare pair, by chance rather than by rule. The adopted split enforces the train minimum for every other pair.
 
-The owner asked on 2026-11-23 what happens when every group is its own unit (`configs/split_s3_no_units.yaml`, `keep_related_units: false`, output in `results/split_s3_no_units/`). All other rules are unchanged.
+## 7. How it is applied (this change)
 
-| | S3 (units kept) | Variant (units relaxed) |
-|---|---|---|
-| Every compatible pair in ≥ 2 test groups | yes | yes |
-| Pairs in ≥ 3 test groups | 66 / 98 (exact ceiling 76) | 65 / 98 (exact ceiling 78) |
-| Balance score | 0.0930 | 0.0918 |
-| Pairs present in TRAIN (≥ 1 group) | 97 / 98 | 97 / 98 |
-| Pairs in only 1 TRAIN group | 2 | 2 |
-| Related units split across train and test | none | 4 (g02/g35, g07/g13, g12/g28/g53/g61/g66, g22/g44) |
+- **`src/mife/splits.py`, `configs/active_split.yaml`:** select the active split. `mife.probing.data.prompts()` and `prompt_rules()` take `split` from the S3 assignment. The test-set gate is unchanged: TEST rows stay locked until `results/prespec/FROZEN.json` approves unblinding.
+- **CV folds:** `results/cv_s3/folds.json` holds 5 GroupKFold folds of 10 groups each (7,380 prompts per fold) over the 50 S3 TRAIN groups. They were made with the V1 procedure and fold seed 20261201; the same code reproduces the V1 `results/cv/folds.json` exactly. `probing.cv.CV_DIR` and the V2 CV read the active split's folds, and the V2 CV refuses folds made for another split.
+- **Leakage tests:** `tests/test_no_test_leakage.py` checks the loaders and the new folds against the S3 TEST groups. It checks the V1 caches, predictions and folds against the 2026-11-14 split they were built under.
 
-The only pair absent from TRAIN in both splits is `capital_word_frequency` + `number_words`. This is unavoidable at a test coverage of ≥ 2, because it occurs in only 2 pools. Relaxing the units gains almost nothing and lets near-duplicate tasks straddle the split, so S3 with units kept remains the recommended split.
+## 8. Still to do before evaluation (not in this change)
+
+- **V2 caches:** these hold the old 42,066 TRAIN rows, and their key checks now refuse to load against the new split. They need rebuilding for the 36,900 S3 TRAIN prompts. This requires max-attention (A1max) extraction on the Mac for the 9 groups that move from the old test set to train (6,642 prompts). These are TRAIN prompts under S3, so the extraction falls under the existing TRAIN-only exception.
+- **V2 retraining:** CV selection and the final refit need re-running on the S3 folds.
+- **Contamination to report:** the 16 groups that move to test were used for TRAIN-side CV and selection in V1 and V2. The owner accepted this ("leakage does not matter right now"). Any result must report it, and the new models must be refit without those groups.
+- **Pre-specification:** the 2026-11-14 freeze (15 test groups) needs a dated revision for S3 before the owner authorises unblinding.

@@ -1,4 +1,4 @@
-# Variant of configs/split_s3.yaml requested 2026-11-23: related-task units relaxed. Not the recommended split.
+# Variant of configs/split_s3_test_only.yaml (2026-11-23): related-task units relaxed. Comparison only.
 # Split amendment S3 (2026-11-23), docs/amendment_split_s3_2026-11-23.md.
 # Proposes a replacement for the 2026-11-14 split (15 test groups). configs/experiment.yaml is not edited.
 amendment: split-s3-2026-11-23

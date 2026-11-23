@@ -1,11 +1,16 @@
-"""The 15 TEST groups must not be read by any CV / tuning code path before the pre-specification is frozen and
-unblinding is approved. These tests fail if a loader, cache, bundle or saved CV output contains a TEST prompt_id."""
+"""TEST groups must not be read by any CV / tuning code path before unblinding is approved. These tests fail if a
+loader, cache, bundle or saved CV output contains a TEST prompt_id.
+
+Since amendment S3 (2026-11-23) the loaders use the active split (`mife.splits`, 22 TEST groups). Artifacts built
+under the 2026-11-14 split (V1 caches, predictions and results/cv/folds.json) are checked against that split, which
+the manifest `split` column still records."""
 import json
 
 import numpy as np
 import pandas as pd
 import pytest
 
+from mife import splits
 from mife.config import DATA_DIR
 from mife.probing import data
 
@@ -14,8 +19,22 @@ pytestmark = pytest.mark.skipif(not (DATA_DIR / "manifest" / "prompts.parquet").
 
 @pytest.fixture(scope="module")
 def split_ids():
+    """(train, test) prompt ids of the ACTIVE split."""
+    m = splits.apply(pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet", columns=["prompt_id", "group_id", "split"]))
+    return set(m.prompt_id[m.split == "train"]), set(m.prompt_id[m.split == "test"])
+
+
+@pytest.fixture(scope="module")
+def v1_split_ids():
+    """(train, test) prompt ids of the 2026-11-14 split, for artifacts built under it."""
     m = pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet", columns=["prompt_id", "split"])
     return set(m.prompt_id[m.split == "train"]), set(m.prompt_id[m.split == "test"])
+
+
+def test_loaders_use_active_split(split_ids):
+    train, _ = split_ids
+    assert set(data.prompt_ids("train")) == train
+    assert set(data.prompts("train").group_id).isdisjoint(splits.test_groups())
 
 
 @pytest.fixture
@@ -58,9 +77,9 @@ def test_cv_store_reads_train_only(locked, split_ids, monkeypatch):
     assert seen and set(seen) <= train
 
 
-def test_cached_features_and_bundle_are_train_only(split_ids):
+def test_cached_features_and_bundle_are_train_only(v1_split_ids):
     from mife.probing import features
-    train, test = split_ids
+    train, test = v1_split_ids  # V1 caches were built under the 2026-11-14 split
     root = data.PROBE_FEAT
     for p in root.rglob("*_keys*.parquet"):
         ids = set(pd.read_parquet(p).get("prompt_id", pd.Series(dtype=str)))
@@ -73,8 +92,8 @@ def test_cached_features_and_bundle_are_train_only(split_ids):
         assert ids <= train and len(ids) == len(train)
 
 
-def test_saved_cv_outputs_are_train_only(split_ids):
-    _, test = split_ids
+def test_saved_cv_outputs_are_train_only(v1_split_ids):
+    _, test = v1_split_ids  # V1 predictions and folds were built under the 2026-11-14 split
     for p in (data.RESULTS / "predictions").glob("*/obj*/cv/*.parquet"):
         assert not set(pd.read_parquet(p, columns=["prompt_id"]).prompt_id) & test, p
     folds = data.RESULTS / "cv" / "folds.json"
@@ -83,3 +102,14 @@ def test_saved_cv_outputs_are_train_only(split_ids):
         test_groups = set(pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet", columns=["group_id", "split"])
                           .query("split == 'test'").group_id)
         assert not {g for fold in f["folds"] for g in fold} & test_groups
+
+
+def test_active_split_folds_are_train_only():
+    folds = splits.cv_dir() / "folds.json"
+    if splits.version() == splits.MANIFEST_VERSION or not folds.exists():
+        pytest.skip("no folds for a non-manifest active split")
+    f = json.loads(folds.read_text())
+    assert f["split_version"] == splits.version()
+    in_folds = {g for fold in f["folds"] for g in fold}
+    assert not in_folds & splits.test_groups()
+    assert in_folds == set(data.prompts("train").group_id)

@@ -53,7 +53,8 @@ def related_units(group_meta: list[dict]) -> list[list[str]]:
 
 
 class _Problem:
-    def __init__(self, group_meta, n_test, min_pair, min_type_test, min_type_train, types=None, keep_related_units=True):
+    def __init__(self, group_meta, n_test, min_pair, min_type_test, min_type_train, types=None, keep_related_units=True,
+                 min_pair_train=0, exception_priority="test"):
         self.types = sorted(types or S.TYPES)
         self.pairs = compatible_type_pairs(self.types)
         self.fams = sorted({f for g in group_meta for f in g["families"]})
@@ -61,6 +62,7 @@ class _Problem:
         self.units = related_units(group_meta) if keep_related_units else [[g] for g in sorted(self.gids)]
         self.n_test, self.n_groups = n_test, len(group_meta)
         self.min_pair, self.min_type_test, self.min_type_train = min_pair, min_type_test, min_type_train
+        self.min_pair_train = min_pair_train
         ti = {t: i for i, t in enumerate(self.types)}
         pi = {p: i for i, p in enumerate(self.pairs)}
         fi = {f: i for i, f in enumerate(self.fams)}
@@ -83,13 +85,28 @@ class _Problem:
         self.type_all = self.U_type.sum(0)
         self.pair_all = self.U_pair.sum(0)
         self.fam_all = self.U_fam.sum(0)
+        # per-pair requirements; a pair too rare for both minima satisfies the prioritised side first
+        if exception_priority == "test":
+            self.req_test = np.minimum(min_pair, self.pair_all)
+            self.req_train = np.minimum(min_pair_train, self.pair_all - self.req_test)
+        elif exception_priority == "train":
+            self.req_train = np.minimum(min_pair_train, self.pair_all)
+            self.req_test = np.minimum(min_pair, self.pair_all - self.req_train)
+        else:
+            raise ValueError(exception_priority)
 
     def infeasible_pairs(self):
         return [(self.pairs[i], int(c)) for i, c in enumerate(self.pair_all) if c < self.min_pair]
 
+    def exceptions(self):
+        return [{"pair": "|".join(self.pairs[i]), "all_groups": int(self.pair_all[i]),
+                 "required_test": int(self.req_test[i]), "required_train": int(self.req_train[i])}
+                for i in np.where((self.req_test < self.min_pair) | (self.req_train < self.min_pair_train))[0]]
+
     def evaluate(self, typ, pair, fam):
         """Arrays may carry a leading batch axis. Returns (shortfall, score)."""
-        short = (np.clip(self.min_pair - pair, 0, None).sum(-1)
+        short = (np.clip(self.req_test - pair, 0, None).sum(-1)
+                 + np.clip(self.req_train - (self.pair_all - pair), 0, None).sum(-1)
                  + np.clip(self.min_type_test - typ, 0, None).sum(-1)
                  + np.clip(self.min_type_train - (self.type_all - typ), 0, None).sum(-1))
         # identical to tasks.split_groups: L1 family-share gap + L1 type-share gap (test vs all 72 groups)
@@ -141,17 +158,28 @@ class _Problem:
 def split_groups_pair_coverage(group_meta: list[dict], n_test: int, seed: int, min_pair_test_groups: int = 2,
                                min_type_test_groups: int = 1, min_type_train_groups: int = 5,
                                n_restarts: int = 1000, max_steps: int = 200, types=None,
-                               keep_related_units: bool = True) -> tuple[set[str], dict]:
+                               keep_related_units: bool = True, min_pair_train_groups: int = 0,
+                               allow_pair_exceptions: bool = False,
+                               exception_priority: str = "test") -> tuple[set[str], dict]:
     """Seeded multi-start local search for the best-balanced admissible split (see module docstring).
 
     Admissible: every compatible type pair in >= min_pair_test_groups TEST groups, every type in
     >= min_type_test_groups TEST groups and >= min_type_train_groups TRAIN groups, related units kept whole.
     Among admissible splits the lowest balance score wins; ties keep the earliest restart.
+    min_pair_train_groups also requires every compatible pair in that many TRAIN groups. A pair that occurs in
+    fewer than min_pair_test_groups + min_pair_train_groups groups overall cannot meet both; with
+    allow_pair_exceptions=True the side named by exception_priority keeps its minimum and the other side gets the
+    remaining groups (recorded under "pair_exceptions"), otherwise a ValueError is raised. The owner chose
+    exception_priority="test" on 2026-11-23 (the rare pair goes 2 test / 0 train).
     keep_related_units=False treats every group as its own unit (RELATED_CLUSTERS ignored; variant for comparison).
     """
     P = _Problem(group_meta, n_test, min_pair_test_groups, min_type_test_groups, min_type_train_groups, types,
-                 keep_related_units)
-    bad = P.infeasible_pairs()
+                 keep_related_units, min_pair_train_groups, exception_priority)
+    exc = P.exceptions()
+    if exc and not allow_pair_exceptions:
+        raise ValueError(f"pair minima infeasible (test >= {min_pair_test_groups}, train >= {min_pair_train_groups}) "
+                         f"for these compatible pairs; allow_pair_exceptions=True relaxes them: {exc}")
+    bad = [] if allow_pair_exceptions else P.infeasible_pairs()
     if bad:
         raise ValueError(f"min_pair_test_groups={min_pair_test_groups} is infeasible: these compatible pairs occur in "
                          f"fewer groups across all {P.n_groups}: {bad}")
@@ -179,6 +207,8 @@ def split_groups_pair_coverage(group_meta: list[dict], n_test: int, seed: int, m
         "min_pair_test_groups": min_pair_test_groups, "min_type_test_groups": min_type_test_groups,
         "min_type_train_groups": min_type_train_groups, "n_compatible_pairs": len(P.pairs),
         "keep_related_units": keep_related_units, "units": P.units,
+        "min_pair_train_groups": min_pair_train_groups, "pair_exceptions": exc,
+        "exception_priority": exception_priority,
         "pair_test_groups": {f"{a}|{b}": int(c) for (a, b), c in zip(P.pairs, pair)},
         "pair_all_groups": {f"{a}|{b}": int(c) for (a, b), c in zip(P.pairs, P.pair_all)},
         "type_test_groups": {t: int(c) for t, c in zip(P.types, typ)},
@@ -187,6 +217,7 @@ def split_groups_pair_coverage(group_meta: list[dict], n_test: int, seed: int, m
         "n_pairs_at_least_3": int((pair >= 3).sum()),
         "pair_train_groups": {f"{a}|{b}": int(c) for (a, b), c in zip(P.pairs, P.pair_all - pair)},
         "n_pairs_absent_from_train": int(((P.pair_all - pair) == 0).sum()),
+        "min_pair_train_coverage": int((P.pair_all - pair).min()),
         "related_units_split": [u for u in related_units(group_meta) if len(u) > 1
                                 and 0 < sum(g in test for g in u) < len(u)],
     }

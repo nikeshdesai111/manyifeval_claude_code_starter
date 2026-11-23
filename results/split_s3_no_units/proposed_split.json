@@ -11,7 +11,7 @@
     "n_test_groups": 22,
     "seed": 20261123
   },
-  "config_sha256": "a15759cd8872ba00d174d25c09743738f12ecc29c9b06c55ffe0599e59560f16",
+  "config_sha256": "5b0b3bad77021f88f3a7b100ca1128b5e3040b5a6a265fd50dd0bfd0544c7bd9",
   "counts": {
     "test": {
       "groups": 22,
@@ -24,10 +24,13 @@
       "tasks": 150
     }
   },
+  "exception_priority": "test",
   "keep_related_units": false,
   "manifest_prompts_sha256": "f63c0aeaeec8872ec22df70f3feccbb4ecf464ee24368a001aace0cc5ccf1b14",
   "min_pair_coverage": 2,
   "min_pair_test_groups": 2,
+  "min_pair_train_coverage": 0,
+  "min_pair_train_groups": 0,
   "min_type_test_groups": 1,
   "min_type_train_groups": 5,
   "n_compatible_pairs": 98,
@@ -37,6 +40,8 @@
   "n_restarts_admissible": 828,
   "n_restarts_filled": 1000,
   "n_test": 22,
+  "note": "the frozen manifest split column is unchanged; configs/active_split.yaml selects the split in use",
+  "pair_exceptions": [],
   "related_units_split": [
     [
       "g02",
@@ -61,7 +66,7 @@
   "restart_index": 850,
   "score": 0.09175084175084185,
   "seed": 20261123,
-  "status": "proposed; manifest split column unchanged",
+  "status": "proposed (not the active split)",
   "test_groups": [
     "g02",
     "g04",

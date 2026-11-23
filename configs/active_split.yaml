@@ -1,0 +1,7 @@
+# Which group split the probing code uses (docs/amendment_split_s3_2026-11-23.md).
+# The manifest files are frozen and still carry the 2026-11-14 `split` column; mife.splits overlays this assignment
+# on every manifest read in mife.probing.data. Set version: manifest-2026-11-14 to use the original column.
+version: split-s3-2026-11-23
+assignment: results/split_s3/proposed_split.json   # test_groups / train_groups, written by scripts/split_s3/propose_split.py
+cv_dir: results/cv_s3                               # folds over the 50 S3 TRAIN groups (results/cv/ keeps the V1 folds)
+fold_group_counts: [10, 10, 10, 10, 10]

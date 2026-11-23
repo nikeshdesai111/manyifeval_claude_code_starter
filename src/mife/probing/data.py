@@ -17,7 +17,7 @@ import pandas as pd
 import pyarrow.dataset as ds
 
 from ..config import DATA_DIR, ROOT, load_config
-from .. import integrity
+from .. import integrity, splits
 from ..introspect import bits_to_float32
 
 RUN = "main"
@@ -49,7 +49,7 @@ def _splits(split: str) -> tuple[str, ...]:
 
 @lru_cache(maxsize=None)
 def _manifest_all() -> pd.DataFrame:
-    return pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet")
+    return splits.apply(pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet"))  # active split overlay
 
 
 def prompts(split: str = "train") -> pd.DataFrame:
@@ -63,7 +63,7 @@ def prompt_ids(split: str = "train") -> list[str]:
 
 
 def prompt_rules(split: str = "train") -> pd.DataFrame:
-    pr = pd.read_parquet(DATA_DIR / "manifest" / "prompt_rules.parquet")
+    pr = splits.apply(pd.read_parquet(DATA_DIR / "manifest" / "prompt_rules.parquet"))
     return pr[pr["split"].isin(_splits(split))].reset_index(drop=True)
 
 

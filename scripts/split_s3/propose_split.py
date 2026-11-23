@@ -38,7 +38,10 @@ def main():
         gm, cfg["n_test_groups"], cfg["seed"], min_pair_test_groups=cfg["min_pair_test_groups"],
         min_type_test_groups=cfg["min_type_test_groups"], min_type_train_groups=cfg["min_type_train_groups"],
         n_restarts=cfg["n_restarts"], max_steps=cfg["max_steps"],
-        keep_related_units=cfg.get("keep_related_units", True))
+        keep_related_units=cfg.get("keep_related_units", True),
+        min_pair_train_groups=cfg.get("min_pair_train_groups", 0),
+        allow_pair_exceptions=cfg.get("allow_pair_exceptions", False),
+        exception_priority=cfg.get("exception_priority", "test"))
     old_test = sorted(prompts.loc[prompts["split"] == "test", "group_id"].unique())
     per_group = prompts.groupby("group_id").size()
     by_split = {s: {"groups": len(g), "tasks": 3 * len(g), "prompts": int(per_group[list(g)].sum())}
@@ -47,7 +50,8 @@ def main():
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     summary = {
-        "amendment": V.AMENDMENT_ID, "status": "proposed; manifest split column unchanged",
+        "amendment": V.AMENDMENT_ID, "status": cfg.get("status", "proposed (not the active split)"),
+        "note": "the frozen manifest split column is unchanged; configs/active_split.yaml selects the split in use",
         "config": cfg, "config_sha256": hashlib.sha256(cfg_text.encode()).hexdigest(),
         "manifest_prompts_sha256": hashlib.sha256(Path(a.prompts).read_bytes()).hexdigest(),
         "test_groups": sorted(test), "train_groups": sorted(set(per_group.index) - test), "counts": by_split,
@@ -66,6 +70,7 @@ def main():
     pd.DataFrame(rows).sort_values(["test_groups_s3", "type_a", "type_b"]).to_csv(out / "pair_coverage.csv", index=False)
     print(json.dumps({k: summary[k] for k in ("test_groups", "counts", "score", "min_pair_coverage",
                                                 "n_pairs_at_least_3", "n_pairs_absent_from_train",
+                                                "min_pair_train_coverage", "pair_exceptions",
                                                 "related_units_split", "n_restarts_admissible")}, indent=1))
 
 

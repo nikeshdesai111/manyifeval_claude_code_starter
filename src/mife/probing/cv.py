@@ -23,13 +23,14 @@ import numpy as np
 import pandas as pd
 import torch
 
+from .. import splits
 from ..config import derive_seed, load_config
 from ..storage import write_json
 from . import configs as C
 from . import data, features, heads
 from .data import RESULTS
 
-CV_DIR = RESULTS / "cv"
+CV_DIR = splits.cv_dir()  # results/cv (V1, 2026-11-14 split) or the active split's folder (results/cv_s3)
 MIN_VIOLATED = 50
 
 
@@ -41,10 +42,10 @@ def pcfg() -> dict:
 def make_folds(write: bool = True) -> dict:
     P = data.prompts("train")
     groups = np.sort(P["group_id"].unique())
-    assert len(groups) == 57
+    counts = splits.fold_group_counts() or pcfg()["cv"]["fold_group_counts"]
+    assert len(groups) == sum(counts)
     rng = np.random.default_rng(pcfg()["seeds"]["folds"])
     perm = list(rng.permutation(groups))
-    counts = pcfg()["cv"]["fold_group_counts"]
     folds, s = [], 0
     for c in counts:
         folds.append(sorted(perm[s:s + c]))
@@ -54,7 +55,7 @@ def make_folds(write: bool = True) -> dict:
     PR["fold"] = PR["group_id"].map(fog)
     cov = {str(f): {t: int(((PR.fold != f) & (PR.type_id == t)).sum()) for t in features.TYPES} for f in range(5)}
     gcov = {str(f): {t: int(PR[(PR.fold != f) & (PR.type_id == t)].group_id.nunique()) for t in features.TYPES} for f in range(5)}
-    out = {"seed": pcfg()["seeds"]["folds"], "n_groups": len(groups), "fold_group_counts": counts, "folds": folds,
+    out = {"split_version": splits.version(), "seed": pcfg()["seeds"]["folds"], "n_groups": len(groups), "fold_group_counts": counts, "folds": folds,
            "fold_of_group": fog, "fitting_rows_per_type": cov, "fitting_groups_per_type": gcov,
            "n_prompts_per_fold": [int(P["group_id"].isin(f).sum()) for f in folds]}
     if write:
