@@ -1,7 +1,7 @@
 # NeurIPS-format draft report (2026-11-23)
 
-Draft of the class project report in the official NeurIPS 2026 style (`neurips_2026.sty`, anonymous submission mode
-with line numbers). Final report due Mon 7 Dec 2026.
+Draft of the class project report in the official NeurIPS 2026 style (`neurips_2026.sty`, `[preprint]` option: same
+layout and fonts as a submission, without the reviewer line numbers). Final report due Mon 7 Dec 2026.
 
 | File | What it is |
 |---|---|
@@ -20,9 +20,10 @@ cd report/neurips_draft && latexmk -pdf paper.tex
 
 ## Page limit
 
-Main text (through the Conclusion) ends on page 8; References start on page 9. A test that inserted filler before the
-Conclusion showed about two to three lines of slack, so the final results must **replace** the `\todo` text and `TBD`
-cells rather than add to them. Reproducibility, AI-use and compute statements are in the appendix.
+Main text (through the Conclusion) ends about halfway down page 8, and References start on page 8. That leaves roughly
+25 lines for the final results, the secondary table and the discussion of findings. Details that do not affect the
+reading of the main text (decoding settings, penalty grids, tie rule, sparse-head fallback, split constraints) are in
+the appendix. Recompile and check that the Conclusion still ends on page 8.
 
 ## What is and is not in the draft
 
