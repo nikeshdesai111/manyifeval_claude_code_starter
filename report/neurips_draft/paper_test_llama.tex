@@ -288,7 +288,7 @@ rule.}
 1 & B1 \cto{} H1 & \blk{P} \cto{} \blk{H} & substitution & hidden state vs prompt text \\
 2 & B2 \cto{} H2 & \blk{P} \cto{} \blk{H} & substitution & same, given the exact rule \\
 3 & B2 \cto{} RCAP & \blk{P} \cto{} \blk{A} & substitution & rule attention vs prompt text \\
-4 & RCAP \cto{} H2 & \blk{A} \cto{} \blk{H} & substitution & hidden state vs rule attention \\
+4 & H2 \cto{} RCAP & \blk{H} \cto{} \blk{A} & substitution & rule attention vs hidden state \\
 \midrule
 5 & B1 \cto{} B1+H & $+\blk{H}$ & addition & what \blk{H} adds to B1 \\
 6 & B2 \cto{} B2+H & $+\blk{H}$ & addition & what \blk{H} adds to B2 \\
@@ -394,20 +394,20 @@ confirmation, nor one including zero as equivalence.
 
 \begin{table}[t]
 \centering\footnotesize
-\caption{Evaluation~1, Objective~1 on the 22 held-out S3 test groups: rule-level violation-risk prediction (115,236 prompt--rule rows and 2,304,720 response $\times$ rule outcomes per generator). NLL reduction $=$ NLL(comparator) $-$ NLL(candidate), $\times10^{3}$ nats per outcome; AUROC gain $\times100$; Types $=$ rule types with strictly lower NLL (descriptive). Positive favours the candidate. Paired, pointwise 95\% intervals from a 22-pool cluster bootstrap (10,000 draws). Primary comparisons above the rule, secondary below. Qwen: test features still being extracted at the time of this version.}
+\caption{Evaluation~1, Objective~1 on the 22 held-out S3 test groups: rule-level violation-risk prediction (115,236 prompt--rule rows and 2,304,720 response $\times$ rule outcomes per generator). NLL reduction $=$ NLL(comparator) $-$ NLL(candidate), in nats per outcome; AUROC gain $\times100$; Types $=$ rule types with strictly lower NLL (descriptive). Positive favours the candidate. Paired, pointwise 95\% intervals from a 22-pool cluster bootstrap (10,000 draws). Primary comparisons above the rule, secondary below. Qwen: test features still being extracted at the time of this version.}
 \label{tab:e1o1}
 \begin{tabular}{lccc}
 \toprule
 Comparison & NLL red. & AUROC gain & Types \\
 \midrule
-1: B1 \cto{} H1 & 31.2 [$-$10.5, 70.8] & 4.6 [0.9, 7.7] & 12/15 \\
-2: B2 \cto{} H2 & 20.9 [0.3, 42.2] & 1.6 [0.3, 2.9] & 12/15 \\
-3: B2 \cto{} RCAP & 43.3 [13.4, 77.4] & 2.0 [0.5, 3.5] & 13/15 \\
-4: RCAP \cto{} H2 & $-$22.4 [$-$52.3, 3.5] & $-$0.3 [$-$2.1, 1.5] & 8/15 \\
+1: B1 \cto{} H1 & 0.0312 [$-$0.0105, 0.0708] & 4.6 [0.9, 7.7] & 12/15 \\
+2: B2 \cto{} H2 & 0.0209 [0.0003, 0.0422] & 1.6 [0.3, 2.9] & 12/15 \\
+3: B2 \cto{} RCAP & 0.0433 [0.0134, 0.0774] & 2.0 [0.5, 3.5] & 13/15 \\
+4: H2 \cto{} RCAP & 0.0224 [$-$0.0035, 0.0523] & 0.3 [$-$1.5, 2.1] & 7/15 \\
 \midrule
-5: B1 \cto{} B1+H1 & 13.1 [$-$32.7, 56.2] & 4.7 [1.1, 7.7] & 11/15 \\
-6: B2 \cto{} B2+H1 & 23.6 [7.5, 41.6] & 1.9 [1.0, 2.8] & 12/15 \\
-7: B2 \cto{} B2+A1 & 37.2 [17.4, 59.6] & 2.1 [1.2, 3.0] & 12/15 \\
+5: B1 \cto{} B1+H1 & 0.0131 [$-$0.0327, 0.0562] & 4.7 [1.1, 7.7] & 11/15 \\
+6: B2 \cto{} B2+H1 & 0.0236 [0.0075, 0.0416] & 1.9 [1.0, 2.8] & 12/15 \\
+7: B2 \cto{} B2+A1 & 0.0372 [0.0174, 0.0596] & 2.1 [1.2, 3.0] & 12/15 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -415,21 +415,21 @@ Comparison & NLL red. & AUROC gain & Types \\
 
 
 \paragraph{Objective 1.} On the held-out groups (Table~\ref{tab:e1o1}), the rule-conditioned attention probe
-beats B2, which already embeds the exact rule, by 43.3 [13.4, 77.4] $\times10^{-3}$ nats per outcome (comparison~3),
-and the hidden state beats it by 20.9 [0.3, 42.2] (comparison~2); both also raise AUROC (by 2.0 and 1.6 points) and
+beats B2, which already embeds the exact rule, by 0.0433 [0.0134, 0.0774] nats per outcome (comparison~3),
+and the hidden state beats it by 0.0209 [0.0003, 0.0422] (comparison~2); both also raise AUROC (by 2.0 and 1.6 points) and
 lower NLL on 13 and 12 of the 15 rule types. Against the prompt-only baseline B1, the hidden state (comparison~1) raises
-AUROC by 4.6 [0.9, 7.7] points, but its NLL reduction, 31.2 [$-10.5$, 70.8], has an interval that includes zero.
-Attention and hidden state cannot be separated (comparison~4: $-22.4$ [$-52.3$, 3.5]); attention has the lowest NLL of
+AUROC by 4.6 [0.9, 7.7] points, but its NLL reduction, 0.0312 [$-0.0105$, 0.0708], has an interval that includes zero.
+Attention and hidden state cannot be separated (comparison~4, H2 \cto{} RCAP: 0.0224 [$-0.0035$, 0.0523]); attention has the lowest NLL of
 all predictors (0.345, against 0.388 for B2 and 0.367 for H2). These comparisons test predictive accuracy, not
 mechanism.
 
-\paragraph{Incremental information and breadth.} Added to B2, the hidden state (comparison~6: 23.6 [7.5, 41.6]) and
-attention (comparison~7: 37.2 [17.4, 59.6]) both improve NLL with intervals above zero and AUROC by about 2 points;
-added to B1, the hidden state (comparison~5) raises AUROC by 4.7 points but does not clearly lower NLL (13.1 [$-32.7$,
-56.2]). The type counts are point estimates, not per-type tests. Split by rule class (Appendix A3b), the gains appear in
-both: on the five fixed-wording types every comparison except~4 lowers NLL by 12--16 $\times10^{-3}$, and attention's
-larger gains come from the ten parameterised types (58.6 for comparison~3 and 50.7 for comparison~7; fixed minus
-parameterised $-38.8$ [$-76.2$, $-5.5$] for comparison~7, exploratory). Calibration is reasonable throughout (ECE
+\paragraph{Incremental information and breadth.} Added to B2, the hidden state (comparison~6: 0.0236 [0.0075, 0.0416]) and
+attention (comparison~7: 0.0372 [0.0174, 0.0596]) both improve NLL with intervals above zero and AUROC by about 2 points;
+added to B1, the hidden state (comparison~5) raises AUROC by 4.7 points but does not clearly lower NLL (0.0131 [$-0.0327$,
+0.0562]). The type counts are point estimates, not per-type tests. Split by rule class (Appendix A3b), the gains appear in
+both: on the five fixed-wording types every comparison except~4 lowers NLL by 0.012--0.016 nats, and attention's
+larger gains come from the ten parameterised types (0.0586 for comparison~3 and 0.0507 for comparison~7; fixed minus
+parameterised $-0.0388$ [$-0.0762$, $-0.0055$] for comparison~7, exploratory). Calibration is reasonable throughout (ECE
 3.2--5.6 points; Appendix A1--A2).
 
 \begin{table}[t]
@@ -446,7 +446,7 @@ Comparison & RMSE red. (pp) & Spearman gain & RMSE red. (pp) & Spearman gain \\
 1: B1 \cto{} H1 & 1.94 [0.84, 3.06] & 28.6 [17.5, 39.7] & 0.76 [$-$0.11, 1.61] & 12.1 [4.7, 20.4] \\
 2: B2 \cto{} H2 & 0.60 [0.04, 1.18] & 8.5 [3.4, 14.5] & 0.49 [$-$0.45, 1.35] & 11.3 [3.8, 18.9] \\
 3: B2 \cto{} RCAP & 0.76 [0.06, 1.45] & 8.3 [2.4, 14.9] & 0.50 [$-$0.04, 1.05] & 10.5 [4.8, 16.5] \\
-4: RCAP \cto{} H2 & $-$0.16 [$-$0.72, 0.44] & 0.1 [$-$4.2, 4.4] & $-$0.01 [$-$0.72, 0.58] & 0.8 [$-$3.3, 4.9] \\
+4: H2 \cto{} RCAP & 0.16 [$-$0.44, 0.72] & $-$0.1 [$-$4.4, 4.2] & 0.01 [$-$0.58, 0.72] & $-$0.8 [$-$4.9, 3.3] \\
 \midrule
 5: B1 \cto{} B1+H1 & 1.92 [0.80, 3.05] & 28.4 [17.4, 39.6] & 0.75 [$-$0.11, 1.58] & 12.0 [4.7, 20.2] \\
 6: B2 \cto{} B2+H1 & 0.54 [$-$0.03, 1.14] & 8.4 [3.6, 14.2] & 0.46 [$-$0.29, 1.19] & 11.4 [4.7, 18.3] \\
@@ -552,7 +552,7 @@ stays stable (1.9). By family (B), informational tasks are associated with lower
 Llama & 1: B1 \cto{} H1 & $-$0.5 [$-$4.6, 3.7] & $-$7.1 [$-$18.6, 3.1] & $-$10.4 [$-$32.9, 11.7] & 94.1 [$-$52.5, 216.8] \\
  & 2: B2 \cto{} H2 & 5.2 [1.9, 8.8] & 1.7 [$-$5.4, 8.5] & 3.7 [$-$10.7, 17.9] & 1.2 [$-$134.6, 119.1] \\
  & 3: B2 \cto{} RCAP & $-$40.3 [$-$58.4, $-$22.6] & $-$22.8 [$-$35.2, $-$9.7] & $-$30.5 [$-$47.6, $-$13.7] & 25.0 [$-$54.2, 111.1] \\
- & 4: RCAP \cto{} H2 & 45.6 [26.8, 65.2] & 24.5 [11.7, 36.9] & 34.2 [15.6, 52.2] & $-$23.9 [$-$139.4, 73.9] \\
+ & 4: H2 \cto{} RCAP & $-$45.6 [$-$65.2, $-$26.8] & $-$24.5 [$-$36.9, $-$11.7] & $-$34.2 [$-$52.2, $-$15.6] & 23.9 [$-$73.9, 139.4] \\
  & 5: B1 \cto{} B1+H1 & $-$1.5 [$-$7.8, 4.9] & $-$5.7 [$-$17.6, 6.6] & $-$6.8 [$-$27.8, 17.1] & $-$7.9 [$-$169.8, 130.9] \\
  & 6: B2 \cto{} B2+H1 & 7.3 [3.9, 11.1] & 6.0 [$-$1.9, 13.6] & 14.1 [1.2, 26.8] & 20.5 [$-$73.4, 110.5] \\
  & 7: B2 \cto{} B2+A1 & $-$18.2 [$-$32.4, $-$4.6] & $-$2.4 [$-$11.9, 7.9] & 0.1 [$-$11.5, 12.5] & 46.3 [$-$19.3, 120.1] \\
@@ -564,8 +564,8 @@ Llama & 1: B1 \cto{} H1 & $-$0.5 [$-$4.6, 3.7] & $-$7.1 [$-$18.6, 3.1] & $-$10.4
 
 Table~\ref{tab:eval2} asks whether the predictors forecast these matched changes. The clearest held-out result is
 negative for attention: the rule-attention probe forecasts position, append and companion changes worse than B2
-(comparison~3: $-40.3$, $-22.8$ and $-30.5$, all intervals below zero), and H2 beats it on the same three factors
-(comparison~4). The hidden state gives a small, consistent gain for position changes, alone (comparison~2: 5.2 [1.9,
+(comparison~3: $-40.3$, $-22.8$ and $-30.5$, all intervals below zero), and it also forecasts them worse than H2
+(comparison~4, H2 \cto{} RCAP: $-45.6$, $-24.5$ and $-34.2$). The hidden state gives a small, consistent gain for position changes, alone (comparison~2: 5.2 [1.9,
 8.8]) and on top of B2 (comparison~6: 7.3 [3.9, 11.1]), where it also improves companion forecasts (14.1 [1.2, 26.8]).
 No comparison is clearly better or worse for task changes, which are the noisiest (zero-change MSE 762). Better
 absolute accuracy therefore does not imply better forecasts of how a rule's risk moves with its context: rule attention
@@ -864,20 +864,20 @@ Llama & B2+A1 & 0.3508 [0.2976, 0.4113] & 0.1046 [0.0878, 0.1226] & 83.4 [78.3, 
 
 \begin{table}[h]
 \centering\scriptsize
-\caption{A1 (contrasts) and A4 (sensitivity). Raw NLL ($\times10^3$) and AUROC ($\times100$), comparator / candidate; Brier reduction $\times10^3$ with paired interval; NLL-reduction $t_{21}$ jackknife interval and leave-one-pool-out range ($\times10^3$).}
+\caption{A1 (contrasts) and A4 (sensitivity). Raw NLL (nats) and AUROC ($\times100$), comparator / candidate; Brier reduction $\times10^3$ with paired interval; NLL-reduction $t_{21}$ jackknife interval and leave-one-pool-out range (nats).}
 \label{tab:A1c}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{llccccc}
 \toprule
  & Comparison & NLL comp./cand. & Brier reduction & AUROC comp./cand. & NLL $t_{21}$ interval & NLL leave-one-pool-out \\
 \midrule
-Llama & 1: B1 \cto{} H1 & 402.3 / 371.1 & 12.19 [$-$1.71, 25.54] & 76.6 / 81.2 & [$-$12.4, 74.9] & 23.7 to 43.3 \\
-Llama & 2: B2 \cto{} H2 & 388.0 / 367.1 & 6.67 [$-$0.67, 13.91] & 81.3 / 83.0 & [$-$1.5, 43.2] & 15.4 to 27.5 \\
-Llama & 3: B2 \cto{} RCAP & 388.0 / 344.7 & 13.25 [4.16, 23.22] & 81.3 / 83.3 & [8.5, 78.1] & 33.3 to 47.1 \\
-Llama & 4: RCAP \cto{} H2 & 344.7 / 367.1 & $-$6.58 [$-$14.57, 0.65] & 83.3 / 83.0 & [$-$52.6, 7.8] & $-$25.9 to $-$11.8 \\
-Llama & 5: B1 \cto{} B1+H1 & 402.3 / 389.2 & 10.02 [$-$4.18, 23.87] & 76.6 / 81.3 & [$-$34.6, 60.8] & 5.6 to 26.5 \\
-Llama & 6: B2 \cto{} B2+H1 & 388.0 / 364.4 & 8.06 [2.33, 14.14] & 81.3 / 83.2 & [5.2, 41.9] & 17.7 to 27.8 \\
-Llama & 7: B2 \cto{} B2+A1 & 388.0 / 350.8 & 11.78 [5.53, 18.80] & 81.3 / 83.4 & [14.1, 60.3] & 30.9 to 39.8 \\
+Llama & 1: B1 \cto{} H1 & 0.4023 / 0.3711 & 12.19 [$-$1.71, 25.54] & 76.6 / 81.2 & [$-$0.0124, 0.0749] & 0.0237 to 0.0433 \\
+Llama & 2: B2 \cto{} H2 & 0.3880 / 0.3671 & 6.67 [$-$0.67, 13.91] & 81.3 / 83.0 & [$-$0.0015, 0.0432] & 0.0154 to 0.0275 \\
+Llama & 3: B2 \cto{} RCAP & 0.3880 / 0.3447 & 13.25 [4.16, 23.22] & 81.3 / 83.3 & [0.0085, 0.0781] & 0.0333 to 0.0471 \\
+Llama & 4: H2 \cto{} RCAP & 0.3671 / 0.3447 & 6.58 [$-$0.65, 14.57] & 83.0 / 83.3 & [$-$0.0078, 0.0526] & 0.0118 to 0.0259 \\
+Llama & 5: B1 \cto{} B1+H1 & 0.4023 / 0.3892 & 10.02 [$-$4.18, 23.87] & 76.6 / 81.3 & [$-$0.0346, 0.0608] & 0.0056 to 0.0265 \\
+Llama & 6: B2 \cto{} B2+H1 & 0.3880 / 0.3644 & 8.06 [2.33, 14.14] & 81.3 / 83.2 & [0.0052, 0.0419] & 0.0177 to 0.0278 \\
+Llama & 7: B2 \cto{} B2+A1 & 0.3880 / 0.3508 & 11.78 [5.53, 18.80] & 81.3 / 83.4 & [0.0141, 0.0603] & 0.0309 to 0.0398 \\
 \bottomrule
 \end{tabular}
 }
@@ -886,24 +886,24 @@ Llama & 7: B2 \cto{} B2+A1 & 388.0 / 350.8 & 11.78 [5.53, 18.80] & 81.3 / 83.4 &
 \subsection*{A2 --- Calibration (Objective 1)}
 \begin{figure}[h]\centering\includegraphics[width=0.62\linewidth]{figures/test_llama/e1_A2_reliability.png}\caption{A2. Reliability curves on the test groups for five key predictors; bins are deciles of each predictor's \emph{training} out-of-fold predictions (fixed before test scoring); unit: response $\times$ rule outcome. Bin support: \texttt{tables/eval1\_calibration.csv}.}\end{figure}
 \subsection*{A3 --- Per-type NLL reduction}
-\begin{figure}[h]\centering\includegraphics[width=\linewidth]{figures/test_llama/e1_A3_per_type_nll_heatmap.png}\caption{A3. Per-type test NLL reduction ($\times100$) for the seven comparisons; five fixed-wording types above the line, ten parameterised types below; positive (red) favours the candidate. All 210 values per generator with paired intervals and support: \texttt{tables/eval1\_per\_type.csv}.}\end{figure}
+\begin{figure}[h]\centering\includegraphics[width=\linewidth]{figures/test_llama/e1_A3_per_type_nll_heatmap.png}\caption{A3. Per-type test NLL reduction (nats) for the seven comparisons; five fixed-wording types above the line, ten parameterised types below; positive (red) favours the candidate. All 210 values per generator with paired intervals and support: \texttt{tables/eval1\_per\_type.csv}.}\end{figure}
 \subsection*{A3b --- Fixed versus parameterised rule types (Objective 1 only)}
 \begin{table}[h]
 \centering\scriptsize
-\caption{A3b. NLL reductions of the same seven predictor comparisons, calculated separately on rule-level outcomes from the five fixed and ten parameterised ManyIFEval rule types ($\times10^3$). Positive improvement favours the candidate (right of the arrow). The fixed-minus-parameterised column compares improvements between subgroups, not raw violation rates. Intervals are paired pointwise 95\% intervals from resampling the 22 test rule pools (identical draws for both classes); all seven subgroup differences are exploratory. Last column: type-equal-weight sensitivity (simple mean of per-type reductions). Observed violation rates: Llama: fixed 8.2\% (803,160 outcomes), parameterised 20.6\% (1,501,560).}
+\caption{A3b. NLL reductions of the same seven predictor comparisons, calculated separately on rule-level outcomes from the five fixed and ten parameterised ManyIFEval rule types (nats). Positive improvement favours the candidate (right of the arrow). The fixed-minus-parameterised column compares improvements between subgroups, not raw violation rates. Intervals are paired pointwise 95\% intervals from resampling the 22 test rule pools (identical draws for both classes); all seven subgroup differences are exploratory. Last column: type-equal-weight sensitivity (simple mean of per-type reductions). Observed violation rates: Llama: fixed 8.2\% (803,160 outcomes), parameterised 20.6\% (1,501,560).}
 \label{tab:A3b}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{llcccc}
 \toprule
  & Comparison & Fixed $\Delta$NLL & Parameterised $\Delta$NLL & Fixed $-$ param. & Type-equal (F / P) \\
 \midrule
-Llama & 1: B1 \cto{} H1 & 16.2 [4.4, 31.5] & 39.3 [$-$24.0, 99.6] & $-$23.2 [$-$85.0, 40.3] & 16.3 / 38.5 \\
- & 2: B2 \cto{} H2 & 16.2 [4.4, 31.5] & 23.4 [$-$9.4, 58.1] & $-$7.3 [$-$47.3, 31.3] & 16.3 / 20.7 \\
- & 3: B2 \cto{} RCAP & 14.7 [4.2, 27.5] & 58.6 [13.3, 111.5] & $-$43.9 [$-$97.9, 3.4] & 14.6 / 44.9 \\
- & 4: RCAP \cto{} H2 & 1.5 [$-$4.8, 7.3] & $-$35.1 [$-$81.6, 4.2] & 36.6 [$-$3.3, 83.9] & 1.7 / $-$24.2 \\
- & 5: B1 \cto{} B1+H1 & 15.1 [$-$0.5, 34.8] & 12.0 [$-$58.1, 77.0] & 3.1 [$-$64.7, 75.3] & 15.9 / 13.1 \\
- & 6: B2 \cto{} B2+H1 & 14.2 [4.4, 26.8] & 28.6 [2.7, 58.0] & $-$14.4 [$-$48.0, 17.5] & 14.4 / 23.6 \\
- & 7: B2 \cto{} B2+A1 & 12.0 [4.0, 21.6] & 50.7 [20.2, 85.8] & $-$38.8 [$-$76.2, $-$5.5] & 12.2 / 37.2 \\
+Llama & 1: B1 \cto{} H1 & 0.0162 [0.0044, 0.0315] & 0.0393 [$-$0.0240, 0.0996] & $-$0.0232 [$-$0.0850, 0.0403] & 0.0163 / 0.0385 \\
+ & 2: B2 \cto{} H2 & 0.0162 [0.0044, 0.0315] & 0.0234 [$-$0.0094, 0.0581] & $-$0.0073 [$-$0.0473, 0.0313] & 0.0163 / 0.0207 \\
+ & 3: B2 \cto{} RCAP & 0.0147 [0.0042, 0.0275] & 0.0586 [0.0133, 0.1115] & $-$0.0439 [$-$0.0979, 0.0034] & 0.0146 / 0.0449 \\
+ & 4: H2 \cto{} RCAP & $-$0.0015 [$-$0.0073, 0.0048] & 0.0351 [$-$0.0042, 0.0816] & $-$0.0366 [$-$0.0839, 0.0033] & $-$0.0017 / 0.0242 \\
+ & 5: B1 \cto{} B1+H1 & 0.0151 [$-$0.0005, 0.0348] & 0.0120 [$-$0.0581, 0.0770] & 0.0031 [$-$0.0647, 0.0753] & 0.0159 / 0.0131 \\
+ & 6: B2 \cto{} B2+H1 & 0.0142 [0.0044, 0.0268] & 0.0286 [0.0027, 0.0580] & $-$0.0144 [$-$0.0480, 0.0175] & 0.0144 / 0.0236 \\
+ & 7: B2 \cto{} B2+A1 & 0.0120 [0.0040, 0.0216] & 0.0507 [0.0202, 0.0858] & $-$0.0388 [$-$0.0762, $-$0.0055] & 0.0122 / 0.0372 \\
 \bottomrule
 \end{tabular}
 }
@@ -959,7 +959,7 @@ $k$ & Slots & Llama & Contexts \\
 Llama & 1: B1 \cto{} H1 & 1.7 [$-$8.3, 12.0] & 0.9 [$-$4.6, 5.9] & $-$2.6 [$-$5.5, 0.3] & $-$1.8 [$-$5.4, 1.2] \\
  & 2: B2 \cto{} H2 & 11.3 [3.9, 19.7] & 5.4 [1.1, 9.9] & 2.0 [$-$0.8, 5.1] & 2.2 [$-$0.7, 5.4] \\
  & 3: B2 \cto{} RCAP & $-$75.7 [$-$112.2, $-$42.8] & $-$41.1 [$-$61.5, $-$20.0] & $-$28.5 [$-$41.4, $-$14.9] & $-$16.1 [$-$28.0, $-$3.4] \\
- & 4: RCAP \cto{} H2 & 87.0 [50.8, 127.6] & 46.6 [24.8, 68.2] & 30.5 [17.5, 43.2] & 18.2 [6.0, 29.9] \\
+ & 4: H2 \cto{} RCAP & $-$87.0 [$-$127.6, $-$50.8] & $-$46.6 [$-$68.2, $-$24.8] & $-$30.5 [$-$43.2, $-$17.5] & $-$18.2 [$-$29.9, $-$6.0] \\
  & 5: B1 \cto{} B1+H1 & $-$4.9 [$-$19.3, 9.3] & $-$2.9 [$-$11.2, 5.3] & $-$1.3 [$-$6.5, 3.9] & 3.0 [$-$3.6, 9.7] \\
  & 6: B2 \cto{} B2+H1 & 15.2 [7.0, 24.7] & 7.4 [3.4, 11.7] & 3.5 [1.3, 5.8] & 3.3 [0.5, 6.3] \\
  & 7: B2 \cto{} B2+A1 & $-$45.0 [$-$77.3, $-$17.1] & $-$19.1 [$-$35.7, $-$2.2] & $-$10.2 [$-$19.5, $-$0.2] & 1.3 [$-$8.4, 12.5] \\
@@ -1065,7 +1065,7 @@ Transition & Slot $j$ & Llama & Pairs / pools \\
 Llama & 1: B1 \cto{} H1 & $-$16.1 [$-$40.1, 4.7] & $-$7.6 [$-$19.0, 2.8] & $-$2.3 [$-$10.8, 5.5] & $-$2.3 [$-$10.9, 6.0] \\
  & 2: B2 \cto{} H2 & 0.5 [$-$12.9, 14.2] & 3.9 [$-$4.2, 11.8] & 3.4 [$-$3.6, 10.6] & $-$1.2 [$-$9.4, 6.8] \\
  & 3: B2 \cto{} RCAP & $-$26.9 [$-$52.8, 0.0] & $-$20.4 [$-$34.9, $-$5.2] & $-$17.5 [$-$27.7, $-$7.0] & $-$26.5 [$-$37.4, $-$15.6] \\
- & 4: RCAP \cto{} H2 & 27.4 [$-$2.2, 55.5] & 24.3 [11.4, 37.0] & 20.9 [11.8, 30.7] & 25.4 [13.2, 38.1] \\
+ & 4: H2 \cto{} RCAP & $-$27.4 [$-$55.5, 2.2] & $-$24.3 [$-$37.0, $-$11.4] & $-$20.9 [$-$30.7, $-$11.8] & $-$25.4 [$-$38.1, $-$13.2] \\
  & 5: B1 \cto{} B1+H1 & $-$10.8 [$-$33.9, 12.4] & $-$12.9 [$-$27.1, 1.2] & $-$0.7 [$-$11.3, 10.1] & 1.7 [$-$9.5, 13.2] \\
  & 6: B2 \cto{} B2+H1 & 3.1 [$-$11.6, 17.6] & 9.9 [1.2, 18.5] & 8.1 [1.4, 14.9] & 3.1 [$-$3.5, 9.6] \\
  & 7: B2 \cto{} B2+A1 & 0.7 [$-$19.3, 23.2] & $-$0.6 [$-$12.0, 11.2] & $-$0.9 [$-$8.8, 7.4] & $-$8.9 [$-$16.4, $-$0.9] \\
@@ -1147,7 +1147,7 @@ Type & L RMS & L corr. & L noise & L base & L pools \\
 Llama & 1: B1 \cto{} H1 & $-$3.8 [$-$32.6, 23.8] & $-$11.5 [$-$31.1, 9.0] & $-$17.0 [$-$38.2, 3.8] & $-$9.3 [$-$36.4, 15.9] \\
  & 2: B2 \cto{} H2 & 16.1 [$-$4.3, 37.2] & 5.4 [$-$8.4, 19.3] & $-$1.9 [$-$16.6, 12.0] & $-$4.7 [$-$22.3, 10.9] \\
  & 3: B2 \cto{} RCAP & $-$37.1 [$-$58.7, $-$17.0] & $-$28.6 [$-$45.8, $-$10.7] & $-$31.6 [$-$51.7, $-$11.4] & $-$24.5 [$-$42.7, $-$6.8] \\
- & 4: RCAP \cto{} H2 & 53.2 [27.2, 79.9] & 34.0 [16.6, 51.4] & 29.7 [10.0, 49.1] & 19.8 [$-$0.4, 39.4] \\
+ & 4: H2 \cto{} RCAP & $-$53.2 [$-$79.9, $-$27.2] & $-$34.0 [$-$51.4, $-$16.6] & $-$29.7 [$-$49.1, $-$10.0] & $-$19.8 [$-$39.4, 0.4] \\
  & 5: B1 \cto{} B1+H1 & $-$12.2 [$-$43.0, 21.1] & $-$10.5 [$-$31.3, 12.5] & $-$10.8 [$-$30.6, 9.8] & 6.2 [$-$19.0, 32.3] \\
  & 6: B2 \cto{} B2+H1 & 27.3 [7.1, 48.1] & 16.1 [3.2, 28.5] & 8.8 [$-$3.1, 20.3] & 4.1 [$-$9.3, 16.7] \\
  & 7: B2 \cto{} B2+A1 & 4.2 [$-$15.2, 22.9] & 1.1 [$-$12.2, 15.2] & $-$3.7 [$-$16.6, 10.0] & $-$1.3 [$-$14.9, 12.7] \\
@@ -1251,7 +1251,7 @@ PERSUASIVE $-$ PRACTICAL & $-$3.68 [$-$8.69, 0.52] & 8 \\
 Llama & 1: B1 \cto{} H1 & 53.1 [$-$213.8, 278.3] & 96.1 [$-$87.7, 238.7] & 113.8 [$-$20.5, 229.0] & 107.6 [$-$15.7, 218.1] & 100.1 [$-$15.3, 205.8] \\
  & 2: B2 \cto{} H2 & $-$24.5 [$-$274.7, 194.6] & $-$7.5 [$-$172.9, 134.7] & 9.0 [$-$111.9, 119.7] & 14.0 [$-$90.7, 112.5] & 14.8 [$-$77.3, 103.0] \\
  & 3: B2 \cto{} RCAP & $-$28.6 [$-$238.1, 182.2] & 9.4 [$-$110.3, 127.8] & 36.2 [$-$40.1, 115.6] & 49.0 [$-$15.7, 118.3] & 59.3 [$-$0.5, 120.7] \\
- & 4: RCAP \cto{} H2 & 4.1 [$-$251.8, 223.4] & $-$16.9 [$-$165.1, 114.2] & $-$27.2 [$-$117.6, 50.2] & $-$34.9 [$-$106.8, 30.1] & $-$44.5 [$-$104.8, 12.2] \\
+ & 4: H2 \cto{} RCAP & $-$4.1 [$-$223.4, 251.8] & 16.9 [$-$114.2, 165.1] & 27.2 [$-$50.2, 117.6] & 34.9 [$-$30.1, 106.8] & 44.5 [$-$12.2, 104.8] \\
  & 5: B1 \cto{} B1+H1 & $-$96.0 [$-$373.8, 151.7] & $-$19.4 [$-$224.9, 143.2] & 25.3 [$-$130.2, 162.0] & 24.3 [$-$124.3, 156.2] & 26.3 [$-$113.4, 149.4] \\
  & 6: B2 \cto{} B2+H1 & $-$19.3 [$-$216.1, 161.0] & 19.6 [$-$98.9, 132.5] & 33.0 [$-$49.9, 116.0] & 34.6 [$-$36.5, 106.6] & 34.5 [$-$26.4, 100.1] \\
  & 7: B2 \cto{} B2+A1 & 38.6 [$-$141.0, 221.2] & 43.4 [$-$40.0, 134.3] & 48.0 [$-$14.1, 113.5] & 48.5 [$-$4.3, 105.5] & 53.3 [9.8, 101.0] \\
@@ -1348,7 +1348,7 @@ Qwen & Structure only & 11.84 & 8.79 & 140.2 & 29.8 & 34.4 & 1.78 \\
 Llama & 1: B1 \cto{} H1 & 2.19 [1.19, 3.25] & 53.1 [22.2, 84.4] & 26.1 [15.6, 37.8] \\
 Llama & 2: B2 \cto{} H2 & 0.63 [0.12, 1.18] & 15.6 [0.9, 30.7] & 6.8 [2.0, 12.9] \\
 Llama & 3: B2 \cto{} RCAP & 0.77 [0.23, 1.36] & 19.5 [1.5, 37.8] & 8.6 [2.3, 15.1] \\
-Llama & 4: RCAP \cto{} H2 & $-$0.14 [$-$0.56, 0.28] & $-$3.9 [$-$18.1, 11.4] & $-$1.8 [$-$6.5, 3.7] \\
+Llama & 4: H2 \cto{} RCAP & 0.14 [$-$0.28, 0.56] & 3.9 [$-$11.4, 18.1] & 1.8 [$-$3.7, 6.5] \\
 Llama & 5: B1 \cto{} B1+H1 & 2.18 [1.17, 3.24] & 52.5 [21.7, 83.9] & 25.9 [15.3, 37.7] \\
 Llama & 6: B2 \cto{} B2+H1 & 0.66 [0.18, 1.21] & 14.0 [$-$0.7, 29.5] & 6.5 [1.7, 12.6] \\
 Llama & 7: B2 \cto{} B2+A1 & 0.76 [0.23, 1.35] & 19.3 [1.8, 37.5] & 8.5 [2.1, 15.1] \\
@@ -1356,7 +1356,7 @@ Llama & 7: B2 \cto{} B2+A1 & 0.76 [0.23, 1.35] & 19.3 [1.8, 37.5] & 8.5 [2.1, 15
 Qwen & 1: B1 \cto{} H1 & 0.95 [0.33, 1.58] & 17.4 [$-$2.5, 36.9] & 16.0 [5.6, 26.7] \\
 Qwen & 2: B2 \cto{} H2 & 0.66 [0.03, 1.27] & 11.0 [$-$10.1, 31.0] & 10.4 [$-$1.3, 22.7] \\
 Qwen & 3: B2 \cto{} RCAP & 0.50 [0.10, 0.91] & 11.2 [$-$1.0, 23.8] & 8.8 [0.8, 17.6] \\
-Qwen & 4: RCAP \cto{} H2 & 0.15 [$-$0.28, 0.54] & $-$0.2 [$-$15.9, 13.0] & 1.7 [$-$5.6, 8.6] \\
+Qwen & 4: H2 \cto{} RCAP & $-$0.15 [$-$0.54, 0.28] & 0.2 [$-$13.0, 15.9] & $-$1.7 [$-$8.6, 5.6] \\
 Qwen & 5: B1 \cto{} B1+H1 & 0.94 [0.33, 1.56] & 17.1 [$-$2.6, 36.1] & 15.7 [5.3, 26.4] \\
 Qwen & 6: B2 \cto{} B2+H1 & 0.65 [0.09, 1.20] & 10.4 [$-$6.6, 26.8] & 9.9 [0.5, 20.4] \\
 Qwen & 7: B2 \cto{} B2+A1 & 0.43 [0.12, 0.74] & 7.1 [$-$1.5, 15.7] & 6.3 [0.9, 12.7] \\
@@ -1418,15 +1418,15 @@ Qwen & Obj.~2 head H2+S & 11.01 & 47.3 \\
 \toprule
  & Factor & Pairs & RMS & Signed mean & Zero MSE & 1 & 2 & 3 & 4 \\
 \midrule
-Llama & position & 244,800 & 6.9 [6.0, 7.7] & $-$0.08 [$-$0.35, 0.22] & 65.4 & $-$6.2 [$-$9.9, $-$2.3] & $-$3.7 [$-$5.9, $-$1.6] & $-$15.3 [$-$22.3, $-$8.9] & 11.6 [6.4, 17.3] \\
- & append & 14,400 & 15.4 [14.1, 16.6] & 0.49 [$-$0.02, 1.01] & 259.8 & 57.8 [39.9, 76.4] & 16.1 [6.2, 26.8] & 14.4 [0.3, 28.8] & 1.7 [$-$10.7, 15.3] \\
- & companion & 25,200 & 16.7 [15.3, 18.1] & $-$0.22 [$-$1.12, 0.74] & 299.5 & 54.2 [29.6, 79.9] & 26.0 [14.4, 39.0] & 15.0 [$-$0.8, 32.7] & 11.0 [$-$2.1, 24.7] \\
- & task & 36,900 & 18.8 [16.9, 20.5] & $-$0.42 [$-$2.12, 1.22] & 376.3 & $-$3.1 [$-$42.1, 37.9] & 9.2 [$-$14.7, 34.1] & 13.5 [$-$28.3, 56.1] & $-$4.3 [$-$35.0, 29.1] \\
+Llama & position & 244,800 & 6.9 [6.0, 7.7] & $-$0.08 [$-$0.35, 0.22] & 65.4 & $-$6.2 [$-$9.9, $-$2.3] & $-$3.7 [$-$5.9, $-$1.6] & $-$15.3 [$-$22.3, $-$8.9] & $-$11.6 [$-$17.3, $-$6.4] \\
+ & append & 14,400 & 15.4 [14.1, 16.6] & 0.49 [$-$0.02, 1.01] & 259.8 & 57.8 [39.9, 76.4] & 16.1 [6.2, 26.8] & 14.4 [0.3, 28.8] & $-$1.7 [$-$15.3, 10.7] \\
+ & companion & 25,200 & 16.7 [15.3, 18.1] & $-$0.22 [$-$1.12, 0.74] & 299.5 & 54.2 [29.6, 79.9] & 26.0 [14.4, 39.0] & 15.0 [$-$0.8, 32.7] & $-$11.0 [$-$24.7, 2.1] \\
+ & task & 36,900 & 18.8 [16.9, 20.5] & $-$0.42 [$-$2.12, 1.22] & 376.3 & $-$3.1 [$-$42.1, 37.9] & 9.2 [$-$14.7, 34.1] & 13.5 [$-$28.3, 56.1] & 4.3 [$-$29.1, 35.0] \\
 \midrule
-Qwen & position & 244,800 & 6.1 [5.4, 6.8] & 0.06 [$-$0.07, 0.20] & 45.1 & $-$5.6 [$-$8.9, $-$2.8] & $-$5.6 [$-$8.7, $-$2.8] & $-$6.2 [$-$9.3, $-$3.6] & 0.6 [$-$1.3, 2.6] \\
- & append & 14,400 & 12.0 [10.5, 13.4] & 1.09 [0.72, 1.48] & 152.2 & 17.0 [8.6, 26.5] & 7.0 [$-$3.3, 17.2] & 9.8 [$-$0.4, 21.8] & $-$2.8 [$-$11.1, 5.4] \\
- & companion & 25,200 & 13.4 [11.7, 15.0] & 0.28 [$-$0.53, 1.17] & 188.0 & 20.7 [10.7, 32.2] & 12.7 [0.7, 25.6] & 6.5 [$-$4.3, 18.3] & 6.3 [$-$1.9, 15.2] \\
- & task & 36,900 & 12.6 [10.8, 14.2] & $-$0.44 [$-$1.67, 0.72] & 166.9 & $-$12.2 [$-$29.1, 2.9] & $-$11.8 [$-$28.9, 3.7] & $-$4.3 [$-$19.9, 12.2] & $-$7.5 [$-$20.5, 3.8] \\
+Qwen & position & 244,800 & 6.1 [5.4, 6.8] & 0.06 [$-$0.07, 0.20] & 45.1 & $-$5.6 [$-$8.9, $-$2.8] & $-$5.6 [$-$8.7, $-$2.8] & $-$6.2 [$-$9.3, $-$3.6] & $-$0.6 [$-$2.6, 1.3] \\
+ & append & 14,400 & 12.0 [10.5, 13.4] & 1.09 [0.72, 1.48] & 152.2 & 17.0 [8.6, 26.5] & 7.0 [$-$3.3, 17.2] & 9.8 [$-$0.4, 21.8] & 2.8 [$-$5.4, 11.1] \\
+ & companion & 25,200 & 13.4 [11.7, 15.0] & 0.28 [$-$0.53, 1.17] & 188.0 & 20.7 [10.7, 32.2] & 12.7 [0.7, 25.6] & 6.5 [$-$4.3, 18.3] & $-$6.3 [$-$15.2, 1.9] \\
+ & task & 36,900 & 12.6 [10.8, 14.2] & $-$0.44 [$-$1.67, 0.72] & 166.9 & $-$12.2 [$-$29.1, 2.9] & $-$11.8 [$-$28.9, 3.7] & $-$4.3 [$-$19.9, 12.2] & 7.5 [$-$3.8, 20.5] \\
 \bottomrule
 \end{tabular}
 }

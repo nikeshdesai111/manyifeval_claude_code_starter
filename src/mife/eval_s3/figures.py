@@ -98,14 +98,14 @@ def e1_heatmap():
     d = r("eval1_per_type")
     types = _types(d, "rule_type")
     cols = [c[0] for c in COMPS]
-    vmax = np.nanquantile(np.abs(d.nll_reduction) * 100, 0.97)
+    vmax = np.nanquantile(np.abs(d.nll_reduction), 0.97)
     fig, axes = plt.subplots(1, len(GENS), figsize=(6.5 * len(GENS), 6.2), constrained_layout=True, squeeze=False)
     axes = axes[0]
     for ax, gen in zip(axes, GENS):
         s = d[d.generator == gen].pivot(index="rule_type", columns="comparison", values="nll_reduction").reindex(types)[cols]
-        heat(ax, 100 * s.values, types, cols, f"{'AB'[GENS.index(gen)]}. {GEN_LABEL[gen]}", vmax,
-             "NLL reduction ×100 (positive favors candidate)", fig, rowlab=[short_type(t) for t in types],
-             n_fixed_rows=sum(t in FIXED_TYPES for t in types), fmt="{:+.1f}")
+        heat(ax, s.values, types, cols, f"{'AB'[GENS.index(gen)]}. {GEN_LABEL[gen]}", vmax,
+             "NLL reduction, nats (positive favors candidate)", fig, rowlab=[short_type(t) for t in types],
+             n_fixed_rows=sum(t in FIXED_TYPES for t in types), fmt="{:+.3f}", fs=6)
         ax.text(-0.5, -0.9, "fixed (5) above the line · parameterized (10) below", fontsize=7, color=MUTED)
     return _save(fig, "e1_A3_per_type_nll_heatmap")
 

@@ -13,7 +13,7 @@ COMPS = [
     ("#1", "B1", "H1", "#1 B1 → H1 + structure", True),
     ("#2", "B2", "H2", "#2 B2 → H2 + structure", True),
     ("#3", "B2", "RCAP", "#3 B2 → rule-conditioned attention", True),
-    ("#4", "RCAP", "H2", "#4 attention → H2 + structure", True),
+    ("#4", "H2", "RCAP", "#4 H2 + structure → attention", True),
     ("#5", "B1", "B1+H1", "#5 B1 → B1 + H1", False),
     ("#6", "B2", "B2+H1", "#6 B2 → B2 + H1", False),
     ("#7", "B2", "B2+A1", "#7 B2 → B2 + A1", False),

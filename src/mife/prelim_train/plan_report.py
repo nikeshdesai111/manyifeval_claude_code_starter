@@ -19,7 +19,7 @@ T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "PRELIMINARY_RESULTS_FOLLOWING_PLAN.md"
 GEN = {"llama": "Llama-3.1-8B-Instruct", "qwen": "Qwen3-8B (non-thinking)"}
 CL = {"#1": "#1 B1 → H1 + structure", "#2": "#2 B2 → H2 + structure", "#3": "#3 B2 → rule-conditioned attention",
-      "#4": "#4 attention → H2 + structure", "#5": "#5 B1 → B1 + H1", "#6": "#6 B2 → B2 + H1", "#7": "#7 B2 → B2 + A1"}
+      "#4": "#4 H2 + structure → attention", "#5": "#5 B1 → B1 + H1", "#6": "#6 B2 → B2 + H1", "#7": "#7 B2 → B2 + A1"}
 ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
 PRIM = {"#1", "#2", "#3", "#4"}
 PL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "Rule-cond. attention",
@@ -103,7 +103,7 @@ def main():
     con = r("eval1_contrasts")
     w("## Evaluation 1, Objective 1\n")
     w("### Table 2 — Rule-level violation-risk prediction (§4.4), TRAIN OOF\n")
-    w("NLL reduction ×10³ nats per response × rule outcome, pooled over 153,900 TRAIN prompt–rule rows per generator; "
+    w("NLL reduction in nats per response × rule outcome, pooled over 153,900 TRAIN prompt–rule rows per generator; "
       "AUROC gain ×100 on response-level binary outcomes; types improved = strictly positive per-type NLL reduction "
       "(descriptive, not 15 significance tests). 95% CIs: paired 50-pool cluster bootstrap.\n")
     for gen in ("llama", "qwen"):
@@ -111,7 +111,7 @@ def main():
         rows = []
         for cid in ORDER:
             x = con[(con.generator == gen) & (con.comparison == cid)].iloc[0]
-            rows.append([bold(cid, CL[cid]), bold(cid, ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1e3)),
+            rows.append([bold(cid, CL[cid]), bold(cid, ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1, 4)),
                          ci(x.auroc_gain, x.auroc_gain_lo, x.auroc_gain_hi, 100),
                          f"{int(x.types_improved)}/15" + (f" ({int(x.types_undefined)} undefined)" if x.types_undefined else "")])
         w(table(["Method comparison (comparator → candidate)", "NLL reduction [95% CI] ↑", "AUROC gain [95% CI] ↑",
@@ -122,9 +122,9 @@ def main():
     for gen in ("llama", "qwen"):
         for cid in ORDER:
             x = con[(con.generator == gen) & (con.comparison == cid)].iloc[0]
-            rows.append([gen, CL[cid], f"[{f(x.nll_t_lo * 1e3)}, {f(x.nll_t_hi * 1e3)}]",
-                         f"{f(x.nll_loo_min * 1e3)} to {f(x.nll_loo_max * 1e3)}"])
-    w(table(["Generator", "Comparison", "t(49) 95% interval (×10³)", "Leave-one-pool-out range (×10³)"], rows))
+            rows.append([gen, CL[cid], f"[{f(x.nll_t_lo, 4)}, {f(x.nll_t_hi, 4)}]",
+                         f"{f(x.nll_loo_min, 4)} to {f(x.nll_loo_max, 4)}"])
+    w(table(["Generator", "Comparison", "t(49) 95% interval (nats)", "Leave-one-pool-out range (nats)"], rows))
     w("")
 
     # A1
@@ -155,13 +155,13 @@ def main():
     w("![A3 heatmap](figures/e1_A3_per_type_nll_heatmap.png)\n")
     pt = r("eval1_per_type")
     for gen in ("llama", "qwen"):
-        w(f"**{GEN[gen]}** — NLL reduction ×10³ by type (columns = comparisons)\n")
+        w(f"**{GEN[gen]}** — NLL reduction (nats) by type (columns = comparisons)\n")
         rows = []
         for t in types_order(pt.rule_type.unique()):
             row = [tn(t) + (" (fixed)" if t in FIXED_TYPES else "")]
             for cid in ORDER:
                 x = pt[(pt.generator == gen) & (pt.rule_type == t) & (pt.comparison == cid)].iloc[0]
-                row.append(f(x.nll_reduction * 1e3))
+                row.append(f(x.nll_reduction, 4))
             n = pt[(pt.generator == gen) & (pt.rule_type == t)].iloc[0]
             row.append(int(n.n_pools))
             rows.append(row)
@@ -172,7 +172,7 @@ def main():
     # A3b
     fp = r("eval1_fixed_vs_param")
     w("### Appendix A3b — Fixed versus parameterised NLL improvement (Objective 1 only)\n")
-    w("*NLL reductions (×10³) of the same seven comparisons, calculated separately on rule-level outcomes from the five fixed "
+    w("*NLL reductions (nats) of the same seven comparisons, calculated separately on rule-level outcomes from the five fixed "
       "and ten parameterised rule types. Fixed-minus-parameterised compares improvements, not raw violation rates. Paired "
       "pointwise 95% intervals from resampling the 50 TRAIN pools; all subgroup differences are exploratory.*\n")
     for gen in ("llama", "qwen"):
@@ -183,10 +183,10 @@ def main():
         rows = []
         for cid in ORDER:
             x = fp[(fp.generator == gen) & (fp.comparison == cid)].iloc[0]
-            rows.append([bold(cid, CL[cid]), ci(x.fixed_dnll, x.fixed_lo, x.fixed_hi, 1e3),
-                         ci(x.parameterized_dnll, x.parameterized_lo, x.parameterized_hi, 1e3),
-                         ci(x["diff_dnll"], x.diff_lo, x.diff_hi, 1e3),
-                         f"{f(x.fixed_typeeq_dnll * 1e3)} / {f(x.param_typeeq_dnll * 1e3)}"])
+            rows.append([bold(cid, CL[cid]), ci(x.fixed_dnll, x.fixed_lo, x.fixed_hi, 1, 4),
+                         ci(x.parameterized_dnll, x.parameterized_lo, x.parameterized_hi, 1, 4),
+                         ci(x["diff_dnll"], x.diff_lo, x.diff_hi, 1, 4),
+                         f"{f(x.fixed_typeeq_dnll, 4)} / {f(x.param_typeeq_dnll, 4)}"])
         w(table(["Comparator → candidate", "Fixed (5 types): ΔNLL ↑", "Parameterised (10 types): ΔNLL ↑",
                  "Fixed − parameterised", "Type-equal-weight sensitivity (fixed / param.)"], rows))
         w("")

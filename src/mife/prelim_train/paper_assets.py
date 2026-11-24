@@ -26,7 +26,7 @@ NAMES = {
     "detectable_format:title": "Title", "change_case:english_capital": "All uppercase",
     "change_case:english_lowercase": "All lowercase", "change_case:capital_word_frequency": "Uppercase-word count",
     "startend:quotation": "Quotation marks", "punctuation:no_comma": "No commas"}
-SHORT = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#4": r"4: RCAP \cto{} H2",
+SHORT = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#4": r"4: H2 \cto{} RCAP",
          "#5": r"5: B1 \cto{} B1+H", "#6": r"6: B2 \cto{} B2+H", "#7": r"7: B2 \cto{} B2+A"}
 
 
@@ -106,7 +106,7 @@ def tab_main():
             b = o2[(o2.generator == gen) & (o2.comparison == cid)].iloc[0]
             lines.append(" & " + " & ".join([
                 SHORT[cid],
-                c(a.nll_reduction, a.nll_reduction_lo, a.nll_reduction_hi, 1e3),
+                c(a.nll_reduction, a.nll_reduction_lo, a.nll_reduction_hi, 1, 4),
                 c(a.auroc_gain, a.auroc_gain_lo, a.auroc_gain_hi, 100),
                 f"{int(a.types_improved)}/15",
                 c(b.rmse_reduction, b.rmse_reduction_lo, b.rmse_reduction_hi, 100, 2),

@@ -7,14 +7,14 @@ disclosure and provenance.
 ## Evaluation 1, Objective 1 (per-rule violation probability; 153,900 prompt–rule rows, 3,078,000 outcomes per generator)
 
 Replacing the frozen prompt embedding with the generator's hidden state (comparison 1, B1→H1) reduces NLL by
-68.3 [37.9, 102.7] ×10⁻³ nats per outcome for Llama and 58.3 [26.7, 94.4] for Qwen, raises AUROC by 5.9 [3.8, 7.9]
+0.0683 [0.0379, 0.1027] nats per outcome for Llama and 0.0583 [0.0267, 0.0944] for Qwen, raises AUROC by 5.9 [3.8, 7.9]
 and 7.7 [4.2, 11.6] points, and lowers NLL on 10 and 11 of 15 rule types. The gain is concentrated in the ten
-parameterised types (Llama 100 vs 7 ×10⁻³ for the fixed-wording types; Qwen 85 vs 8). Against B2, which also embeds the
-exact rule, the hidden state (comparison 2) gives 7.9 [−2.2, 18.2] for Llama and 18.6 [3.8, 34.6] for Qwen, with AUROC
-gains of 1.3 [0.5, 2.1] and 4.0 [2.1, 6.0]; rule attention (comparison 3) gives 11.6 [−3.9, 27.5] and
-18.6 [1.2, 38.4]. Hidden state and attention are indistinguishable (comparison 4: −3.7 [−19.9, 10.4] and
-0.0 [−13.0, 12.9]). Added to B2, the hidden state (comparison 6: 16.3 [7.8, 25.4]; 18.6 [3.9, 34.4]) and attention
-(comparison 7: 19.2 [8.3, 31.4]; 19.2 [1.8, 39.2]) help both generators.
+parameterised types (Llama 0.100 vs 0.007 nats for the fixed-wording types; Qwen 0.085 vs 0.008). Against B2, which also embeds the
+exact rule, the hidden state (comparison 2) gives 0.0079 [−0.0022, 0.0182] for Llama and 0.0186 [0.0038, 0.0346] for Qwen, with AUROC
+gains of 1.3 [0.5, 2.1] and 4.0 [2.1, 6.0]; rule attention (comparison 3) gives 0.0116 [−0.0039, 0.0275] and
+0.0186 [0.0012, 0.0384]. Hidden state and attention are indistinguishable (comparison 4, H2→RCAP: 0.0037 [−0.0104, 0.0199] and
+0.0000 [−0.0129, 0.0130]). Added to B2, the hidden state (comparison 6: 0.0163 [0.0078, 0.0254]; 0.0186 [0.0039, 0.0344]) and attention
+(comparison 7: 0.0192 [0.0083, 0.0314]; 0.0192 [0.0018, 0.0392]) help both generators.
 
 ## Evaluation 1, Objective 2 (expected fraction of rules violated; 36,900 prompts)
 
@@ -36,8 +36,8 @@ Llama −0.5 [−1.7, 0.6], 0.0 [−0.7, 0.6], 0.4 [−0.2, 1.1], 0.7 [0.2, 1.3]
 
 *Predictive (Δ-MSE ×10⁴, positive favours candidate).* Generator- and factor-specific. Llama: hidden-state probes
 forecast task-induced changes better than both text baselines (comparison 1: 161.8 [81.0, 247.8]; comparison 2:
-127.1 [48.7, 206.7]); H2 beats the attention probe on all four factors (comparison 4: 43.4, 25.1, 27.6, 69.8, all
-intervals above zero). Qwen: H2 is worse than B2 on task (−30.6 [−53.6, −8.1]) and position (−5.3 [−10.7, −1.8]).
+127.1 [48.7, 206.7]); the attention probe forecasts worse than H2 on all four factors (comparison 4, H2→RCAP: −43.4, −25.1, −27.6, −69.8, all
+intervals below zero). Qwen: H2 is worse than B2 on task (−30.6 [−53.6, −8.1]) and position (−5.3 [−10.7, −1.8]).
 Both generators: the attention probe is worse than B2 on position and append changes, and H1 is worse than B1 on append
 and companion changes.
 

@@ -351,7 +351,7 @@ not analysed here.
 - **Predictors:** the frozen V2 refits on the 50 S3 TRAIN pools (`results/v2_s3/models/`), applied once to TEST. No
   model, layer, penalty, calibration edge or weight was chosen on TEST. Hidden row: Llama layer 12, Qwen layer 18.
 - **Comparisons (positive always favours the candidate, right of the arrow):** primary #1 B1 → H1, #2 B2 → H2,
-  #3 B2 → rule-conditioned attention, #4 attention → H2; secondary #5 B1 → B1+H1, #6 B2 → B2+H1, #7 B2 → B2+A1.
+  #3 B2 → rule-conditioned attention, #4 H2 → rule-conditioned attention; secondary #5 B1 → B1+H1, #6 B2 → B2+H1, #7 B2 → B2+A1.
 - **Uncertainty:** paired cluster bootstrap over the 22 TEST pools (B = 10,000, seed 20261203), percentile 95%
   intervals, pointwise and unadjusted for multiplicity. All predictors and contrasts use identical pool draws.
 - **Evaluation 2 weighting:** the plan's *proposed* recipe (§§5.1, 6.3), which was not separately signed off before
@@ -406,7 +406,7 @@ outcome. Numerical ECE for every predictor is in A1.
 
 ### Appendix A3. Per-rule-type NLL reduction (15 types × 7 comparisons)
 
-Cells show NLL(comparator) − NLL(candidate) × 100 on that type's TEST outcomes; positive (red) favours the candidate.
+Cells show NLL(comparator) − NLL(candidate) in nats on that type's TEST outcomes; positive (red) favours the candidate.
 The five fixed types are above the line, the ten parameterized types below. Per-cell CIs, support and NLLs are in
 `tables/eval1_per_type.csv` (210 rows).
 

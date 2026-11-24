@@ -16,7 +16,7 @@ from .paths import EVAL_DIR
 T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "paper"
 ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
-CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#4": r"4: RCAP \cto{} H2",
+CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#4": r"4: H2 \cto{} RCAP",
       "#5": r"5: B1 \cto{} B1+H1", "#6": r"6: B2 \cto{} B2+H1", "#7": r"7: B2 \cto{} B2+A1"}
 GL = {"llama": "Llama", "qwen": "Qwen"}
 PL = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "RCAP", "B1+H1": "B1+H1", "B2+H1": "B2+H1",
@@ -84,13 +84,13 @@ def main_tables():
         row = [CL[cid]]
         for g in ("llama", "qwen"):
             x = con[(con.generator == g) & (con.comparison == cid)].iloc[0]
-            row += [ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1e3),
+            row += [ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1, 4),
                     ci(x.auroc_gain, x.auroc_gain_lo, x.auroc_gain_hi, 100), f"{int(x.types_improved)}/15"]
         rows.append(row)
     t2 = tab(r"\emph{Preliminary} Evaluation~1, Objective~1: rule-level violation-risk prediction, out-of-fold on the "
              r"50 S3 training groups (153,900 prompt--rule rows and 3,078,000 response $\times$ rule outcomes per "
              r"generator; not held-out test performance). NLL reduction $=$ NLL(comparator) $-$ NLL(candidate), "
-             r"$\times10^{3}$ nats per outcome; AUROC gain $\times100$; Types $=$ rule types with strictly lower NLL "
+             r"in nats per outcome; AUROC gain $\times100$; Types $=$ rule types with strictly lower NLL "
              r"(descriptive). Positive favours the candidate. Paired, pointwise 95\% intervals from a 50-pool cluster "
              r"bootstrap. Primary comparisons above the rule, secondary below.",
              "tab:e1o1", ["Comparison", "NLL red.", "AUROC gain", "Types", "NLL red.", "AUROC gain", "Types"], rows,
@@ -161,10 +161,10 @@ def appendix():
         for cid in ORDER:
             x = con[(con.generator == g) & (con.comparison == cid)].iloc[0]
             rows.append([GL[g], CL[cid], ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1e3, 2),
-                         f"[{f(x.nll_t_lo * 1e3)}, {f(x.nll_t_hi * 1e3)}]",
-                         f"{f(x.nll_loo_min * 1e3)} to {f(x.nll_loo_max * 1e3)}"])
+                         f"[{f(x.nll_t_lo, 4)}, {f(x.nll_t_hi, 4)}]",
+                         f"{f(x.nll_loo_min, 4)} to {f(x.nll_loo_max, 4)}"])
     w(tab(r"A1 (contrasts) and A4 (sensitivity). Brier reduction $\times10^3$; NLL reduction $t_{49}$ interval and "
-          r"leave-one-pool-out range ($\times10^3$).", "tab:A1c",
+          r"leave-one-pool-out range (nats).", "tab:A1c",
           ["", "Comparison", "Brier reduction", r"NLL $t_{49}$ interval", "NLL leave-one-pool-out"], rows, align="llccc", mid=[7]))
     w(r"\subsection*{A2 --- Calibration (Objective 1)}")
     w(r"\begin{figure}[h]\centering\includegraphics[width=\linewidth]{figures/prelim/e1_A2_reliability.png}"
@@ -180,13 +180,13 @@ def appendix():
             mids.append(len(rows))
         for cid in ORDER:
             x = fp[(fp.generator == g) & (fp.comparison == cid)].iloc[0]
-            rows.append([GL[g] if cid == "#1" else "", CL[cid], ci(x.fixed_dnll, x.fixed_lo, x.fixed_hi, 1e3),
-                         ci(x.parameterized_dnll, x.parameterized_lo, x.parameterized_hi, 1e3),
-                         ci(x["diff_dnll"], x.diff_lo, x.diff_hi, 1e3)])
+            rows.append([GL[g] if cid == "#1" else "", CL[cid], ci(x.fixed_dnll, x.fixed_lo, x.fixed_hi, 1, 4),
+                         ci(x.parameterized_dnll, x.parameterized_lo, x.parameterized_hi, 1, 4),
+                         ci(x["diff_dnll"], x.diff_lo, x.diff_hi, 1, 4)])
     rates = "; ".join(f"{GL[g]}: fixed {100 * fp[fp.generator == g].fixed_viol_rate.iloc[0]:.1f}\\%, parameterised "
                       f"{100 * fp[fp.generator == g].parameterized_viol_rate.iloc[0]:.1f}\\%" for g in ("llama", "qwen"))
     w(r"\subsection*{A3b --- Fixed versus parameterised rule types (Objective 1 only)}")
-    w(tab(r"A3b. NLL reductions ($\times10^3$) of the seven comparisons within the five fixed and ten parameterised types, "
+    w(tab(r"A3b. NLL reductions (nats) of the seven comparisons within the five fixed and ten parameterised types, "
           r"and their difference (fixed $-$ parameterised improvement); identical 50-pool resamples; exploratory. "
           f"Observed violation rates: {rates}.", "tab:A3b",
           ["", "Comparison", "Fixed $\\Delta$NLL", "Parameterised $\\Delta$NLL", "Fixed $-$ param."], rows, align="llccc", mid=mids))
