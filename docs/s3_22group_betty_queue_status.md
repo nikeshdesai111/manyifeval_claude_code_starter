@@ -66,3 +66,11 @@ sacct -u desai7 -S 2026-11-23 -X --format=JobID,JobName%22,State,Elapsed,ExitCod
 - `check-complete llama` on Betty and on the Mac: 277,200 / 277,200 worklist records present exactly once with their recorded seeds; 0 missing, 0 duplicates, 0 invalid provenance, 0 empty responses, 0 records outside the worklist.
 - Fetched to the Mac (`expansion_s3_stage.sh fetch llama`): 48 files, MD5-identical to Betty (312 MB).
 - Qwen preflight 11148891 COMPLETED (node-local weights, 5/5 shard checksums OK, 400 TRAIN records). Qwen array 11148892 pending.
+
+## Qwen: complete (2026-11-23)
+
+- Array 11148892: all 12 tasks COMPLETED between 17:50 and 20:10 EST (7–11 min each, including the node-local weight download and checksum check), 0 failures.
+- `check-complete qwen` on Betty and on the Mac: 277,200 / 277,200 worklist records present exactly once with their recorded seeds; 0 missing, 0 duplicates, 0 invalid provenance, 0 empty responses, 0 records outside the worklist.
+- Fetched to the Mac (`expansion_s3_stage.sh fetch qwen`): 48 files, MD5-identical to Betty (251 MB).
+
+**The S3 expansion generation is complete: 554,400 new responses (277,200 per generator).** Verification of these TEST responses stays locked until the owner authorizes it.
