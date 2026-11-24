@@ -144,22 +144,34 @@ def test_maxattn_refuses_test_prompts(monkeypatch):
     import pandas as pd
     from mife.probing import data
     from mife.probing.v2 import maxattn
+    from mife import splits
     monkeypatch.setattr(data, "test_unblinded", lambda: False)
-    m = pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet", columns=["prompt_id", "split"])
-    tid = m.prompt_id[m.split == "test"].tolist()[:2]
+    m = splits.apply(pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet", columns=["prompt_id", "group_id", "split"]))
+    tid = m.prompt_id[m.split == "test"].tolist()[:2]  # TEST under the ACTIVE split
     with pytest.raises(data.TestSetLocked):
         maxattn.run("llama", ids=tid)
     with pytest.raises(data.TestSetLocked):
         maxattn.load("llama", tid)
+    # prompts extracted while TRAIN under an earlier split and TEST now are stored but never loadable
+    done, _ = maxattn.committed("llama")
+    stored_test = sorted(done & set(m.prompt_id[m.split == "test"]))[:2]
+    if stored_test:
+        with pytest.raises(data.TestSetLocked):
+            maxattn.load("llama", stored_test)
 
 
 @needs_data
 def test_v2_caches_train_only():
+    """The active split's caches and results hold no TEST prompt of the active split. The split-independent max-attention
+    store may hold prompts extracted while they were TRAIN under an earlier split; maxattn.load refuses them (above)."""
     import pandas as pd
-    from mife.probing.v2.versioning import FEAT_V2, RESULTS_V2
-    m = pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet", columns=["prompt_id", "split"])
+    from mife import splits
+    from mife.probing import data
+    from mife.probing.v2.versioning import FEAT_SPLIT, RESULTS_V2
+    m = splits.apply(pd.read_parquet(DATA_DIR / "manifest" / "prompts.parquet", columns=["prompt_id", "group_id", "split"]))
     test = set(m.prompt_id[m.split == "test"])
-    for f in list(FEAT_V2.rglob("*.parquet")) + list(RESULTS_V2.rglob("*.parquet")):
+    files = [f for f in FEAT_SPLIT.rglob("*.parquet") if "maxattn" not in f.parts] + list(RESULTS_V2.rglob("*.parquet"))
+    for f in files:
         df = pd.read_parquet(f)
         if "prompt_id" in df:
             assert not (set(df.prompt_id) & test), f

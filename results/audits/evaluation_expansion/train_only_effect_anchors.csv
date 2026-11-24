@@ -1,0 +1,19 @@
+model,quantity,train_pp
+llama,marginal rate k=2 minus k=1 (all targets),-0.46
+llama,marginal rate k=3 minus k=2 (all targets),0.45
+llama,marginal rate k=4 minus k=3 (all targets),0.67
+llama,marginal rate k=5 minus k=4 (all targets),0.97
+llama,k=2: last minus first position,0.93
+llama,k=3: last minus first position,1.4
+llama,k=4: last minus first position,1.44
+llama,k=5: last minus first position,1.22
+llama,overall violation rate,17.67
+qwen,marginal rate k=2 minus k=1 (all targets),0.91
+qwen,marginal rate k=3 minus k=2 (all targets),1.13
+qwen,marginal rate k=4 minus k=3 (all targets),1.1
+qwen,marginal rate k=5 minus k=4 (all targets),1.3
+qwen,k=2: last minus first position,0.81
+qwen,k=3: last minus first position,0.63
+qwen,k=4: last minus first position,0.57
+qwen,k=5: last minus first position,0.1
+qwen,overall violation rate,9.89

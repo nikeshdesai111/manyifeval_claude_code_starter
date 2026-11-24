@@ -1,0 +1,4 @@
+variant,append_4to5_target_rule_x_position_cv,added_k4_orderings_per_group,added_prompts_total,added_generations_both_llms_at_20,strict_append_3to4_ordered_pairs_per_group,strict_append_4to5_ordered_pairs_per_group,strict_replacement_k4_pairs_per_group,strict_replacement_k5_pairs_per_group,k4_orderings_per_subset_min,k4_orderings_per_subset_max,k4_rule_x_position_count_min,k4_rule_x_position_count_max,k4_subsets_position_balanced
+expanded,0.1633,0.0,0,0,180.0,60.0,336.0,120.0,12,12,3,3,225
+B_prefix,0.0,48.0,2160,86400,228.0,120.0,560.0,120.0,14,16,3,5,45
+B_S4,0.0,180.0,8100,324000,360.0,120.0,1440.0,120.0,24,24,6,6,225

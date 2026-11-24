@@ -1,0 +1,466 @@
+{
+  "base_grids": {
+    "P": [
+      100.0,
+      1000.0,
+      10000.0,
+      100000.0,
+      1000000.0,
+      10000000.0
+    ],
+    "R": [
+      100.0,
+      1000.0,
+      10000.0,
+      100000.0,
+      1000000.0,
+      10000000.0
+    ]
+  },
+  "boundary_hits_base_round": [],
+  "edges_after_expansion": [],
+  "expansions": [],
+  "fallbacks_fired": [
+    {
+      "compliant": 215342.0,
+      "fallback": true,
+      "fold": 0,
+      "groups_with_violation": 2,
+      "model": "qwen",
+      "reason": "groups_with_violation<5",
+      "type_id": "detectable_format:title",
+      "violated": 118.0
+    },
+    {
+      "compliant": 205082.0,
+      "fallback": true,
+      "fold": 1,
+      "groups_with_violation": 2,
+      "model": "qwen",
+      "reason": "groups_with_violation<5",
+      "type_id": "detectable_format:title",
+      "violated": 118.0
+    },
+    {
+      "compliant": 215460.0,
+      "fallback": true,
+      "fold": 2,
+      "groups_with_violation": 0,
+      "model": "qwen",
+      "reason": "violated<50;groups_with_violation<5",
+      "type_id": "detectable_format:title",
+      "violated": 0.0
+    },
+    {
+      "compliant": 225602.0,
+      "fallback": true,
+      "fold": 3,
+      "groups_with_violation": 2,
+      "model": "qwen",
+      "reason": "groups_with_violation<5",
+      "type_id": "detectable_format:title",
+      "violated": 118.0
+    },
+    {
+      "compliant": 205082.0,
+      "fallback": true,
+      "fold": 4,
+      "groups_with_violation": 2,
+      "model": "qwen",
+      "reason": "groups_with_violation<5",
+      "type_id": "detectable_format:title",
+      "violated": 118.0
+    },
+    {
+      "compliant": 266642.0,
+      "fallback": true,
+      "fold": "final",
+      "groups_with_violation": 2,
+      "model": "qwen",
+      "reason": "groups_with_violation<5",
+      "type_id": "detectable_format:title",
+      "violated": 118.0
+    }
+  ],
+  "final_grids": {
+    "P": [
+      100.0,
+      1000.0,
+      10000.0,
+      100000.0,
+      1000000.0,
+      10000000.0
+    ],
+    "R": [
+      100.0,
+      1000.0,
+      10000.0,
+      100000.0,
+      1000000.0,
+      10000000.0
+    ]
+  },
+  "hidden_row": 18,
+  "hidden_row_scores": {
+    "14": 0.30278143696913934,
+    "18": 0.28215632587741524,
+    "27": 0.30328350671646703,
+    "37": 0.33958089786291756,
+    "9": 0.33193614602600885
+  },
+  "model": "qwen",
+  "objective": 1,
+  "other_generator_row": 12,
+  "other_generator_row_scores": {
+    "12": 0.2893738723279795,
+    "16": 0.30999992563527456,
+    "24": 0.32504693584153577,
+    "33": 0.3186801142913375,
+    "8": 0.3091714329589486
+  },
+  "other_row_convention": {
+    "12": {
+      "depth_fraction": 0.375,
+      "meaning": "output of decoder layer 12"
+    },
+    "16": {
+      "depth_fraction": 0.5,
+      "meaning": "output of decoder layer 16"
+    },
+    "24": {
+      "depth_fraction": 0.75,
+      "meaning": "output of decoder layer 24"
+    },
+    "33": {
+      "depth_fraction": 1.0,
+      "meaning": "output of decoder layer 32 BEFORE the final norm"
+    },
+    "8": {
+      "depth_fraction": 0.25,
+      "meaning": "output of decoder layer 8"
+    }
+  },
+  "row_convention": {
+    "14": {
+      "depth_fraction": 0.3889,
+      "meaning": "output of decoder layer 14"
+    },
+    "18": {
+      "depth_fraction": 0.5,
+      "meaning": "output of decoder layer 18"
+    },
+    "27": {
+      "depth_fraction": 0.75,
+      "meaning": "output of decoder layer 27"
+    },
+    "37": {
+      "depth_fraction": 1.0,
+      "meaning": "output of decoder layer 36 BEFORE the final norm"
+    },
+    "9": {
+      "depth_fraction": 0.25,
+      "meaning": "output of decoder layer 9"
+    }
+  },
+  "selected": {
+    "B1": {
+      "baseline": null,
+      "blocks": [
+        [
+          "EP",
+          "P"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.34042208930856854,
+      "fixed": {},
+      "fold_losses": [
+        0.22269597494010807,
+        0.3402144092774134,
+        0.26358264498188305,
+        0.3992852806845224,
+        0.47633213665891583
+      ],
+      "hidden_row": null,
+      "n_features": 1044,
+      "note": null,
+      "setting": "P=100000"
+    },
+    "B1+H1": {
+      "baseline": "B1",
+      "blocks": [
+        [
+          "EP",
+          "F_P"
+        ],
+        [
+          "S",
+          "S"
+        ],
+        [
+          "H18",
+          "X"
+        ]
+      ],
+      "cv_loss": 0.28795579721099157,
+      "fixed": {
+        "F_P": 100000.0
+      },
+      "fold_losses": [
+        0.20798651780951177,
+        0.3162543729179914,
+        0.24183922336886968,
+        0.31670368577159863,
+        0.3569951861869865
+      ],
+      "hidden_row": 18,
+      "n_features": 5140,
+      "note": null,
+      "setting": "X=100000"
+    },
+    "B2": {
+      "baseline": null,
+      "blocks": [
+        [
+          "EP",
+          "P"
+        ],
+        [
+          "ER",
+          "R"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.29267662197513905,
+      "fixed": {},
+      "fold_losses": [
+        0.20466737706957236,
+        0.32080154862539334,
+        0.22831117546863017,
+        0.31085539148459673,
+        0.39874761722750296
+      ],
+      "hidden_row": null,
+      "n_features": 2068,
+      "note": null,
+      "setting": "P=1e+06,R=1e+06"
+    },
+    "B2+A1": {
+      "baseline": "B2",
+      "blocks": [
+        [
+          "EP",
+          "F_P"
+        ],
+        [
+          "ER",
+          "F_R"
+        ],
+        [
+          "S",
+          "S"
+        ],
+        [
+          "A1",
+          "X"
+        ]
+      ],
+      "cv_loss": 0.27344202827350667,
+      "fixed": {
+        "F_P": 1000000.0,
+        "F_R": 1000000.0
+      },
+      "fold_losses": [
+        0.22478446302059285,
+        0.3101851948059332,
+        0.22502625003949756,
+        0.27842521697595357,
+        0.3287890165255564
+      ],
+      "hidden_row": null,
+      "n_features": 3220,
+      "note": null,
+      "setting": "X=10000"
+    },
+    "B2+H1": {
+      "baseline": "B2",
+      "blocks": [
+        [
+          "EP",
+          "F_P"
+        ],
+        [
+          "ER",
+          "F_R"
+        ],
+        [
+          "S",
+          "S"
+        ],
+        [
+          "H18",
+          "X"
+        ]
+      ],
+      "cv_loss": 0.27409986978418377,
+      "fixed": {
+        "F_P": 1000000.0,
+        "F_R": 1000000.0
+      },
+      "fold_losses": [
+        0.2028001785523794,
+        0.31913450837102514,
+        0.2263965271284476,
+        0.2898399727852662,
+        0.3323281620838004
+      ],
+      "hidden_row": 18,
+      "n_features": 6164,
+      "note": null,
+      "setting": "X=100000"
+    },
+    "H1": {
+      "baseline": null,
+      "blocks": [
+        [
+          "H18",
+          "P"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.28215632587741524,
+      "fixed": {},
+      "fold_losses": [
+        0.20392142433784816,
+        0.3256982061450968,
+        0.23338415695319198,
+        0.3081301779385033,
+        0.33964766401243585
+      ],
+      "hidden_row": 18,
+      "n_features": 4116,
+      "note": null,
+      "setting": "P=100000"
+    },
+    "H2": {
+      "baseline": null,
+      "blocks": [
+        [
+          "H18",
+          "P"
+        ],
+        [
+          "ER",
+          "R"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.27407071445935505,
+      "fixed": {},
+      "fold_losses": [
+        0.20244490415695757,
+        0.3212435997827504,
+        0.22578382071659567,
+        0.28950464129969755,
+        0.331376606340774
+      ],
+      "hidden_row": 18,
+      "n_features": 5140,
+      "note": null,
+      "setting": "P=100000,R=1e+06"
+    },
+    "RCAP": {
+      "baseline": null,
+      "blocks": [
+        [
+          "A1",
+          "P"
+        ],
+        [
+          "ER",
+          "R"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.27407799863861937,
+      "fixed": {},
+      "fold_losses": [
+        0.22495262308463754,
+        0.31109718329914904,
+        0.22551687636659853,
+        0.27870522881046766,
+        0.33011808163224404
+      ],
+      "hidden_row": null,
+      "n_features": 2196,
+      "note": null,
+      "setting": "P=10000,R=1e+06"
+    },
+    "REF_structure": {
+      "baseline": null,
+      "blocks": [
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.35603485063740337,
+      "fixed": {},
+      "fold_losses": [
+        0.21484363820064042,
+        0.3837481384228863,
+        0.25456122575852813,
+        0.41018181427003825,
+        0.5168394365349235
+      ],
+      "hidden_row": null,
+      "n_features": 20,
+      "note": null,
+      "setting": "none"
+    },
+    "XH1": {
+      "baseline": null,
+      "blocks": [
+        [
+          "XH12",
+          "P"
+        ],
+        [
+          "S",
+          "S"
+        ]
+      ],
+      "cv_loss": 0.2893738723279795,
+      "fixed": {},
+      "fold_losses": [
+        0.20757542345938568,
+        0.31333264100098895,
+        0.23858554263225487,
+        0.32258984486672954,
+        0.3647859096805386
+      ],
+      "hidden_row": 12,
+      "n_features": 4116,
+      "note": null,
+      "setting": "P=100000"
+    }
+  },
+  "split": "split-s3-2026-11-23",
+  "version": "v2-2026-11-20",
+  "with_attention": true
+}

@@ -1,0 +1,29 @@
+{
+  "blocks": [
+    [
+      "H12",
+      "P"
+    ],
+    [
+      "ER",
+      "R"
+    ],
+    [
+      "S",
+      "S"
+    ]
+  ],
+  "fallback_types": [],
+  "fitted_as": "H2",
+  "fixed": {},
+  "n_fitting_groups": 57,
+  "predictor": "H2",
+  "setting": "P=100000,R=100000",
+  "split": "split-s3-2026-11-23",
+  "version": "v2-2026-11-20",
+  "widths": [
+    4096,
+    1024,
+    20
+  ]
+}

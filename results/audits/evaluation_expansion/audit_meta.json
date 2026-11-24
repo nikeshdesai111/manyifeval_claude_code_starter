@@ -1,0 +1,39 @@
+{
+  "audit": "evaluation_expansion",
+  "manifest_prompts_sha256": "f63c0aeaeec8872ec22df70f3feccbb4ecf464ee24368a001aace0cc5ccf1b14",
+  "matches_frozen_manifest": true,
+  "test_groups": [
+    "g02",
+    "g03",
+    "g08",
+    "g09",
+    "g10",
+    "g14",
+    "g30",
+    "g35",
+    "g41",
+    "g48",
+    "g52",
+    "g55",
+    "g63",
+    "g67",
+    "g68"
+  ],
+  "seed": 20261122,
+  "mc_reps": 4000,
+  "inputs_read": [
+    "data/manifest/prompts.parquet (metadata columns)",
+    "data/manifest/prompt_rules.parquet (metadata columns)",
+    "data/manifest/rule_pools.jsonl",
+    "data/manifest/tasks.parquet",
+    "results/tables/desc_by_position.csv",
+    "results/tables/desc_by_k.csv"
+  ],
+  "not_read": [
+    "generations",
+    "verification labels",
+    "features",
+    "predictions",
+    "any TEST outcome"
+  ]
+}

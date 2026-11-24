@@ -19,7 +19,7 @@ from ...config import DATA_DIR
 from ...storage import sha256_file, write_json
 from .. import data
 from .. import features as v1features
-from .versioning import FEAT_V2, load_array, save_array, check_meta
+from .versioning import FEAT_SPLIT, load_array, save_array, check_meta
 
 TYPES = v1features.TYPES
 T_IX = v1features.T_IX
@@ -43,7 +43,7 @@ def row_convention(model: str) -> dict:
 
 
 def gdir(model: str | None = None):
-    d = FEAT_V2 / (model or "shared")
+    d = FEAT_SPLIT / (model or "shared")
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -93,20 +93,58 @@ def build_structure(model: str) -> None:
     P[["prompt_id"]].to_parquet(d / "S2_train_keys.parquet")
 
 
-def build_bge() -> None:
-    """Copy the frozen BGE-M3 embeddings (V1 cache, same pinned encoder) into the V2 tree with provenance."""
+def build_bge(check_n: int = 64) -> dict:
+    """Frozen BGE-M3 embeddings of the active split's TRAIN prompts and exact rules (same pinned encoder).
+
+    Vectors already in the V1 cache (2026-11-14 TRAIN prompts and rules) are reused with provenance. Prompts and rules
+    of groups that are TRAIN only under the active split are encoded now with the same encoder and settings
+    (`encoder.encode`, MPS, float32, no truncation). Consistency check: `check_n` cached prompts and every cached rule
+    are re-encoded the same way and compared with the cache; the max |difference| is recorded in the sidecar."""
+    from .. import encoder
     d = gdir()
     src = data.PROBE_FEAT / "shared"
-    EP = np.asarray(v1features.load_prompt_block("EP", "train"))  # checks V1 key order vs current prompts
+    P = data.prompts("train")
+    PR = data.prompt_rules("train")
+    v1_ids = pd.read_parquet(src / "EP_train_keys.parquet")["prompt_id"]
+    v1_EP = np.load(src / "EP_train.npy", mmap_mode="r")
+    v1_pos = {x: i for i, x in enumerate(v1_ids)}
+    have = P["prompt_id"].map(v1_pos)
+    EP = np.empty((len(P), v1_EP.shape[1]), dtype=np.float32)
+    m = have.notna().values
+    EP[m] = np.asarray(v1_EP[have[m].astype(int).values])
+    model = encoder.load_model()
+    new_txt = P.loc[~m, "prompt_text"].tolist()
+    if new_txt:
+        EP[~m] = encoder.encode(new_txt, model, batch_size=64)
+    rng = np.random.default_rng(20261123)
+    chk = rng.choice(np.nonzero(m)[0], min(check_n, int(m.sum())), replace=False)
+    re_ep = encoder.encode(P["prompt_text"].values[chk].tolist(), model, batch_size=64)
+    ep_diff = float(np.abs(re_ep - EP[chk]).max())
+    rk_v1 = pd.read_parquet(src / "ER_rules_train_keys.parquet")
+    ER_v1 = np.load(src / "ER_rules_train.npy")
+    rules = PR.drop_duplicates("rule_id")[["rule_id", "rule_text"]].reset_index(drop=True)
+    rpos = {r: i for i, r in enumerate(rk_v1["rule_id"])}
+    rh = rules["rule_id"].map(rpos)
+    rm = rh.notna().values
+    ER = np.empty((len(rules), ER_v1.shape[1]), dtype=np.float32)
+    ER[rm] = ER_v1[rh[rm].astype(int).values]
+    if (~rm).any():
+        ER[~rm] = encoder.encode(rules.loc[~rm, "rule_text"].tolist(), model)
+    re_er = encoder.encode(rules.loc[rm, "rule_text"].tolist(), model)
+    er_diff = float(np.abs(re_er - ER[rm]).max())
+    enc = v1features.load_config()["probing"]["encoder"]
+    info = {"n_prompts": len(P), "n_prompts_reused_v1": int(m.sum()), "n_prompts_encoded_now": int((~m).sum()),
+            "n_rules": len(rules), "n_rules_reused_v1": int(rm.sum()), "n_rules_encoded_now": int((~rm).sum()),
+            "reencode_check_prompts": int(len(chk)), "reencode_max_abs_diff_prompts": ep_diff,
+            "reencode_check_rules": int(rm.sum()), "reencode_max_abs_diff_rules": er_diff}
     save_array(EP, d / "EP_train.npy", "EP", source=str(src / "EP_train.npy"), source_sha256=sha256_file(src / "EP_train.npy"),
-               encoder=v1features.load_config()["probing"]["encoder"], rows="data.prompts('train')",
+               encoder=enc, rows="data.prompts('train')", **info,
                definition_note="frozen BGE-M3 dense [CLS] embedding of the full prompt text")
-    ER = np.load(src / "ER_rules_train.npy")
     save_array(ER, d / "ER_rules_train.npy", "ER", source=str(src / "ER_rules_train.npy"),
-               source_sha256=sha256_file(src / "ER_rules_train.npy"), encoder=v1features.load_config()["probing"]["encoder"],
-               rows="ER_rules_train_keys.parquet")
-    pd.read_parquet(src / "ER_rules_train_keys.parquet").to_parquet(d / "ER_rules_train_keys.parquet")
-    data.prompts("train")[["prompt_id"]].to_parquet(d / "EP_train_keys.parquet")
+               source_sha256=sha256_file(src / "ER_rules_train.npy"), encoder=enc, rows="ER_rules_train_keys.parquet", **info)
+    rules[["rule_id", "rule_text"]].to_parquet(d / "ER_rules_train_keys.parquet")
+    P[["prompt_id"]].to_parquet(d / "EP_train_keys.parquet")
+    return info
 
 
 def build_hidden(model: str) -> None:

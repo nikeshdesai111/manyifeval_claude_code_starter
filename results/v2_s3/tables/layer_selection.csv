@@ -1,0 +1,41 @@
+model,objective,which,row,meaning,depth,cv_loss_best_setting,selected
+llama,1,own (H1 + structure),12,output of decoder layer 12,0.375,0.4137778426198886,True
+llama,1,own (H1 + structure),16,output of decoder layer 16,0.5,0.4445742744264128,False
+llama,1,own (H1 + structure),24,output of decoder layer 24,0.75,0.46862322673824797,False
+llama,1,own (H1 + structure),33,output of decoder layer 32 BEFORE the final norm,1.0,0.45184052846899264,False
+llama,1,own (H1 + structure),8,output of decoder layer 8,0.25,0.4483613860292794,False
+llama,1,other generator (reference),14,output of decoder layer 14,0.3889,0.42839483942550954,False
+llama,1,other generator (reference),18,output of decoder layer 18,0.5,0.3974069675719985,True
+llama,1,other generator (reference),27,output of decoder layer 27,0.75,0.451886236516184,False
+llama,1,other generator (reference),37,output of decoder layer 36 BEFORE the final norm,1.0,0.48339206674327945,False
+llama,1,other generator (reference),9,output of decoder layer 9,0.25,0.4611867805278008,False
+llama,2,own (H1 + structure),12,output of decoder layer 12,0.375,0.01605857325420422,True
+llama,2,own (H1 + structure),16,output of decoder layer 16,0.5,0.017578505566752455,False
+llama,2,own (H1 + structure),24,output of decoder layer 24,0.75,0.02005562318238834,False
+llama,2,own (H1 + structure),33,output of decoder layer 32 BEFORE the final norm,1.0,0.01859004130985501,False
+llama,2,own (H1 + structure),8,output of decoder layer 8,0.25,0.018212317046504837,False
+llama,2,other generator (reference),14,output of decoder layer 14,0.3889,0.01776056609664562,False
+llama,2,other generator (reference),18,output of decoder layer 18,0.5,0.016814733756112997,True
+llama,2,other generator (reference),27,output of decoder layer 27,0.75,0.01733858249998806,False
+llama,2,other generator (reference),37,output of decoder layer 36 BEFORE the final norm,1.0,0.019135230491134036,False
+llama,2,other generator (reference),9,output of decoder layer 9,0.25,0.021072847816881776,False
+qwen,1,own (H1 + structure),14,output of decoder layer 14,0.3889,0.30278143696913934,False
+qwen,1,own (H1 + structure),18,output of decoder layer 18,0.5,0.28215632587741524,True
+qwen,1,own (H1 + structure),27,output of decoder layer 27,0.75,0.30328350671646703,False
+qwen,1,own (H1 + structure),37,output of decoder layer 36 BEFORE the final norm,1.0,0.33958089786291756,False
+qwen,1,own (H1 + structure),9,output of decoder layer 9,0.25,0.33193614602600885,False
+qwen,1,other generator (reference),12,output of decoder layer 12,0.375,0.2893738723279795,True
+qwen,1,other generator (reference),16,output of decoder layer 16,0.5,0.30999992563527456,False
+qwen,1,other generator (reference),24,output of decoder layer 24,0.75,0.32504693584153577,False
+qwen,1,other generator (reference),33,output of decoder layer 32 BEFORE the final norm,1.0,0.3186801142913375,False
+qwen,1,other generator (reference),8,output of decoder layer 8,0.25,0.3091714329589486,False
+qwen,2,own (H1 + structure),14,output of decoder layer 14,0.3889,0.012740047664339556,False
+qwen,2,own (H1 + structure),18,output of decoder layer 18,0.5,0.012393926720400102,False
+qwen,2,own (H1 + structure),27,output of decoder layer 27,0.75,0.012192019666237541,True
+qwen,2,own (H1 + structure),37,output of decoder layer 36 BEFORE the final norm,1.0,0.01373580531262418,False
+qwen,2,own (H1 + structure),9,output of decoder layer 9,0.25,0.013341868731882516,False
+qwen,2,other generator (reference),12,output of decoder layer 12,0.375,0.01160777005368694,True
+qwen,2,other generator (reference),16,output of decoder layer 16,0.5,0.012005686567160816,False
+qwen,2,other generator (reference),24,output of decoder layer 24,0.75,0.013040530088716014,False
+qwen,2,other generator (reference),33,output of decoder layer 32 BEFORE the final norm,1.0,0.012861518307189958,False
+qwen,2,other generator (reference),8,output of decoder layer 8,0.25,0.012973202352041096,False
