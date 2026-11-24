@@ -19,9 +19,9 @@ T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "PRELIMINARY_RESULTS_FOLLOWING_PLAN.md"
 GEN = {"llama": "Llama-3.1-8B-Instruct", "qwen": "Qwen3-8B (non-thinking)"}
 CL = {"#1": "#1 B1 → H1 + structure", "#2": "#2 B2 → H2 + structure", "#3": "#3 B2 → rule-conditioned attention",
-      "#7": "#7 attention → H2 + structure", "#4": "#4 B1 → B1 + H1", "#5": "#5 B2 → B2 + H1", "#6": "#6 B2 → B2 + A1"}
-ORDER = ["#1", "#2", "#3", "#7", "#4", "#5", "#6"]
-PRIM = {"#1", "#2", "#3", "#7"}
+      "#4": "#4 attention → H2 + structure", "#5": "#5 B1 → B1 + H1", "#6": "#6 B2 → B2 + H1", "#7": "#7 B2 → B2 + A1"}
+ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
+PRIM = {"#1", "#2", "#3", "#4"}
 PL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "Rule-cond. attention",
       "B1+H1": "B1 + H1", "B2+H1": "B2 + H1", "B2+A1": "B2 + A1", "REF_structure": "Structure only (ref.)",
       "REF_trainmean": "Training-fold mean (ref.)"}
@@ -437,9 +437,9 @@ def main():
             sp = sup[(sup.generator == gen) & (sup.factor == fac)].iloc[0]
             q = lambda n, s=1e4, d=1: ci(g.loc[n, "est"], g.loc[n, "lo"], g.loc[n, "hi"], s, d)
             rows.append([gen, fac, f"{int(sp.n_prompt_pairs):,}", q("rms_pp_noise_adjusted", 1), q("dobs", 100, 2),
-                         f(g.loc["se_zero", "est"] * 1e4), q("dmse_#1"), q("dmse_#2"), q("dmse_#3"), q("dmse_#7")])
+                         f(g.loc["se_zero", "est"] * 1e4), q("dmse_#1"), q("dmse_#2"), q("dmse_#3"), q("dmse_#4")])
     w(table(["Generator", "Factor", "Prompt pairs", "Observed RMS (pp)", "Signed mean (pp)", "Zero-change MSE ×10⁴",
-             "Δ-MSE #1", "Δ-MSE #2", "Δ-MSE #3", "Δ-MSE #7"], rows))
+             "Δ-MSE #1", "Δ-MSE #2", "Δ-MSE #3", "Δ-MSE #4"], rows))
     w("\nSecondary comparisons and per-stratum values: `tables/obj2_eval2.csv`.\n")
 
     w("## Not available tonight / deviations\n")

@@ -54,17 +54,17 @@ beats B2, which already embeds the exact rule, by 43.3 [13.4, 77.4] $\times10^{-
 and the hidden state beats it by 20.9 [0.3, 42.2] (comparison~2); both also raise AUROC (by 2.0 and 1.6 points) and
 lower NLL on 13 and 12 of the 15 rule types. Against the prompt-only baseline B1, the hidden state (comparison~1) raises
 AUROC by 4.6 [0.9, 7.7] points, but its NLL reduction, 31.2 [$-10.5$, 70.8], has an interval that includes zero.
-Attention and hidden state cannot be separated (comparison~7: $-22.4$ [$-52.3$, 3.5]); attention has the lowest NLL of
+Attention and hidden state cannot be separated (comparison~4: $-22.4$ [$-52.3$, 3.5]); attention has the lowest NLL of
 all predictors (0.345, against 0.388 for B2 and 0.367 for H2). These comparisons test predictive accuracy, not
 mechanism.
 
-\paragraph{Incremental information and breadth.} Added to B2, the hidden state (comparison~5: 23.6 [7.5, 41.6]) and
-attention (comparison~6: 37.2 [17.4, 59.6]) both improve NLL with intervals above zero and AUROC by about 2 points;
-added to B1, the hidden state (comparison~4) raises AUROC by 4.7 points but does not clearly lower NLL (13.1 [$-32.7$,
+\paragraph{Incremental information and breadth.} Added to B2, the hidden state (comparison~6: 23.6 [7.5, 41.6]) and
+attention (comparison~7: 37.2 [17.4, 59.6]) both improve NLL with intervals above zero and AUROC by about 2 points;
+added to B1, the hidden state (comparison~5) raises AUROC by 4.7 points but does not clearly lower NLL (13.1 [$-32.7$,
 56.2]). The type counts are point estimates, not per-type tests. Split by rule class (Appendix A3b), the gains appear in
-both: on the five fixed-wording types every comparison except~7 lowers NLL by 12--16 $\times10^{-3}$, and attention's
-larger gains come from the ten parameterised types (58.6 for comparison~3 and 50.7 for comparison~6; fixed minus
-parameterised $-38.8$ [$-76.2$, $-5.5$] for comparison~6, exploratory). Calibration is reasonable throughout (ECE
+both: on the five fixed-wording types every comparison except~4 lowers NLL by 12--16 $\times10^{-3}$, and attention's
+larger gains come from the ten parameterised types (58.6 for comparison~3 and 50.7 for comparison~7; fixed minus
+parameterised $-38.8$ [$-76.2$, $-5.5$] for comparison~7, exploratory). Calibration is reasonable throughout (ECE
 3.2--5.6 points; Appendix A1--A2).
 
 """
@@ -146,8 +146,8 @@ E2_SKILL_PROSE = r"""
 Table~\ref{tab:eval2} asks whether the predictors forecast these matched changes. The clearest held-out result is
 negative for attention: the rule-attention probe forecasts position, append and companion changes worse than B2
 (comparison~3: $-40.3$, $-22.8$ and $-30.5$, all intervals below zero), and H2 beats it on the same three factors
-(comparison~7). The hidden state gives a small, consistent gain for position changes, alone (comparison~2: 5.2 [1.9,
-8.8]) and on top of B2 (comparison~5: 7.3 [3.9, 11.1]), where it also improves companion forecasts (14.1 [1.2, 26.8]).
+(comparison~4). The hidden state gives a small, consistent gain for position changes, alone (comparison~2: 5.2 [1.9,
+8.8]) and on top of B2 (comparison~6: 7.3 [3.9, 11.1]), where it also improves companion forecasts (14.1 [1.2, 26.8]).
 No comparison is clearly better or worse for task changes, which are the noisiest (zero-change MSE 762). Better
 absolute accuracy therefore does not imply better forecasts of how a rule's risk moves with its context: rule attention
 is the most accurate absolute predictor and the worst forecaster of within-context changes.

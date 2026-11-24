@@ -4,7 +4,7 @@
 
 ## 1. What was rerun, and what was not changed
 
-- **Recipe:** the V2 recipe (`configs/v2_recipe.yaml`) and the 2026-11-22 decisions are unchanged. Primary comparisons are 1, 2, 3 and 7. Comparisons 4–6 freeze the baseline. Parsed parameters stay out of S. The recipe file is byte-identical, so its sha256 is unchanged. It was recorded for S3 in `results/v2_s3/recipe_recorded.json` (2026-11-22 23:08:46 local) before any S3 selection ran.
+- **Recipe:** the V2 recipe (`configs/v2_recipe.yaml`) and the 2026-11-22 decisions are unchanged. Primary comparisons are 1, 2, 3 and 4. Comparisons 5–7 freeze the baseline. Parsed parameters stay out of S. The recipe file is byte-identical, so its sha256 is unchanged. It was recorded for S3 in `results/v2_s3/recipe_recorded.json` (2026-11-22 23:08:46 local) before any S3 selection ran.
 - **Folds:** 5 grouped folds of 10 groups over the 50 S3 TRAIN groups (`results/cv_s3/folds.json`, made by PR #4). V2 CV refuses folds made for another split.
 - **Paths:** every split-dependent V2 artifact now lives in a separate tree, and its sidecars carry `split: split-s3-2026-11-23`. Loaders refuse an artifact built for another split. The 2026-11-14-split V2 run (`results/v2/`, `data/probing_features_v2/{shared,llama,qwen}`) is untouched.
   - Caches: `data/probing_features_v2/split_s3/{shared,llama,qwen}`

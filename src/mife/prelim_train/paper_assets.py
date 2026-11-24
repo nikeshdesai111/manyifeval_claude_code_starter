@@ -26,8 +26,8 @@ NAMES = {
     "detectable_format:title": "Title", "change_case:english_capital": "All uppercase",
     "change_case:english_lowercase": "All lowercase", "change_case:capital_word_frequency": "Uppercase-word count",
     "startend:quotation": "Quotation marks", "punctuation:no_comma": "No commas"}
-SHORT = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#7": r"7: RCAP \cto{} H2",
-         "#4": r"4: B1 \cto{} B1+H", "#5": r"5: B2 \cto{} B2+H", "#6": r"6: B2 \cto{} B2+A"}
+SHORT = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#4": r"4: RCAP \cto{} H2",
+         "#5": r"5: B1 \cto{} B1+H", "#6": r"6: B2 \cto{} B2+H", "#7": r"7: B2 \cto{} B2+A"}
 
 
 def r(n):
@@ -122,7 +122,7 @@ def tab_eval2():
     lines = []
     for gen, lab in (("llama", "Llama"), ("qwen", "Qwen")):
         lines.append(r"\multirow{4}{*}{" + lab + "}")
-        for cid in ("#1", "#2", "#3", "#7"):
+        for cid in ("#1", "#2", "#3", "#4"):
             cells = []
             for f in ("position", "append", "companion", "task"):
                 s = sk[f]
@@ -162,7 +162,7 @@ def tab_app():
     sk = {f: r(f"eval2_{f}_skill") for f in ("position", "append", "companion", "task")}
     L = []
     for gen, labg in (("llama", "Llama"), ("qwen", "Qwen")):
-        for cid in ("#4", "#5", "#6"):
+        for cid in ("#5", "#6", "#7"):
             cells = []
             for f in ("position", "append", "companion", "task"):
                 s = sk[f]
@@ -179,7 +179,7 @@ def tab_app():
                           ("dobs", "Observed signed mean (pp)", 100),
                           ("se_zero", r"Zero-change MSE ($\times10^4$)", 1e4),
                           ("dmse_#1", r"$\Delta$-MSE 1 ($\times10^4$)", 1e4), ("dmse_#2", r"$\Delta$-MSE 2 ($\times10^4$)", 1e4),
-                          ("dmse_#3", r"$\Delta$-MSE 3 ($\times10^4$)", 1e4), ("dmse_#7", r"$\Delta$-MSE 7 ($\times10^4$)", 1e4)):
+                          ("dmse_#3", r"$\Delta$-MSE 3 ($\times10^4$)", 1e4), ("dmse_#4", r"$\Delta$-MSE 4 ($\times10^4$)", 1e4)):
             cells = []
             for f in ("position", "append", "companion", "task"):
                 x = e[(e.generator == gen) & (e.factor == f) & (e.quantity == q)].iloc[0]

@@ -12,7 +12,7 @@ import pandas as pd
 
 from .versioning import FEAT_V2, RESULTS_V2, SPLIT, read_versioned_json
 
-# Priority split decided by the project owner on 2026-11-22 (amendment section 9): primary = 1, 2, 3, 7.
+# Priority split decided by the project owner on 2026-11-22 (amendment section 9): primary = 1, 2, 3, 4.
 COMPARISONS = [("Primary 1", "H1", "B1"), ("Primary 2", "H2", "B2"), ("Primary 3", "RCAP", "B2"),
                ("Primary 7", "H2", "RCAP"),
                ("Secondary 4", "B1+H1", "B1"), ("Secondary 5", "B2+H1", "B2"), ("Secondary 6", "B2+A1", "B2")]
@@ -53,7 +53,7 @@ def build() -> str:
     rec = read_versioned_json(RESULTS_V2 / "recipe_recorded.json")
     lines += [f"Recipe sha256 `{rec['sha256'][:16]}…`, recorded {rec['recorded_at']}, before any selection reported here.", "",
               "## What changed from V1", "",
-              "- **Predictors:** 7 planned comparisons (primary: 1, 2, 3 and 7; secondary: 4, 5 and 6) plus references, "
+              "- **Predictors:** 7 planned comparisons (primary: 1, 2, 3 and 4; secondary: 5, 6 and 7) plus references, "
               "instead of 23 configurations. "
               "B2 is now B1 plus a *frozen* exact-rule embedding (no fine-tuning). A1 is the per-layer×head **max** "
               "attention over the target-rule span (new training-only extraction). The rule-conditioned attention probe "
@@ -161,7 +161,7 @@ def build() -> str:
               _md(SEL.drop(columns=["fold_losses"])) if len(SEL) else "(not run)", "",
               "Objective 1 loss is the pooled mean log loss per completion; Objective 2 loss is the pooled squared error of "
               "the predicted fraction. `P` = prompt-representation penalty, `R` = rule-embedding penalty, `X` = added "
-              "block in comparisons 4–6 (\"off\" = CV did not select the block, so the gain is 0 by construction; this is "
+              "block in comparisons 5–7 (\"off\" = CV did not select the block, so the gain is 0 by construction; this is "
               "not evidence that the block carries no information).", ""]
     lines += ["## 5. Sparse-head fallbacks that fired (Objective 1)", "",
               _md(FB[["model", "fold", "type_id", "violated", "compliant", "groups_with_violation", "reason"]])

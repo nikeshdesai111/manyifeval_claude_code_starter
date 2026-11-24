@@ -15,9 +15,9 @@ from .paths import EVAL_DIR
 
 T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "paper"
-ORDER = ["#1", "#2", "#3", "#7", "#4", "#5", "#6"]
-CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#7": r"7: RCAP \cto{} H2",
-      "#4": r"4: B1 \cto{} B1+H1", "#5": r"5: B2 \cto{} B2+H1", "#6": r"6: B2 \cto{} B2+A1"}
+ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
+CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#4": r"4: RCAP \cto{} H2",
+      "#5": r"5: B1 \cto{} B1+H1", "#6": r"6: B2 \cto{} B2+H1", "#7": r"7: B2 \cto{} B2+A1"}
 GL = {"llama": "Llama", "qwen": "Qwen"}
 PL = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "RCAP", "B1+H1": "B1+H1", "B2+H1": "B2+H1",
       "B2+A1": "B2+A1", "REF_structure": "Structure only", "REF_trainmean": "Training-fold mean",
@@ -380,12 +380,12 @@ def appendix():
             rows.append([GL[g] if fac == "position" else "", fac,
                          f"{int(sup[(sup.generator == g) & (sup.factor == fac)].n_prompt_pairs.iloc[0]):,}",
                          q("rms_pp_noise_adjusted", 1), q("dobs", 100, 2), f(x.loc["se_zero", "est"] * 1e4),
-                         q("dmse_#1"), q("dmse_#2"), q("dmse_#3"), q("dmse_#7")])
+                         q("dmse_#1"), q("dmse_#2"), q("dmse_#3"), q("dmse_#4")])
     w(r"\subsection*{Evaluation 2, Objective 2 (preliminary design, not fixed by the plan)}")
     w(tab("Objective~2 matched changes: prompt-level pairs, outcome = fraction of rules violated. Observed noise-adjusted RMS "
           "and signed mean (points; append includes the new rule, so the denominator changes); zero-change MSE and "
           "$\\Delta$-MSE ($\\times10^4$) for the primary comparisons. Secondary comparisons: \\texttt{tables/obj2\\_eval2.csv}.",
-          "tab:o2e2", ["", "Factor", "Pairs", "RMS", "Signed mean", "Zero MSE", "1", "2", "3", "7"], rows,
+          "tab:o2e2", ["", "Factor", "Pairs", "RMS", "Signed mean", "Zero MSE", "1", "2", "3", "4"], rows,
           align="llcccccccc", mid=mids))
     return "\n".join(out)
 

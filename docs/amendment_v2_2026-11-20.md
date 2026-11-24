@@ -86,7 +86,7 @@ Disclosure: hidden-state methods get a 5-row layer search that the text and atte
 
 These decisions involve no retraining. Every V2 selection, out-of-fold prediction and refit stands as run.
 
-1. **Priority split changed.** The primary comparisons are now 1, 2, 3 and **7**; the secondary comparisons are 4, 5 and 6. Comparison numbers and definitions are unchanged.
+1. **Priority split changed.** The primary comparisons are now 1, 2, 3 and **4**; the secondary comparisons are 5, 6 and 7. (Renumbered on 2026-11-24 at the owner's request: old 7, RCAP → H2, is now 4, and old 4, 5, 6 are now 5, 6, 7; the definitions are unchanged.)
 
    | # | Priority | Left | Right |
    |---|---|---|---|
@@ -98,7 +98,7 @@ These decisions involve no retraining. Every V2 selection, out-of-fold predictio
    | 5 | Secondary | S + R + P + H (B2 + H1) | S + R + P (B2) |
    | 6 | Secondary | S + R + P + A (B2 + A1) | S + R + P (B2) |
 
-   **Effect on the later test reporting (not run).** The Objective 1 main table has **eight rows**: four primary comparisons × two generators. Previously it had six. Objective 2 follows the same split. Comparisons 4–6 and the reference rows go in the secondary/descriptive table. Intervals remain pointwise and unadjusted, as before.
-2. **Incremental comparisons (4–6) keep the current rule.** The baseline (B1 or B2) is frozen at its head-to-head selection, and only the added block's penalty is tuned (same 6 values plus "off"). No joint re-tuning.
+   **Effect on the later test reporting (not run).** The Objective 1 main table has **eight rows**: four primary comparisons × two generators. Previously it had six. Objective 2 follows the same split. Comparisons 5–7 and the reference rows go in the secondary/descriptive table. Intervals remain pointwise and unadjusted, as before.
+2. **Incremental comparisons (5–7) keep the current rule.** The baseline (B1 or B2) is frozen at its head-to-head selection, and only the added block's penalty is tuned (same 6 values plus "off"). No joint re-tuning.
 3. **B1 / B2 naming.** In V2, **B1 = S + P** and **B2 = S + P + R**, both with the frozen, pinned BGE-M3 encoder. In V1 (`results/RESULTS.md`, `results/tables/`, `results/cv/`, `results/predictions/`, `results/models/`, `docs/probing_schema.md`, `src/mife/probing/b2.py`), **"B2" means the LoRA-adapted BGE-M3 baseline**, which V2 retired. They are different models. No V2 artifact uses or loads the adapted encoder. The V1 files are left unchanged as the historical record, and this note, `CLAUDE.md`, `AGENTS.md`, `docs/probing_schema.md` and `results/v2/SUMMARY.md` say which definition applies where.
 4. **No parsed-parameter sensitivity run.** Parsed rule parameters stay out of S in every predictor. The limitation, that no predictor is told a rule's number directly, is noted for the write-up.

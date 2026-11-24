@@ -16,7 +16,7 @@ The generation phase is complete: bulk generation, verification and pre-generati
 - **Narrow exception to the frozen-feature rule:** a new max-attention extraction (A1max) on **TRAIN prompts only**, using the original frozen models, tokenization, rule token spans and backend (HF eager, BF16, Apple MPS), is authorised (`v2/maxattn.py`). Generations and verifier outcomes are reused. Nothing else may be re-extracted.
 - **Still sealed:** no test-feature extraction, no test-label access, no held-out scoring and no final evaluation freeze until the owner authorises them. The 2026-11-14 freeze (`results/prespec/`), `configs/experiment.yaml` and all V1 results stay unchanged.
 - **Naming:** in V2, B1 = S + P and B2 = S + P + R (both frozen BGE-M3). In V1 files, B2 = the retired LoRA-adapted encoder. Never mix the two (amendment section 9).
-- **Priorities (2026-11-22):** primary comparisons 1, 2, 3 and 7; secondary 4, 5 and 6.
+- **Priorities (2026-11-22):** primary comparisons 1, 2, 3 and 4; secondary 5, 6 and 7.
 - **Split S3 rerun (2026-11-23):** under `configs/active_split.yaml` = S3, V2 writes `results/v2_s3/` and `data/probing_features_v2/split_s3/`; the max-attention store is split-independent and `maxattn.load` refuses active-split TEST prompts (`docs/amendment_v2_s3_rerun_2026-11-23.md`).
 - **Stop point:** after training-side verification (spec Part 5).
 
