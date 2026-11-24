@@ -189,6 +189,8 @@ results in Appendix~\ref{app:prelim}.
 
 def build() -> str:
     s = SRC.read_text()
+    s = sub1(s, "  Anonymous Authors\\\\\n  Course project draft report\\\\",
+             "  Nikesh Desai \\quad Abhimanyu Sharma \\quad Yijie Guo\\\\\n  Course project draft report\\\\")
     # abstract
     i = s.index("Generation for the held-out groups was incomplete")
     j = s.index(r"\end{abstract}")
