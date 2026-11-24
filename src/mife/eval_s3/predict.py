@@ -23,7 +23,7 @@ from . import extract
 from .paths import EVAL_DIR, EXP_DIR, TEST_FEAT
 
 MODELS_DIR = ROOT / "results" / "v2_s3" / "models"
-PREDICTORS = ["REF_structure", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1"]
+PREDICTORS = ["REF_structure", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1", "B2+H1+A1"]
 PRED_DIR = DATA_DIR / "eval_s3" / "predictions"
 
 

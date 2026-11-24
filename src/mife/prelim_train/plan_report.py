@@ -19,11 +19,11 @@ T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "PRELIMINARY_RESULTS_FOLLOWING_PLAN.md"
 GEN = {"llama": "Llama-3.1-8B-Instruct", "qwen": "Qwen3-8B (non-thinking)"}
 CL = {"#1": "#1 B1 → H1 + structure", "#2": "#2 B2 → H2 + structure", "#3": "#3 B2 → A2 (rule-conditioned attention)",
-      "#4": "#4 H2 → A2", "#5": "#5 B1 → B1 + H", "#6": "#6 B2 → B2 + H", "#7": "#7 B2 → B2 + A"}
-ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
+      "#4": "#4 H2 → A2", "#5": "#5 B1 → B1 + H", "#6": "#6 B2 → B2 + H", "#7": "#7 B2 → B2 + A", "#8": "#8 B2 + H → B2 + H + A"}
+ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8"]
 PRIM = {"#1", "#2", "#3", "#4"}
 PL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "A2: rule-cond. attention",
-      "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A", "REF_structure": "Structure only (ref.)",
+      "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A", "B2+H1+A1": "B2 + H + A", "REF_structure": "Structure only (ref.)",
       "REF_trainmean": "Training-fold mean (ref.)"}
 
 
@@ -132,7 +132,7 @@ def main():
     w("### Appendix A1 — Complete overall metrics (Objective 1)\n")
     rows = []
     for gen in ("llama", "qwen"):
-        for p in ["REF_structure", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1"]:
+        for p in ["REF_structure", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1", "B2+H1+A1"]:
             x = a1[(a1.generator == gen) & (a1.predictor == p)].iloc[0]
             rows.append([gen, PL[p], ci(x.nll, x.nll_lo, x.nll_hi, 1, 4), ci(x.brier, x.brier_lo, x.brier_hi, 1, 4),
                          ci(x.auroc, x.auroc_lo, x.auroc_hi, 100), ci(x.ece, x.ece_lo, x.ece_hi, 100, 2)])
@@ -218,7 +218,7 @@ def main():
     w("### Appendix A5 — Complete overall metric scores (Objective 2)\n")
     rows = []
     for gen in ("llama", "qwen"):
-        for p in ["B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1", "REF_structure"]:
+        for p in ["B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1", "B2+H1+A1", "REF_structure"]:
             x = s2[(s2.generator == gen) & (s2.predictor == p)].iloc[0]
             rows.append([gen, PL[p], ci(x.rmse, x.rmse_lo, x.rmse_hi, 100, 2), ci(x.mae, x.mae_lo, x.mae_hi, 100, 2),
                          ci(x.mse, x.mse_lo, x.mse_hi, 1e4, 1), ci(x.pearson, x.pearson_lo, x.pearson_hi, 100),
