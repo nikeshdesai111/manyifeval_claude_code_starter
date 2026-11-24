@@ -3,7 +3,7 @@
 This document is the single reference for how the IFBench witness builder works and why it was built that way. It covers the rule study the builder relies on, how it relates to the ManyIFEval feasibility check, each step of the construction, the tests, every fix made during the stage-3 audit together with the failure that caused it, and worked examples. The paper can cite it as the place where this reasoning is recorded.
 
 - Code: `ifbench/src/mife_ifb/witness.py` (builder), `lexicon.py` (word inventory), `plain_meaning.py` (frozen plain-meaning checks), `source.py` (the only route to IFBench code), `stage3_proofs.py` (written proofs).
-- State described: branch `claude/project-thread-we2kwj`. First written at commit `c0c2e7a` (2026-11-23) without changing code or results; updated on 2026-11-24 for the version rule (Section 7.1) and the thesis fix (fix 17), both approved by Nicky.
+- State described: branch `claude/project-thread-we2kwj`. First written at commit `c0c2e7a` (2026-11-23) without changing code or results; updated on 2026-11-24 for the version rule (Section 7.1), the thesis fix (fix 17), combined layouts (Section 5.6, fix 18) and the overlap copy route (Section 5.7, fixes 19–21), all approved by Nicky.
 - Companion reports: `docs/stage1_report.md`, `docs/plain_meaning_checks.md`, `docs/stage2_report.md`, `docs/stage2_builder_limits.md`, `docs/stage3_report.md`.
 - Section 10 lists two findings made while writing this document. The first has since been fixed (fix 17); the second needs no action.
 
@@ -331,12 +331,17 @@ Three and four layouts in one text follow the same order (every subset of the fi
 Example (`format:list` with separator `-` + `format:thesis` + `format:output_template`, seed 0):
 
 ```
-{{EXAMPLE3}}
+<i>Tower general university score north replacement craft sandwich</i>.
+My Answer: Entertainment sister hour level advertising peace dust mention term.
+- Harm dirt shelter oar sea adult radio relation session.
+- History search ice cabinet angle hide care group yolk.
+My Conclusion: Guide week reveal brave shirt jet town meeting positive.
+Future Outlook: Amount switch pack talk goal minimum grandfather classic equal.
 ```
 
 ### 5.7 `ratio:overlap`: copying task text inside the search (added 2026-11-24)
 
-**Why a second route was needed.** Before this change, overlap pairs passed on only {{OV_BEFORE}} of their versions, and pools with overlap almost never completed a six-rule witness (1 of 63 in the pilot). The inserted-span route has two weaknesses. Its span is a sentence of its own that the other rules know nothing about, so any rule over sentences (counts, ratios, increments, last-word = first-word, emoji per sentence) or over word shapes breaks. And its base text is generated filler, so every one of its trigrams counts against the target, which caps the reachable share.
+**Why a second route was needed.** Before this change, overlap pairs passed on only 817 of 2,000 of their versions, and pools with overlap almost never completed a six-rule witness (1 of 63 in the pilot). The inserted-span route has two weaknesses. Its span is a sentence of its own that the other rules know nothing about, so any rule over sentences (counts, ratios, increments, last-word = first-word, emoji per sentence) or over word shapes breaks. And its base text is generated filler, so every one of its trigrams counts against the target, which caps the reachable share.
 
 **The idea.** Let the word search itself copy the task. The verifier compares the sets of token trigrams of the response and of the task (`nltk.word_tokenize`, case-sensitive). If the search places, word by word, a run of words that appears consecutively in the task, every trigram inside that run is shared. Because the words go through the search, they pass every word filter and neighbour relation of the other rules, and the sentence plan (counts, terminals, lengths) stays intact.
 
@@ -348,9 +353,25 @@ Example (`format:list` with separator `-` + `format:thesis` + `format:output_tem
 4. **Sentence lengths sized from the task.** A response much longer than the task's copyable material needs new trigrams beyond the target share. For targets above 40% the plan therefore uses sentence lengths of about M / (pct/100) / 2 words, where M is the number of task trigrams made of words (and terminal marks), and fewer sentences; for targets up to 40% ordinary lengths (4–9 words).
 5. **Correction.** The text is rendered and its real overlap measured (decorations, emoji and markers add trigrams the search does not see). The quota is corrected by the measured error times the number of trigrams and the search rerun; a fresh plan is drawn every third round, six rounds in all. If the text is still below the window at the last round of a plan, the inserted-span route is tried on it as well, with up to 500 spans. A text is accepted only if it passes every rule.
 
-**Order.** Each attempt first runs the inserted-span route as before (same random numbers, same spans in the same order; the only difference is that it keeps looking past an in-window candidate that breaks another rule), and runs the copy route only if that fails. So every version that had a witness before still has one ({{NOREGRESS}}).
+**Order.** Each attempt first runs the inserted-span route as before (same random numbers, same spans in the same order; the only difference is that it keeps looking past an in-window candidate that breaks another rule), and runs the copy route only if that fails. So every version that had a witness before still has one (the rerun confirmed it: of the 2,000 overlap versions, none that passed before fails now).
 
-**What it cannot do.** A share above about 80% needs almost every trigram of the response to occur in the task. Task texts are short (median 42 tokens, a quarter under 20), and many of their trigrams contain digits, punctuation or capitals that a rule-satisfying word stream cannot reproduce. So high targets remain feasible only for long tasks with few interfering rules. This is a real, task-dependent limit, not a builder bug: Stage 5 handles it with per-task checks and redraws (the approved sampler treats "builder found no witness" like a clash, Section 8), and the paper reports overlap acceptance by target range.
+**Result** (all 40 non-proven overlap pairs under the version rule, 2,000 versions, same parameters, seeds and task texts as before):
+
+| target | before | after |
+|---|---|---|
+| 1–40% | 467 of 811 (58%) | 708 of 811 (87%) |
+| 41–79% | 307 of 808 (38%) | 450 of 808 (56%) |
+| 80–100% | 43 of 381 (11%) | 60 of 381 (16%) |
+| all | 817 of 2,000 (41%) | 1,218 of 2,000 (61%) |
+
+The gain at low and middle targets comes from both changes: the inserted-span route now keeps looking past in-window texts that break another rule (fix 19), and the copy route builds texts whose copied words obey the other rules (fix 20). An example from the copy route, `ratio:overlap` (33%) + `words:last_first`; the words "but rather must be indexed by the" and "number of actions or action" are copied, and each sentence still starts with the previous sentence's last word:
+
+```
+TASK: … they cannot be represented explicitly in the model but rather must be indexed by the propositions that each action enforces directly.
+TEXT: Juice but rather must be indexed by the notion. Notion number of actions or action score fix panic. Panic paw chocolate grass consequence teaching sap damage.
+```
+
+**What it cannot do.** A share above about 80% needs almost every trigram of the response to occur in the task. Task texts are short (median 42 tokens, a quarter under 20), and many of their trigrams contain digits, punctuation or capitals that a rule-satisfying word stream cannot reproduce. So high targets remain feasible only for long tasks with few interfering rules. This is a real, task-dependent limit, not a builder bug: Stage 5 handles it with per-task checks and redraws (the Stage 5 sampler Nicky approved on 2026-11-24 treats "builder found no witness" like a clash: new settings, then another type; see the plan doc), and the paper reports overlap acceptance by target range.
 
 
 ---
@@ -400,13 +421,15 @@ All runs used 4 CPU workers. The seed is `20261124`. The timing, full and final 
 | timing | 50 (25 hypothesised conflicts + 25 random) | 18 | 0.09 h | Time per pair and the order of runs |
 | full | 860 of 861 | 100 | 6.2 h | Find builder gaps. The builder changed during this run, so the results come from mixed builder versions. |
 | final | 818 (all pairs except the proven ones) | 32 | 7.9 h | One builder version: `witness.py` sha256 `1ae17eb3…`, as recorded in `freeze/stage3_summary.json`. One pair (`ratio:overlap` + `words:keywords_specific_position`) did not finish its 50 draws in over an hour and counts as unsupported. |
-| versions | 816 (all pairs except the proven and the timed-out one) | 33 | replayed, plus 125 new combinations and 524 thesis-pair versions rerun (under a minute) | **The reported result**: the version rule applied to the final run (below). Thesis pairs use the builder with fix 17; the rest are replayed from the final run's builder, which differs only in the thesis branch. |
+| versions | 816 (all pairs except the proven and the timed-out one) | 25 | 1.98 h summed over all 18,488 versions (replayed versions keep their recorded time; only the 217 layout and overlap pairs and the 100 new combinations were run) | **The reported result**: the version rule applied to the final run (below). Pairs with a layout type or `ratio:overlap` use the current builder (fixes 17–21); the rest are replayed from the final run's builder, whose output for them is unchanged. |
 
 **The version rule (Nicky, 2026-11-24).** Fifty draws only make sense when a pair has parameters to vary. The rule now is: every version of a pair gets exactly 24 attempts; a pair whose two rules are both fixed has **one** version; a pair with at least one parameterised rule has **every parameter combination** if there are fewer than 50 (this covers `format:list` with 4 separators, `count:conjunctions`, `words:repeats` and `sentence:increment` with 5 values, `count:numbers` with 6 and `count:pronouns` with 25, and the 10 pairs of two of these), and **50 parameter draws** otherwise. That gives 351 fixed pairs, 172 all-combination pairs and 338 draw pairs (`tests/test_stage3_versions.py` checks the value lists against the released generators).
 
 Because the builder is deterministic, the rule was applied by replay (`scripts/stage3_versions.py`): a fixed pair's version is the final run's draw 0 (seed 0); an all-combination pair takes, for each combination, the first final-run draw that used it; the 125 combinations the final run never drew were run with seeds 50 + their index. For each compatible pair the first passing version was rebuilt to confirm the replay and store its text. Four fixed pairs that had witnesses on other seeds fail on the single version and are now unsupported (reason "fixed_seed"): `words:alphabet` + `words:vowel` (2 of 50 seeds in the final run), `format:no_whitespace` + `words:prime_lengths` (3 of 50), `format:thesis` + `words:odd_even_syllables` (29 of 50) and `format:parentheses` + `words:start_verb` (40 of 50). Nicky chose exactly 24 attempts for every version knowing this. No all-combination pair changed verdict.
 
 Fix 17 (the thesis terminal, approved the same day) changes `witness.py` only inside the thesis layout branch, so it can only alter texts for pairs that contain `format:thesis`. All 39 non-proven thesis pairs were therefore rerun with the corrected builder (524 versions, same parameters, seeds and task texts), and `stage3_summary.py` checks that thesis pairs carry the new builder hash and every other pair the final-run hash. Only `format:thesis` + `words:last_first` changed (now compatible).
+
+Combined layouts (fix 18) and the overlap changes (fixes 19–21), approved the same day, again touch only code that runs when a layout rule (combined layouts need two) or `ratio:overlap` is present; on 360 rule sets without overlap and with at most one layout the output was byte-identical. So every version of all 217 non-proven pairs with a layout type or `ratio:overlap` (4,505 versions) was rerun with the current builder, and `scripts/stage3_versions.py` and `stage3_summary.py` now treat that whole set as current-builder pairs. Compared with the previous results: **no version that had a witness lost it**; the 8 layout pairs that had only hand witnesses now have builder witnesses on every version (1 of 1 for fixed pairs, 4 of 4 for the pairs with `format:list`), `format:list` + `format:sub-bullets` went from 1 to 4 of 4 separators, and overlap versions went from 817 to 1,218 of 2,000 (Section 5.7). No pair lost compatibility. Builder time for those 4,505 versions was 26 minutes on 4 workers.
 
 **Why a full final run instead of a partial rerun.** The first plan was to rerun about 160 pairs: those touching the four types changed first, plus two crash pairs. After about eight more fixes, a partial rerun would have mixed builder versions in one matrix. So every non-proven pair was rerun on the final builder. Nicky asked about this on 2026-11-23 and was told so.
 
@@ -434,7 +457,12 @@ The "first" column is the failure reason recorded in the full run (from `data/st
 | 16 | "official verifier fails" on `words_position`: `keywords_specific_position` + `words_position` | When the keyword sentence is the last sentence and m = L − 1, the two pins took the same slot. | If the keyword sentence is last, its minimum length is m + 2. Collisions between different pinned words are infeasible. When the same word is pinned twice, the second pin is skipped. | 0 → 50 |
 | 17 | 0 of 50 in the final run (50 of 50 in the full run): `thesis` + `last_first` (found while writing this document, Section 10.1) | Fix 6 put the terminal after `</i>`, so `words:last_first` read the thesis's last word as "glass</i". | Place the terminal per plan: inside the tag when `words:last_first` is present, after it otherwise. Approved by Nicky 2026-11-24; all thesis pairs rerun. | 0 → 1 of 1 (fixed pair, one version) |
 
-Fixes 1–2 removed crashes. Fixes 3–17 were capability fixes. Each was first checked at 10 draws on the affected pairs. Fixes 1–16 were then measured in the final run, and fix 17 in the version run.
+| 18 | "unsupported, hand witness" (8 pairs of two layouts) | The builder wrote one layout per text. | Combined layouts (Section 5.6): a fixed line order with the thesis first, the template labels around the list items and the bullet pair, and `no_bullets_bullets` bullets last; `no_bullets_bullets` + `sub-bullets` stays a proven conflict. Approved by Nicky 2026-11-24. | 8 pairs: 0 → every version; `list` + `sub-bullets`: 1 → 4 of 4 |
+| 19 | overlap texts in the window failing another rule ("verify …" reasons on overlap pairs) | The inserted-span route returned the first in-window candidate, which often broke a sentence or shape rule, and the attempt ended. | Verify every in-window candidate against all rules and keep looking, up to 40 per attempt. | part of 817 → 1,218 (Section 5.7) |
+| 20 | "no task-text span puts the overlap in the window" (most overlap failures) | Generated filler shares no trigrams with the task, and an inserted span is invisible to the other rules. | The copy route (Section 5.7): the word search copies task-text runs up to a quota of shared trigrams, sentence lengths are sized from the task, the quota is corrected from the measured overlap. Approved by Nicky 2026-11-24 (decided as part of the overlap question). | part of 817 → 1,218 |
+| 21 | the first rerun with fixes 19–20 did not finish 20 versions in 35 minutes | Each failing attempt measured the exact overlap of up to 3,000 candidate texts several times, and every measurement tokenises the whole text with NLTK. | A cheap trigram-set screen skips spans that cannot land within 6 points of the target; the copy route tries at most 500 spans; the task's trigrams are computed once. The screen only skips, never accepts. | 4,505 versions in 26 minutes; no version lost |
+
+Fixes 1–2 removed crashes. Fixes 3–20 were capability fixes, and fix 21 a speed fix. Fixes 1–16 were first checked at 10 draws on the affected pairs and then measured in the final run; fixes 17–21 were measured in the version run.
 
 ### 7.3 What could not be fixed, and why
 
@@ -445,8 +473,7 @@ Fixes 1–2 removed crashes. Fixes 3–17 were capability fixes. Each was first 
   The proofs use the verifier facts in Section 3.2. Three of those facts are tested mechanically (`tests/test_stage3_proofs.py`), so a library change that broke an argument would fail the tests: Punkt needs whitespace, the template labels contain five vowels, and the italic tag letters are tokens. A fourth test checks that only "and" has a consonant cluster among the conjunctions.
 
   No proven pair produced a witness in the full or final run. `stage3_summary.py` asserts this.
-- **34 pairs are unsupported by the builder.** They break down as follows:
-  - **8 are layout combinations** (for example list + thesis, template + sub-bullets). The builder writes one layout at a time. A hand-written witness for each passes every check, so they are feasible and are listed as builder gaps.
+- **26 pairs are unsupported by the builder** (34 before combined layouts; the 8 layout pairs with hand witnesses are now built by the builder and are compatible). They break down as follows:
   - **5 are loophole-only**: only texts that glue words together pass. Examples: "shirt-shirt" is two keyword matches but one word for `words:repeats`, and a template label glued to the previous word ("grow.Future").
   - **4 are fixed pairs whose single version failed** (Section 7.1); each had witnesses on other seeds.
   - **16 have no witness and no proof.**
@@ -462,11 +489,13 @@ The pilot is an estimate of how often stage 5 will have to redraw. It does not t
 - Fresh default parameters for each pool.
 - One joint witness per pool, with up to 24 attempts.
 
-**Result (rerun on 2026-11-24 with the version-rule blocked pairs and the thesis fix): 144 of 300 pools (48%) accepted.** The first pilot, before those changes, accepted 137 (46%).
+**Result (rerun on 2026-11-24 with combined layouts and the overlap copy route, fixes 18–21): 147 of 300 pools (49%) accepted.** Earlier runs: 137 (46%) before the version rule and the thesis fix, 144 (48%) after them.
 
-- Median builder time is 0.02 s per pool; the slowest pool took 572 s.
+- Median builder time is 0.02 s per pool; the slowest pool took 67 s (572 s before fix 21).
 - Witnesses have a median length of 52 words; the longest has 1,600.
-- Pools containing `ratio:overlap` passed 1 time in 63. The other types ranged from 14% (`ratio:sentence_words`) to 69% (`format:no_whitespace`) acceptance. Per-type acceptance is confounded by the other five types in each pool.
+- Pools with two layouts are now sampled (the 8 layout pairs are no longer blocked): 28 pools, 14 accepted (50%), about the same as pools with no layout (85 of 160, 53%).
+- **`ratio:overlap` still barely passes in six-rule pools: 2 of 62 (3%), against 1 of 63 before.** By target: 2 of 25 at 1–40%, 0 of 20 at 41–79%, 0 of 17 at 80–100%. Pairwise, the same builder passes 87%, 56% and 16% of versions in those ranges, so the copy route works against one other rule but not against five, most likely because each added rule cuts the runs of task words the search may copy, and the inserted-span route breaks the sentence plan that five rules leave no slack in. This is reported as is; whether to keep the type is Nicky's decision.
+- The other types ranged from 17% (`ratio:sentence_words`) to 71% (`format:emoji`) acceptance; `format:list` is at 23%. Per-type acceptance is confounded by the other five types in each pool.
 
 ---
 
@@ -562,7 +591,7 @@ Punkt reads the separator as sentences: `['!', '?!', '?Beyond … possibility�
 
 `nltk.word_tokenize("A<i>Big</i>Tree <em>Big Tree</em> Now")` gives `['A', '<', 'i', '>', 'Big', '<', '/i', '>', 'Tree', '<', 'em', '>', …]`. The thesis verifier needs the literal `<i>` or `<em>`, so a lower-case token `i` or `em` always appears, and title case rejects it. The basis is "official". The fact is tested.
 
-### 9.10 A hand witness for an unsupported layout pair: `format:list` (sep `-`) + `format:thesis`
+### 9.10 A hand witness for a layout pair: `format:list` (sep `-`) + `format:thesis`
 
 ```
 <i>Orchards need steady care.</i>
@@ -570,7 +599,7 @@ Punkt reads the separator as sentences: `['!', '?!', '?Beyond … possibility�
 - Water the roots often.
 ```
 
-This passes both verifiers and both plain checks (tested). The builder does not produce it because it writes one layout per text.
+This passes both verifiers and both plain checks (tested). Until fix 18 the builder could not produce such a text because it wrote one layout per text, and the pair was listed as unsupported; the builder now writes texts of this shape itself (Section 5.6), and the pair is compatible.
 
 ---
 
@@ -599,9 +628,10 @@ These were found by re-checking the stage-3 data for this document and raised wi
 ```
 cd ifbench
 scripts/fetch_source.sh                       # pinned IFBench + checksum-verified NLTK data
-.venv/bin/python -m pytest -q                 # 94 tests, including the builder and the proofs
+.venv/bin/python -m pytest -q                 # 123 tests, including the builder, the proofs and combined layouts
 .venv/bin/python scripts/stage2_report.py     # stage-2 capability report
 .venv/bin/python scripts/stage3_audit.py final --workers 4
+.venv/bin/python scripts/stage3_versions.py --workers 4   # the version rule; reruns layout and overlap pairs
 .venv/bin/python scripts/stage3_six_pilot.py 300 --workers 4
 .venv/bin/python scripts/stage3_summary.py && .venv/bin/python scripts/stage3_report.py
 ```

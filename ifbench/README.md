@@ -8,7 +8,7 @@ and `tests/test_ifb_isolation.py` checks that. The plan and Nicky's decisions ar
 |---|---|
 | 1. Load IFBench, freeze plain-meaning checks | done, reviewed (`docs/stage1_report.md`) |
 | 2. Witness builder | done, reviewed (`docs/stage2_report.md`, `docs/stage2_builder_limits.md`) |
-| 3. 50-pair timing, 861-pair audit, six-rule pilot | done, awaiting review (`docs/stage3_report.md`) |
+| 3. 50-pair timing, 861-pair audit, six-rule pilot | done; combined layouts and overlap copy route added 2026-11-24, awaiting review (`docs/stage3_report.md`, `docs/witness_builder_methods.md`) |
 | 4. Tasks, families, groups | not started |
 | 5. Pool sampling with D3, split | not started |
 | 6. 100-prompt pilot | not started |

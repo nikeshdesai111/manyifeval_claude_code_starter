@@ -9,8 +9,7 @@ from mife_ifb import stage3_proofs as P  # noqa: E402
 
 S = json.loads((IFB / "freeze" / "stage3_summary.json").read_text())
 c = lambda p: " + ".join(f"`{t}`" for t in p)  # noqa: E731
-WHY = {"hand_witness": "a hand-written witness passes every check, so the pair is feasible; the builder writes one "
-       "layout at a time",
+WHY = {"hand_witness": "a hand-written witness passes every check, so the pair is feasible",
        "loophole_only": "only constructions that glue words together pass", "timed_out": "50 draws did not finish within an hour",
        "fixed_seed": "both rules fixed: the single version found no witness in 24 attempts",
        "no_witness_no_proof": "no witness and no proof"}
@@ -30,16 +29,18 @@ L = ["# Stage 3 report: pairwise compatibility audit and six-rule pilot", "",
      "fixed pair the share is 0 or 1.",
      f"- Versions already run in the final pairwise run were replayed from their records (the builder is "
      f"deterministic); {S['new_versions']} versions were run with the current builder: the combinations the final "
-     "run never drew, and every version of the 39 `format:thesis` pairs after the thesis fix (full stop inside "
-     "`</i>` under `words:last_first`, approved 2026-11-24), which only that layout branch can affect "
+     "run never drew, and every version of every pair with a layout type or `ratio:overlap`, after three builder "
+     "changes approved on 2026-11-24 (the thesis full stop, two or more layouts in one text, and the overlap copy "
+     "route; `docs/witness_builder_methods.md` Sections 5.6, 5.7 and 7.2). Those changes can only alter texts for "
+     "such pairs; every other pair is replayed from the final run "
      f"(`scripts/stage3_versions.py`). {S['versions_run']} versions in total.",
      "- Every pair without a witness was investigated: it is either a **proven conflict** (a written argument in "
      "`src/mife_ifb/stage3_proofs.py`; the library facts it relies on are tested) or **unsupported by the builder**. "
      "Both lists stay in the inventory; neither pair is co-sampled.",
      "- `ratio:overlap` is run against task texts: 222 provisional base tasks (released prompts with the rule text "
      "removed), one task per draw. Stage 4 replaces them with the cleaned task list.",
-     f"- Builder: current witness.py sha256 `{S['witness_py_sha256'][:16]}…` for the thesis pairs; every other pair "
-     "is replayed from the final run's builder, which differs only in the thesis branch (hashes per pair are checked "
+     f"- Builder: current witness.py sha256 `{S['witness_py_sha256'][:16]}…` for the layout and overlap pairs; every "
+     "other pair is replayed from the final run's builder, whose output for them is the same (hashes per pair are checked "
      f"by `stage3_summary.py`: {S['builder_sha_by_pairs']}). "
      "Earlier passes (`full`, `rerun`) were used to find builder gaps and are not reported.",
      "- D1 is empirical: \"compatible\" means the builder found a witness, and \"unsupported\" is not a proof of conflict.", "",
@@ -55,7 +56,9 @@ L += ["", f"Proven conflicts by basis: {S['proven_by_basis'].get('official', 0)}
       f"0.5, {cs['below_0.1']} below 0.1 (lowest {cs['min']}).", "",
       f"`ratio:overlap`: {S['overlap_tasks']['tasks_with_any_witness']} of {S['overlap_tasks']['tasks_tried']} "
       f"provisional tasks got at least one witness; the draw-level success share is "
-      f"{S['overlap_tasks']['draw_success_share']}.", "",
+      f"{S['overlap_tasks']['draw_success_share']}. By target percentage: " +
+      "; ".join(f"{k}%: {v['witnesses']} of {v['versions']} versions ({v['share']:.0%})"
+                for k, v in S['overlap_tasks']['by_target'].items()) + ".", "",
       f"Builder time summed over all versions: {round(S['final_run_seconds'] / 3600, 1)} h of CPU (4 workers).", "",
       "### Proven conflicts", "", "| pair | basis | argument |", "|---|---|---|"]
 for p, (basis, arg) in sorted(P.proven().items()):

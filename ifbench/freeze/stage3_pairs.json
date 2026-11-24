@@ -77,10 +77,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 3,
+  "success": 15,
   "versions": 50,
-  "share": 0.06,
-  "seconds": 6605.3,
+  "share": 0.3,
+  "seconds": 940.0,
   "status": "compatible"
  },
  {
@@ -392,7 +392,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.5,
+  "seconds": 0.4,
   "status": "compatible"
  },
  {
@@ -404,7 +404,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.3,
+  "seconds": 0.4,
   "status": "compatible"
  },
  {
@@ -416,7 +416,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.3,
+  "seconds": 0.4,
   "status": "compatible"
  },
  {
@@ -476,7 +476,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.3,
+  "seconds": 0.4,
   "status": "compatible"
  },
  {
@@ -560,7 +560,7 @@
   "success": 8,
   "versions": 50,
   "share": 0.16,
-  "seconds": 3861.8,
+  "seconds": 473.7,
   "status": "compatible"
  },
  {
@@ -860,7 +860,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.4,
+  "seconds": 0.5,
   "status": "compatible"
  },
  {
@@ -872,7 +872,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.5,
+  "seconds": 0.4,
   "status": "compatible"
  },
  {
@@ -896,7 +896,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.3,
+  "seconds": 0.4,
   "status": "compatible"
  },
  {
@@ -1022,10 +1022,10 @@
    "ratio:stop_words"
   ],
   "category": "draws",
-  "success": 33,
+  "success": 39,
   "versions": 50,
-  "share": 0.66,
-  "seconds": 24.4,
+  "share": 0.78,
+  "seconds": 62.4,
   "status": "compatible"
  },
  {
@@ -1475,10 +1475,10 @@
    "ratio:sentence_type"
   ],
   "category": "draws",
-  "success": 7,
+  "success": 28,
   "versions": 50,
-  "share": 0.14,
-  "seconds": 575.9,
+  "share": 0.56,
+  "seconds": 180.3,
   "status": "compatible"
  },
  {
@@ -1778,7 +1778,7 @@
   "success": 3,
   "versions": 4,
   "share": 0.75,
-  "seconds": 0.0,
+  "seconds": 0.1,
   "status": "compatible"
  },
  {
@@ -1916,10 +1916,10 @@
    "ratio:sentence_balance"
   ],
   "category": "draws",
-  "success": 5,
+  "success": 33,
   "versions": 50,
-  "share": 0.1,
-  "seconds": 690.6,
+  "share": 0.66,
+  "seconds": 204.3,
   "status": "compatible"
  },
  {
@@ -2345,10 +2345,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 40,
+  "success": 42,
   "versions": 50,
-  "share": 0.8,
-  "seconds": 168.7,
+  "share": 0.84,
+  "seconds": 24.7,
   "status": "compatible"
  },
  {
@@ -2762,7 +2762,7 @@
   "success": 32,
   "versions": 50,
   "share": 0.64,
-  "seconds": 572.8,
+  "seconds": 89.7,
   "status": "compatible"
  },
  {
@@ -3179,10 +3179,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 36,
+  "success": 38,
   "versions": 50,
-  "share": 0.72,
-  "seconds": 196.1,
+  "share": 0.76,
+  "seconds": 44.7,
   "status": "compatible"
  },
  {
@@ -3194,7 +3194,7 @@
   "success": 1,
   "versions": 50,
   "share": 0.02,
-  "seconds": 154.8,
+  "seconds": 346.8,
   "status": "compatible"
  },
  {
@@ -3203,10 +3203,10 @@
    "words:vowel"
   ],
   "category": "draws",
-  "success": 11,
+  "success": 24,
   "versions": 50,
-  "share": 0.22,
-  "seconds": 46.6,
+  "share": 0.48,
+  "seconds": 205.0,
   "status": "compatible"
  },
  {
@@ -3215,10 +3215,10 @@
    "words:consonants"
   ],
   "category": "draws",
-  "success": 5,
+  "success": 19,
   "versions": 50,
-  "share": 0.1,
-  "seconds": 158.2,
+  "share": 0.38,
+  "seconds": 197.4,
   "status": "compatible"
  },
  {
@@ -3227,10 +3227,10 @@
    "sentence:alliteration_increment"
   ],
   "category": "draws",
-  "success": 11,
+  "success": 33,
   "versions": 50,
-  "share": 0.22,
-  "seconds": 415.6,
+  "share": 0.66,
+  "seconds": 98.2,
   "status": "compatible"
  },
  {
@@ -3239,10 +3239,10 @@
    "words:palindrome"
   ],
   "category": "draws",
-  "success": 31,
+  "success": 34,
   "versions": 50,
-  "share": 0.62,
-  "seconds": 351.7,
+  "share": 0.68,
+  "seconds": 62.0,
   "status": "compatible"
  },
  {
@@ -3251,10 +3251,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 29,
+  "success": 32,
   "versions": 50,
-  "share": 0.58,
-  "seconds": 565.6,
+  "share": 0.64,
+  "seconds": 89.3,
   "status": "compatible"
  },
  {
@@ -3263,10 +3263,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 32,
+  "success": 35,
   "versions": 50,
-  "share": 0.64,
-  "seconds": 906.8,
+  "share": 0.7,
+  "seconds": 134.4,
   "status": "compatible"
  },
  {
@@ -3275,10 +3275,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 30,
+  "success": 34,
   "versions": 50,
-  "share": 0.6,
-  "seconds": 469.9,
+  "share": 0.68,
+  "seconds": 70.3,
   "status": "compatible"
  },
  {
@@ -3287,10 +3287,10 @@
    "words:prime_lengths"
   ],
   "category": "draws",
-  "success": 3,
+  "success": 16,
   "versions": 50,
-  "share": 0.06,
-  "seconds": 252.1,
+  "share": 0.32,
+  "seconds": 208.0,
   "status": "compatible"
  },
  {
@@ -3299,10 +3299,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 38,
+  "success": 46,
   "versions": 50,
-  "share": 0.76,
-  "seconds": 102.5,
+  "share": 0.92,
+  "seconds": 15.9,
   "status": "compatible"
  },
  {
@@ -3311,10 +3311,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 7,
+  "success": 39,
   "versions": 50,
-  "share": 0.14,
-  "seconds": 193.1,
+  "share": 0.78,
+  "seconds": 67.5,
   "status": "compatible"
  },
  {
@@ -3323,10 +3323,10 @@
    "ratio:sentence_words"
   ],
   "category": "draws",
-  "success": 1,
+  "success": 9,
   "versions": 50,
-  "share": 0.02,
-  "seconds": 90.3,
+  "share": 0.18,
+  "seconds": 196.7,
   "status": "compatible"
  },
  {
@@ -3335,10 +3335,10 @@
    "words:start_verb"
   ],
   "category": "draws",
-  "success": 33,
+  "success": 43,
   "versions": 50,
-  "share": 0.66,
-  "seconds": 489.8,
+  "share": 0.86,
+  "seconds": 36.0,
   "status": "compatible"
  },
  {
@@ -3347,10 +3347,10 @@
    "words:repeats"
   ],
   "category": "draws",
-  "success": 40,
+  "success": 47,
   "versions": 50,
-  "share": 0.8,
-  "seconds": 9.2,
+  "share": 0.94,
+  "seconds": 3.6,
   "status": "compatible"
  },
  {
@@ -3359,10 +3359,10 @@
    "sentence:keyword"
   ],
   "category": "draws",
-  "success": 17,
+  "success": 20,
   "versions": 50,
-  "share": 0.34,
-  "seconds": 2741.2,
+  "share": 0.4,
+  "seconds": 245.1,
   "status": "compatible"
  },
  {
@@ -3371,10 +3371,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 31,
+  "success": 34,
   "versions": 50,
-  "share": 0.62,
-  "seconds": 464.7,
+  "share": 0.68,
+  "seconds": 80.1,
   "status": "compatible"
  },
  {
@@ -3383,10 +3383,10 @@
    "words:odd_even_syllables"
   ],
   "category": "draws",
-  "success": 2,
+  "success": 16,
   "versions": 50,
-  "share": 0.04,
-  "seconds": 797.4,
+  "share": 0.32,
+  "seconds": 289.1,
   "status": "compatible"
  },
  {
@@ -3395,10 +3395,10 @@
    "words:last_first"
   ],
   "category": "draws",
-  "success": 7,
+  "success": 33,
   "versions": 50,
-  "share": 0.14,
-  "seconds": 113.5,
+  "share": 0.66,
+  "seconds": 142.9,
   "status": "compatible"
  },
  {
@@ -3407,10 +3407,10 @@
    "words:paragraph_last_first"
   ],
   "category": "draws",
-  "success": 1,
+  "success": 44,
   "versions": 50,
-  "share": 0.02,
-  "seconds": 417.4,
+  "share": 0.88,
+  "seconds": 91.2,
   "status": "compatible"
  },
  {
@@ -3419,10 +3419,10 @@
    "sentence:increment"
   ],
   "category": "draws",
-  "success": 12,
+  "success": 36,
   "versions": 50,
-  "share": 0.24,
-  "seconds": 518.7,
+  "share": 0.72,
+  "seconds": 136.0,
   "status": "compatible"
  },
  {
@@ -3431,10 +3431,10 @@
    "words:no_consecutive"
   ],
   "category": "draws",
-  "success": 33,
+  "success": 42,
   "versions": 50,
-  "share": 0.66,
-  "seconds": 245.6,
+  "share": 0.84,
+  "seconds": 64.1,
   "status": "compatible"
  },
  {
@@ -3443,10 +3443,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 41,
+  "success": 47,
   "versions": 50,
-  "share": 0.82,
-  "seconds": 238.9,
+  "share": 0.94,
+  "seconds": 32.9,
   "status": "compatible"
  },
  {
@@ -3455,10 +3455,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 37,
+  "success": 39,
   "versions": 50,
-  "share": 0.74,
-  "seconds": 73.5,
+  "share": 0.78,
+  "seconds": 21.8,
   "status": "compatible"
  },
  {
@@ -3467,10 +3467,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 33,
+  "success": 41,
   "versions": 50,
-  "share": 0.66,
-  "seconds": 691.1,
+  "share": 0.82,
+  "seconds": 101.8,
   "status": "compatible"
  },
  {
@@ -3482,7 +3482,7 @@
   "success": 37,
   "versions": 50,
   "share": 0.74,
-  "seconds": 76.8,
+  "seconds": 21.1,
   "status": "compatible"
  },
  {
@@ -3491,10 +3491,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 35,
+  "success": 39,
   "versions": 50,
-  "share": 0.7,
-  "seconds": 82.8,
+  "share": 0.78,
+  "seconds": 19.9,
   "status": "compatible"
  },
  {
@@ -3503,10 +3503,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 26,
+  "success": 30,
   "versions": 50,
-  "share": 0.52,
-  "seconds": 769.1,
+  "share": 0.6,
+  "seconds": 107.5,
   "status": "compatible"
  },
  {
@@ -3515,10 +3515,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 32,
+  "success": 33,
   "versions": 50,
-  "share": 0.64,
-  "seconds": 105.8,
+  "share": 0.66,
+  "seconds": 27.6,
   "status": "compatible"
  },
  {
@@ -3541,10 +3541,10 @@
    "words:words_position"
   ],
   "category": "draws",
-  "success": 2,
+  "success": 41,
   "versions": 50,
-  "share": 0.04,
-  "seconds": 209.2,
+  "share": 0.82,
+  "seconds": 28.5,
   "status": "compatible"
  },
  {
@@ -3553,10 +3553,10 @@
    "ratio:overlap"
   ],
   "category": "draws",
-  "success": 1,
+  "success": 5,
   "versions": 50,
-  "share": 0.02,
-  "seconds": 345.8,
+  "share": 0.1,
+  "seconds": 343.8,
   "status": "compatible"
  },
  {
@@ -3568,7 +3568,7 @@
   "success": 32,
   "versions": 50,
   "share": 0.64,
-  "seconds": 263.9,
+  "seconds": 50.2,
   "status": "compatible"
  },
  {
@@ -3580,7 +3580,7 @@
   "success": 2,
   "versions": 50,
   "share": 0.04,
-  "seconds": 1901.7,
+  "seconds": 536.7,
   "status": "compatible"
  },
  {
@@ -8464,7 +8464,7 @@
   "success": 33,
   "versions": 50,
   "share": 0.66,
-  "seconds": 1.2,
+  "seconds": 1.6,
   "status": "compatible"
  },
  {
@@ -8476,7 +8476,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.1,
+  "seconds": 0.0,
   "status": "compatible"
  },
  {
@@ -8500,7 +8500,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.1,
+  "seconds": 0.0,
   "status": "compatible"
  },
  {
@@ -9385,7 +9385,7 @@
   "success": 15,
   "versions": 20,
   "share": 0.75,
-  "seconds": 0.2,
+  "seconds": 0.3,
   "status": "compatible"
  },
  {
@@ -9892,18 +9892,11 @@
    "format:thesis"
   ],
   "category": "all_combinations",
-  "success": 0,
+  "success": 4,
   "versions": 4,
-  "share": 0.0,
-  "seconds": 0.1,
-  "status": "unsupported_by_builder",
-  "why": "hand_witness",
-  "top_reasons": [
-   [
-    "verify format:list: official verifier fails",
-    96
-   ]
-  ]
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
  },
  {
   "pair": [
@@ -9911,10 +9904,10 @@
    "format:sub-bullets"
   ],
   "category": "all_combinations",
-  "success": 1,
+  "success": 4,
   "versions": 4,
-  "share": 0.25,
-  "seconds": 0.1,
+  "share": 1.0,
+  "seconds": 0.0,
   "status": "compatible"
  },
  {
@@ -9923,18 +9916,11 @@
    "format:no_bullets_bullets"
   ],
   "category": "all_combinations",
-  "success": 0,
+  "success": 4,
   "versions": 4,
-  "share": 0.0,
-  "seconds": 0.1,
-  "status": "unsupported_by_builder",
-  "why": "hand_witness",
-  "top_reasons": [
-   [
-    "verify format:list: official verifier fails",
-    96
-   ]
-  ]
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
  },
  {
   "pair": [
@@ -9957,7 +9943,7 @@
   "success": 20,
   "versions": 50,
   "share": 0.4,
-  "seconds": 4.3,
+  "seconds": 5.3,
   "status": "compatible"
  },
  {
@@ -9990,18 +9976,11 @@
    "format:output_template"
   ],
   "category": "all_combinations",
-  "success": 0,
+  "success": 4,
   "versions": 4,
-  "share": 0.0,
-  "seconds": 0.1,
-  "status": "unsupported_by_builder",
-  "why": "hand_witness",
-  "top_reasons": [
-   [
-    "verify format:list: official verifier fails",
-    96
-   ]
-  ]
+  "share": 1.0,
+  "seconds": 0.0,
+  "status": "compatible"
  },
  {
   "pair": [
@@ -10018,18 +9997,11 @@
    "format:thesis"
   ],
   "category": "fixed",
-  "success": 0,
+  "success": 1,
   "versions": 1,
-  "share": 0.0,
+  "share": 1.0,
   "seconds": 0.0,
-  "status": "unsupported_by_builder",
-  "why": "hand_witness",
-  "top_reasons": [
-   [
-    "verify format:sub-bullets: no '*' bullet",
-    24
-   ]
-  ]
+  "status": "compatible"
  },
  {
   "pair": [
@@ -10037,18 +10009,11 @@
    "format:thesis"
   ],
   "category": "fixed",
-  "success": 0,
+  "success": 1,
   "versions": 1,
-  "share": 0.0,
+  "share": 1.0,
   "seconds": 0.0,
-  "status": "unsupported_by_builder",
-  "why": "hand_witness",
-  "top_reasons": [
-   [
-    "verify format:no_bullets_bullets: official verifier fails",
-    24
-   ]
-  ]
+  "status": "compatible"
  },
  {
   "pair": [
@@ -10101,18 +10066,11 @@
    "format:thesis"
   ],
   "category": "fixed",
-  "success": 0,
+  "success": 1,
   "versions": 1,
-  "share": 0.0,
+  "share": 1.0,
   "seconds": 0.0,
-  "status": "unsupported_by_builder",
-  "why": "hand_witness",
-  "top_reasons": [
-   [
-    "verify format:thesis: official verifier fails",
-    24
-   ]
-  ]
+  "status": "compatible"
  },
  {
   "pair": [
@@ -10153,7 +10111,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.4,
+  "seconds": 0.5,
   "status": "compatible"
  },
  {
@@ -10186,18 +10144,11 @@
    "format:sub-bullets"
   ],
   "category": "fixed",
-  "success": 0,
+  "success": 1,
   "versions": 1,
-  "share": 0.0,
+  "share": 1.0,
   "seconds": 0.0,
-  "status": "unsupported_by_builder",
-  "why": "hand_witness",
-  "top_reasons": [
-   [
-    "verify format:sub-bullets: no '*' bullet",
-    24
-   ]
-  ]
+  "status": "compatible"
  },
  {
   "pair": [
@@ -10229,7 +10180,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.4,
+  "seconds": 0.5,
   "status": "compatible"
  },
  {
@@ -10262,18 +10213,11 @@
    "format:output_template"
   ],
   "category": "fixed",
-  "success": 0,
+  "success": 1,
   "versions": 1,
-  "share": 0.0,
+  "share": 1.0,
   "seconds": 0.0,
-  "status": "unsupported_by_builder",
-  "why": "hand_witness",
-  "top_reasons": [
-   [
-    "verify format:no_bullets_bullets: official verifier fails",
-    24
-   ]
-  ]
+  "status": "compatible"
  },
  {
   "pair": [
@@ -10377,7 +10321,7 @@
   "success": 50,
   "versions": 50,
   "share": 1.0,
-  "seconds": 0.3,
+  "seconds": 0.5,
   "status": "compatible"
  },
  {

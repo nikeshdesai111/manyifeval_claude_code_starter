@@ -102,6 +102,16 @@ def main():
                 ov[d["task_index"]][1] += 1
     ov_tasks = {"tasks_tried": len(ov), "tasks_with_any_witness": sum(1 for a, b in ov.values() if a),
                 "draw_success_share": round(sum(a for a, _ in ov.values()) / max(1, sum(b for _, b in ov.values())), 3)}
+    # overlap: success by target range (versions of every non-proven overlap pair)
+    rng_of = lambda x: "1-40" if x <= 40 else "41-79" if x < 80 else "80-100"  # noqa: E731
+    by_t = defaultdict(lambda: [0, 0])
+    for p, r in final.items():
+        if "ratio:overlap" in p:
+            for d in r["version_records"]:
+                k = rng_of(d["params"]["ratio:overlap"]["percentage"])
+                by_t[k][0] += d["ok"]
+                by_t[k][1] += 1
+    ov_tasks["by_target"] = {k: {"witnesses": a, "versions": b, "share": round(a / b, 3)} for k, (a, b) in sorted(by_t.items())}
 
     six = load("six_pilot.jsonl")
     pilot = None
