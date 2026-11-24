@@ -51,6 +51,10 @@ Resampling units are the 50 TRAIN groups (paired cluster bootstrap, B = 10,000, 
 ECE bins are deciles of the same OOF predictions; the TRAIN design has fewer append and companion contrasts (counts in
 `match_coverage.json`); Obj 2 Eval 2 is a preliminary design. Intervals are pointwise and unadjusted.
 
+## Plan-structured results
+
+`PRELIMINARY_RESULTS_FOLLOWING_PLAN.md` lays out every exhibit of the evaluation plan in its order (Tables 1–4, A1–A7, E2 figures, Pos-A/B/C, K-A/B, C-A/B/C, D-A/B/C/D, Factor E, Objective 2 Evaluation 2) with TRAIN OOF numbers (`python -m mife.prelim_train.plan_report`).
+
 ## Main numbers (all from `tables/`)
 
 See `RESULTS_PRELIMINARY.md`. Paper: `report/neurips_draft/paper.pdf` (Table 3, Table 4, Figure 1, Appendix H).
