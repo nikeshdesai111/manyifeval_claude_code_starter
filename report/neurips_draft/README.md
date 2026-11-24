@@ -13,6 +13,14 @@ official paper checklist is not included). Final report due Mon 7 Dec 2026.
 | `make_assets.py` | Builds `figures/pair_coverage_s3.pdf` and `generated/*.tex` from design metadata and committed TRAIN-CV tables. |
 | `paper.pdf` | Compiled draft. |
 
+## Preliminary TRAIN results (24 Nov 2026)
+
+Tables 3-4, Figure 1 (`figures/eval2_prelim_train.pdf`) and Appendix H now hold **preliminary grouped-CV out-of-fold
+results on the 50 S3 training groups**, with the disclosure in Section 6.1. They are built by
+`mife.prelim_train.paper_assets` from `results/preliminary_train_report/tables/` and inlined between
+`% BEGIN generated` / `% END generated` markers; appendix PNGs are in `figures/prelim/`. Provenance, deviations and
+commands: `results/preliminary_train_report/README.md`. The 22-group test evaluation will replace them.
+
 ## Build
 
 ```bash

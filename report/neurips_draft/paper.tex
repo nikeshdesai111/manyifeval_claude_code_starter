@@ -52,9 +52,11 @@ answer every prompt 20 times, and every rule in every response is checked by its
 sampled violation probability per rule and prompt. Predictors that read the generator's hidden state or its attention to
 the rule are compared with predictors that read a frozen text embedding of the prompt, with the same heads, structural
 features, labels and tuning grid. All choices are made by grouped cross-validation on 50 training
-groups; 22 held-out groups carry every rule subset of their pools (30,096 prompts per generator). We report
-held-out accuracy and whether each predictor forecasts how risk changes when a rule moves, a rule is appended, a
-companion is replaced or the task changes.
+groups; 22 held-out groups carry every rule subset of their pools (30,096 prompts per generator). Generation for the held-out groups was incomplete at the submission deadline, so this version reports
+\emph{preliminary} grouped cross-validation results on the 50 training groups: the generator's hidden state forecasts
+per-rule risk better than a frozen prompt embedding for both models, and better than a text predictor that also embeds the
+exact rule for Qwen, while forecasts of how risk \emph{changes} under controlled prompt edits are generator- and
+factor-specific. Evaluation on the 22 held-out groups is pending.
 \end{abstract}
 
 % =====================================================================================================
@@ -91,8 +93,8 @@ of ManyIFEval tasks, each with its own pool of six compatible rules in balanced 
 predictor uses the same rule-type heads, structural features, labels, penalty grid and selection rule. Four primary
 comparisons substitute one representation for another; three secondary ones add an internal block to a fixed text
 predictor.
-\item \textbf{A two-part held-out evaluation} (Section~\ref{sec:experiments}): accuracy of absolute risk on 22 held-out
-groups, and, from strictly matched prompt pairs, whether each predictor forecasts the \emph{change} in risk caused by
+\item \textbf{A two-part evaluation} (Section~\ref{sec:experiments}; preliminary out-of-fold results on the training
+groups in this version): accuracy of absolute risk, and, from strictly matched prompt pairs, whether each predictor forecasts the \emph{change} in risk caused by
 moving a rule, appending one, replacing a companion or changing the task.
 \end{itemize}
 No single ingredient is new; each has a precedent cited below. What is new is the setting: probabilistic forecasting
@@ -334,6 +336,15 @@ hash before any selection (Appendix~\ref{app:recipe}). Cross-validation chose la
 
 \subsection{Protocol}
 
+\paragraph{Preliminary results in this version.} Because generation and verification for the designated held-out test
+set were incomplete at the submission deadline, we report preliminary analyses on the 50 training groups of the S3 split
+(36,900 prompts, 153,900 prompt--rule rows and 738,000 verified responses per generator; the 246-configuration design).
+Descriptive results characterise observed violation behaviour under controlled prompt changes (exploratory). Predictive results use the out-of-fold predictions of the selected models from 5-fold cross-validation by
+group: every prediction comes from a model fitted without the rule pool that contains it. Settings, penalties and layers
+were selected with the same folds, so these estimates may be optimistic; they are not held-out test results. Metrics,
+matching and weights follow the evaluation plan below, with the 50 training groups as resampling units. Independent
+evaluation on the 22 S3 test groups remains pending and will replace every number in Sections~\ref{sec:results}--4.3.
+
 \paragraph{Test-set discipline.} No feature, label or prediction of a group was read while the group was in the test set
 before the models had been refitted (for the earlier use of 16 test groups, see Section~\ref{sec:discussion}). The
 evaluation plan (comparisons, metrics, matched designs, weights, exhibits) was written before any test outcome was
@@ -342,41 +353,39 @@ examined. Test scoring for Objective~1 was authorised on 24 November
 \citep{cawley2010overfitting} and appear only as selection diagnostics (Appendix~\ref{app:cv}).
 
 \paragraph{Evaluation 1: absolute risk.} For Objective~1 the primary metric is the binomial negative log-likelihood per
-response $\times$ rule outcome, pooled over all 115,236 test prompt--rule rows; secondary metrics are AUROC on binary
+response $\times$ rule outcome, pooled over all prompt--rule rows; secondary metrics are AUROC on binary
 response-level outcomes, Brier score and expected calibration error with ten bins fixed from training out-of-fold
 predictions \citep{guo2017calibration}. ``Types improved'' counts rule types on which the candidate has strictly lower
-NLL; it is descriptive, not 15 significance tests. For Objective~2 the primary metric is RMSE of $\qhat$ over the
-30,096 test prompts, with Spearman correlation as support.
+NLL; it is descriptive, not 15 significance tests. For Objective~2 the primary metric is RMSE of $\qhat$ over prompts, with
+Spearman correlation as support.
 
 \paragraph{Evaluation 2: matched changes (Objective~1).} From metadata alone we build strictly matched prompt pairs
 that differ in one respect, for every target rule kept on both sides: \textbf{(A) position}, the same exact rule set in
-COA orders that place the target in different slots ($k=2..5$; 57,420 target contrasts per generator);
-\textbf{(B) strict append}, one rule appended to an ordered prefix, scored on the retained rules (69,300);
-\textbf{(C) companion replacement}, one non-target rule replaced at a fixed slot, before or after the target
-(177,408); and \textbf{(D) task}, the same configuration attached to another task of the group (115,236). For a pair
+COA orders that place the target in different slots ($k=2..5$); \textbf{(B) strict append}, one rule appended
+to an ordered prefix, scored on the retained rules; \textbf{(C) companion replacement}, one non-target rule replaced
+at a fixed slot, before or after the target; and \textbf{(D) task}, the same configuration attached to another task of
+the group. Counts are in Table~\ref{tab:eval2}. For a pair
 $(a,b)$, $d_{\text{obs}}=\phat_b-\phat_a$ and $d_M=\hat p_{M,b}-\hat p_{M,a}$. We report observed effects as
 noise-adjusted RMS changes (squared changes minus their binomial variance, averaged, then square-rooted) and signed
 means, and forecasting skill as paired $\Delta$-MSE, $\text{mean}(d_M-d_{\text{obs}})^2$ of the comparator minus that of
 the candidate; observation noise cancels from this difference in expectation. Weights are equal per $k$ or transition,
-task and group (Appendix~\ref{app:eval2}). These are effects of this design, not content-free causal effects: moving
-a rule also changes its distance to the prompt's end.
+task and group (Appendix~\ref{app:eval2}). Moving a rule also changes its distance to the prompt's end.
 
-\paragraph{Uncertainty.} The 22 test groups are the units of resampling. A paired group bootstrap
-\citep{efron1979bootstrap} with 10,000 draws, shared by every predictor and contrast, gives pointwise 95\% percentile
-intervals; a $t_{21}$ interval on group-level estimates and leave-one-group-out are sensitivity checks. Intervals are
-not adjusted for multiplicity; a single interval that excludes zero is not read as confirmation, and one that includes
-zero is not read as equivalence.
+\paragraph{Uncertainty.} The 22 test groups (50 training groups for the preliminary results) are the units of resampling. A paired group bootstrap \citep{efron1979bootstrap} with 10,000 draws, shared by every predictor and contrast, gives
+pointwise 95\% percentile intervals, not adjusted for multiplicity; an interval excluding zero is not read as
+confirmation, nor one including zero as equivalence.
 
 \subsection{Evaluation 1: forecasting absolute risk}
 \label{sec:results}
 
 \begin{table}[t]
 \centering\small
-\caption{Held-out accuracy on the 22 test groups (\emph{pending}). Positive values favour the candidate (Table~\ref{tab:predictors}).
-Objective~1: NLL reduction ($\times10^{3}$ nats per response $\times$ rule outcome) over 115,236 prompt--rule
-rows, AUROC gain ($\times100$) on binary outcomes, and the number of the 15 rule types with lower NLL. Objective~2: RMSE
-reduction of $\qhat$ (percentage points) and Spearman gain ($\times100$) over 30,096 prompts. Paired 95\% group-bootstrap intervals; raw scores, Brier, ECE and references in
-Appendix~\ref{app:planned}.}
+\caption{\emph{Preliminary} out-of-fold accuracy on the 50 S3 training groups (grouped 5-fold CV; not held-out
+test performance). Positive values favour the candidate (Table~\ref{tab:predictors}). Objective~1: NLL reduction
+($\times10^{3}$ nats per response $\times$ rule outcome) over 153,900 prompt--rule rows, AUROC gain ($\times100$) on
+binary outcomes, and the number of the 15 rule types with lower NLL. Objective~2: RMSE reduction of $\qhat$ (percentage
+points) and Spearman gain ($\times100$) over 36,900 prompts. Paired 95\% 50-group bootstrap intervals (10,000 draws;
+2,000 for Objective~2), unadjusted; raw scores in Appendix~\ref{app:prelim}.}
 \label{tab:main}
 \footnotesize\setlength{\tabcolsep}{1.7pt}
 \begin{tabular}{llccccc}
@@ -385,131 +394,119 @@ Appendix~\ref{app:planned}.}
 \cmidrule(lr){3-5}\cmidrule(lr){6-7}
  & Comparison & NLL reduction & AUROC gain & Types & RMSE reduction & Spearman gain \\
 \midrule
+% BEGIN generated: generated/prelim/tab_main_rows.tex
 \multirow{7}{*}{\rotatebox{90}{Llama}}
- & 1: B1 \cto{} H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 2: B2 \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 3: B2 \cto{} RCAP & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 7: RCAP \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 1: B1 \cto{} H1 & 68.3 [37.9, 102.7] & 5.9 [3.8, 7.9] & 10/15 & 1.94 [0.84, 3.06] & 28.6 [17.5, 39.7] \\
+ & 2: B2 \cto{} H2 & 7.9 [-2.2, 18.2] & 1.3 [0.5, 2.1] & 7/15 & 0.60 [0.04, 1.18] & 8.5 [3.4, 14.5] \\
+ & 3: B2 \cto{} RCAP & 11.6 [-3.9, 27.5] & 1.3 [0.4, 2.3] & 8/15 & 0.76 [0.06, 1.45] & 8.3 [2.4, 14.9] \\
+ & 7: RCAP \cto{} H2 & -3.7 [-19.9, 10.4] & 0.0 [-0.9, 0.8] & 10/15 & -0.16 [-0.72, 0.44] & 0.1 [-4.2, 4.4] \\
 \cmidrule(lr){2-7}
- & 4: B1 \cto{} B1+H & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 5: B2 \cto{} B2+H & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 6: B2 \cto{} B2+A & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 4: B1 \cto{} B1+H & 69.0 [29.1, 113.0] & 7.4 [4.6, 10.3] & 10/15 & 1.92 [0.80, 3.05] & 28.4 [17.4, 39.6] \\
+ & 5: B2 \cto{} B2+H & 16.3 [7.8, 25.4] & 1.8 [1.1, 2.6] & 9/15 & 0.54 [-0.03, 1.14] & 8.4 [3.6, 14.2] \\
+ & 6: B2 \cto{} B2+A & 19.2 [8.3, 31.4] & 2.3 [1.4, 3.3] & 10/15 & 0.75 [0.07, 1.44] & 8.2 [2.3, 14.8] \\
 \midrule
 \multirow{7}{*}{\rotatebox{90}{Qwen}}
- & 1: B1 \cto{} H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 2: B2 \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 3: B2 \cto{} RCAP & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 7: RCAP \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 1: B1 \cto{} H1 & 58.3 [26.7, 94.4] & 7.7 [4.2, 11.6] & 11/15 & 0.76 [-0.11, 1.61] & 12.1 [4.7, 20.4] \\
+ & 2: B2 \cto{} H2 & 18.6 [3.8, 34.6] & 4.0 [2.1, 6.0] & 8/15 & 0.49 [-0.45, 1.35] & 11.3 [3.8, 18.9] \\
+ & 3: B2 \cto{} RCAP & 18.6 [1.2, 38.4] & 4.4 [2.2, 6.6] & 7/15 & 0.50 [-0.04, 1.05] & 10.5 [4.8, 16.5] \\
+ & 7: RCAP \cto{} H2 & 0.0 [-13.0, 12.9] & -0.3 [-1.3, 0.7] & 9/15 & -0.01 [-0.72, 0.58] & 0.8 [-3.3, 4.9] \\
 \cmidrule(lr){2-7}
- & 4: B1 \cto{} B1+H & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 5: B2 \cto{} B2+H & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 6: B2 \cto{} B2+A & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 4: B1 \cto{} B1+H & 52.5 [25.2, 84.5] & 7.1 [3.8, 10.7] & 9/15 & 0.75 [-0.11, 1.58] & 12.0 [4.7, 20.2] \\
+ & 5: B2 \cto{} B2+H & 18.6 [3.9, 34.4] & 4.0 [2.0, 6.0] & 8/15 & 0.46 [-0.29, 1.19] & 11.4 [4.7, 18.3] \\
+ & 6: B2 \cto{} B2+A & 19.2 [1.8, 39.2] & 4.4 [2.2, 6.6] & 7/15 & 0.31 [-0.06, 0.69] & 9.0 [4.2, 14.0] \\
+% END generated
 \bottomrule
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:main} reports held-out accuracy. For Llama, replacing the prompt embedding with the hidden state
-(comparison~1) changes NLL by \tbd{} [\tbd, \tbd] per outcome and improves \tbd{} of 15 rule types; given the exact rule
-(comparison~2) the change is \tbd{} [\tbd, \tbd], and rule attention (comparison~3) gives \tbd{} [\tbd, \tbd]. For
-Qwen the corresponding values are \tbd, \tbd{} and \tbd. Hidden state and rule attention differ by \tbd{} (comparison~7).
-Added to B2, the hidden state and attention change NLL by \tbd{} and \tbd{} (comparisons~5 and~6). For Objective~2,
-\tbd. \todo{Fill from saved tables; add calibration, spread over types, fixed vs parameterised rules.}
+Table~\ref{tab:main} reports preliminary out-of-fold accuracy. Replacing the prompt embedding with the hidden state
+(comparison~1) reduces NLL by 68.3 [37.9, 102.7] $\times10^{-3}$ nats per outcome for Llama and 58.3 [26.7, 94.4] for
+Qwen, improving 10 and 11 of 15 types, mostly the parameterised ones. Against B2, which also embeds the exact rule, the
+hidden state (comparison~2) gives 7.9 [$-2.2$, 18.2] for Llama and 18.6 [3.8, 34.6] for Qwen and raises AUROC for both;
+rule attention (comparison~3) gives 11.6 [$-3.9$, 27.5] and 18.6 [1.2, 38.4], and the two internal signals are
+indistinguishable (comparison~7). Added to B2, either block helps both generators (comparisons~5--6: 16--19). For
+Objective~2, the primary candidates of comparisons~1--3 raise Spearman correlation by 8--29 points, with RMSE
+reductions of 0.5--1.9 points whose intervals include zero for Qwen; averaging Objective~1 predictions over a prompt's
+rules is as accurate as the dedicated head (Appendix~\ref{app:prelim}).
 
 \subsection{Evaluation 2: forecasting how risk changes}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/eval2_placeholder.pdf}
-\caption{Observed effects of the controlled changes on Objective~1 risk (\emph{empty axes at final size; data
-pending}). (a--c) Noise-adjusted RMS change of a rule's violation probability, by target type (five fixed-wording
-types above the dotted line), when the rule moves between positions, when one companion is replaced, and when the
-task changes; Llama and Qwen side by side. (d) Mean change in the violation probability of retained rules when one rule
-is appended (the new rule is excluded; $3{\to}4$ and $4{\to}5$ cover only COA orders with an exact prefix). Points:
-estimates with 95\% 22-group cluster intervals. The signed type-by-$k$, type-by-companion and family panels of the
-plan are in the appendix to fit the page limit. Observed outcomes only; predictor skill is in Table~\ref{tab:eval2}.}
+\includegraphics[width=\linewidth]{figures/eval2_prelim_train.pdf}
+\caption{\emph{Preliminary}, 50 S3 training groups (exploratory, descriptive). Observed effects of the controlled changes on Objective~1 risk. (a--c) Noise-adjusted RMS change of a rule's violation probability by target type (fixed-wording types above the dotted
+line) when the rule moves, one companion is replaced, or the task changes. (d) Mean change for retained rules when one
+rule is appended. 95\% 50-group bootstrap intervals; estimator validated by simulation and signed panels in
+Appendix~\ref{app:prelim}.}
 \label{fig:eval2}
 \end{figure}
 
 \begin{table}[t]
 \centering\small
-\caption{Forecasting matched changes, primary comparisons (\emph{pending}; comparisons 4--6 in Appendix~\ref{app:planned}): paired $\Delta$-MSE reduction ($\times10^{4}$) [95\% CI] of the
-predicted vs observed change in a rule's violation probability; positive favours the candidate. Contrasts per
-generator: position 57,420, append 69,300, companion 177,408, task 115,236; equal weight per $k$ or transition.}
+\caption{Forecasting matched changes (\emph{preliminary}, out-of-fold, 50 training groups; comparisons 4--6 in
+Appendix~\ref{app:prelim}): paired $\Delta$-MSE reduction ($\times10^{4}$) [95\% interval]; positive favours the
+candidate. Target contrasts per generator: 76,500 / 39,600 / 84,600 / 153,900.}
 \label{tab:eval2}
 \footnotesize\setlength{\tabcolsep}{1.6pt}
 \begin{tabular}{llcccc}
 \toprule
  & Comparison & Position & Strict append & Companion & Task \\
 \midrule
+% BEGIN generated: generated/prelim/tab_eval2_rows.tex
 \multirow{4}{*}{Llama}
- & 1: B1 \cto{} H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 2: B2 \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 3: B2 \cto{} RCAP & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 7: RCAP \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 1: B1 \cto{} H1 & 2.0 [-3.2, 7.4] & -21.9 [-41.2, -5.3] & -37.5 [-67.0, -10.9] & 161.8 [81.0, 247.8] \\
+ & 2: B2 \cto{} H2 & 6.1 [2.5, 10.1] & 2.9 [-3.1, 8.6] & 8.2 [-1.3, 17.9] & 127.1 [48.7, 206.7] \\
+ & 3: B2 \cto{} RCAP & -37.3 [-55.8, -21.3] & -22.2 [-36.3, -9.2] & -19.4 [-34.5, -4.9] & 57.4 [-20.1, 138.2] \\
+ & 7: RCAP \cto{} H2 & 43.4 [28.8, 60.7] & 25.1 [13.2, 38.3] & 27.6 [12.0, 44.4] & 69.8 [38.8, 102.8] \\
 \midrule
 \multirow{4}{*}{Qwen}
- & 1: B1 \cto{} H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 2: B2 \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 3: B2 \cto{} RCAP & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
- & 7: RCAP \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 1: B1 \cto{} H1 & -6.2 [-12.4, -2.1] & -16.6 [-29.4, -5.2] & -33.9 [-64.7, -8.1] & 23.1 [-18.6, 65.7] \\
+ & 2: B2 \cto{} H2 & -5.3 [-10.7, -1.8] & -5.1 [-12.6, 2.4] & -14.4 [-33.2, 3.7] & -30.6 [-53.6, -8.1] \\
+ & 3: B2 \cto{} RCAP & -18.8 [-26.3, -12.1] & -12.4 [-22.0, -3.0] & -6.0 [-21.9, 8.8] & -18.5 [-45.3, 8.4] \\
+ & 7: RCAP \cto{} H2 & 13.5 [6.1, 21.0] & 7.3 [0.4, 14.3] & -8.4 [-25.9, 7.1] & -12.1 [-34.6, 9.5] \\
+% END generated
 \bottomrule
 \end{tabular}
 \end{table}
 
-Figure~\ref{fig:eval2} shows the observed changes. Moving a rule changes its violation probability by a noise-adjusted
-RMS of \tbd{} percentage points for Llama and \tbd{} for Qwen, with the largest sensitivity for \tbd; appending a rule
-changes the risk of retained rules by \tbd{} to \tbd{} points across transitions; replacing one companion changes the
-target's risk by an RMS of \tbd{}; and changing the task, with every rule fixed, by \tbd. Table~\ref{tab:eval2} asks
-whether predictors forecast these changes. \tbd. \todo{Fill from saved tables.}
+Figure~\ref{fig:eval2} shows the observed changes on the training groups. With the rest of the prompt fixed, moving a
+rule changes its violation probability by a median (over types) noise-adjusted RMS of 7.5 points for Llama and 6.5 for
+Qwen (most: paragraph count, 24.4; bullet points, 20.9); replacing one companion, by 12.9 and 12.4; changing the task,
+by 21.1 and 12.3, up to about 50 points for some types. Appending a rule raises the risk of retained rules by at most
+1.4 points (Qwen: 0.4 [$-0.3$, 1.1] at $1{\to}2$ to 1.4 [0.9, 2.0] at $4{\to}5$; Llama: only $4{\to}5$ excludes zero).
+Forecasting these changes (Table~\ref{tab:eval2}) depends on generator and factor. For Llama the hidden-state probes
+forecast task-induced changes better than both text predictors (comparisons~1 and~2), but for Qwen H2 is worse than B2
+on task changes. The attention probe is worse than B2 on position and append changes for both generators, and H1 is worse
+than B1 on append and companion changes.
 
 % =====================================================================================================
 \section{Discussion and limitations}
 \label{sec:discussion}
 
-\paragraph{Reading the outcomes.} Comparisons~2 and~3 are the most demanding substitutions: B2 already sees the structure, the prompt and the exact rule, so a
-candidate that beats it shows that the generator's state exposes violation-relevant information to a linear head that
-a frozen encoder of the same prompt does not. Comparison~7 says which internal signal to read, and comparisons 4--6 say whether internal features help a deployed
-text predictor even where they do not replace it. A gain in Evaluation~1 without one in Evaluation~2 would mean that
-a predictor ranks rules by difficulty but does not track how the same rule's risk moves with its context. Results
-that differ in sign between generators will be reported as generator-specific, not averaged. The other-generator
-reference qualifies every internal-state result: on training cross-validation the other model's hidden states already
-matched or beat the generator's own in two of four cells (Appendix~\ref{app:cv}), so an internal advantage may reflect
-a richer encoding of the prompt rather than anything specific to the model that answers.
+\paragraph{Reading the outcomes.} Comparisons~2 and~3 are the demanding substitutions: B2 already sees the structure,
+the prompt and the exact rule, so a candidate that beats it shows that the generator's state exposes information a
+frozen encoder of the same prompt does not. In the preliminary results this holds clearly for Qwen and only in AUROC for
+Llama. The other generator's hidden states matched or beat the generator's own in two of four training-CV cells
+(Appendix~\ref{app:cv}), so an internal advantage may reflect a richer encoding of the prompt rather than self-knowledge.
+The question is predictive: a win for internal features does not show
+that the model ``knows'' it will fail or that attention causes violations \citep{jain2019attention,wiegreffe2019attention};
+that needs interventions \citep{li2023iti,stolfo2025steering,zhang2024pasta}.
 
-\paragraph{What the design can and cannot show.} The question is predictive. A win for internal features would not
-show that the model ``knows'' it will fail or uses this information, nor that attention causes violations
-\citep{jain2019attention,wiegreffe2019attention}; that needs interventions \citep{li2023iti,stolfo2025steering,zhang2024pasta}.
-A loss would show only that the information is not more linearly accessible at the searched layers.
+\paragraph{Limitations.} \emph{Preliminary numbers:} every result is a grouped-CV estimate on training groups whose folds
+also selected settings, so it may be optimistic and may change on the 22 test groups. \emph{Baseline strength:} the text predictors use a frozen encoder; a fine-tuned prompt reader,
+as in \citet{ashok2025predict}, could narrow any gap. Only hidden-state predictors get a layer search. \emph{Labels:} each $\phat$ has a standard error up to 0.11, and the ``all uppercase'' verifier can reject correct answers.
+\emph{Power and earlier use:} test inference will rest on 22 groups, 16 of which informed earlier design choices
+(penalty grids, layer candidates) under a previous split; 46\% of test prompts use subsets outside the training chain
+design. \emph{Scope:} two 8B models, English, 15 rule types, at most five compatible rules, single-turn \citep{wallace2024hierarchy,sirdeshmukh2025multichallenge}.
 
-\paragraph{Limitations.} \emph{Baseline strength:} the text predictors use a frozen encoder; a fine-tuned prompt reader,
-as in \citet{ashok2025predict}, could narrow any gap. \emph{Unequal search:} only hidden-state predictors get a layer
-search. \emph{Labels:} each $\phat$ has a standard error up to 0.11, and the ``all uppercase'' verifier can reject correct
-answers (a sensitivity analysis drops it, and truncated or repetitive responses).
-\emph{Backends:} features and generation use different software stacks. \emph{Power:} inference rests on 22
-groups, several rule types appear in only six test pools, and one type pair never co-occurs in training.
-\emph{Earlier use of test groups:} 16 of the 22 test groups were training groups under an earlier split and informed
-earlier design choices, including the penalty grids and layer candidates; the final models are refitted without them,
-which does not undo that influence. \emph{Design shift:} 46\% of test prompts use rule subsets outside the chain design seen in training,
-generated in a separate run with the same engine, weights and decoding. \emph{Scope:} two open 8B models, English, 15 programmatically checkable rule
-types, at most five rules, default sampling and no reasoning mode. We forecast violations of constraints that are in
-the model-visible prompt, not constraints lost before the prompt is assembled \citep{wang2026compaction}; our rules are
-compatible and of equal priority, unlike conflicting instructions of different privilege \citep{wallace2024hierarchy};
-and prompts are single-turn, unlike multi-turn evaluations \citep{sirdeshmukh2025multichallenge}.
-
-\paragraph{Future work.} Forecasts could drive risk-aware routing or sampling with conformal guarantees
-\citep{quach2024conformal,ashok2025predict} or guide rule reordering; newer constraint types \citep{pyatkin2025ifbench},
-larger models and reasoning modes would test whether the findings hold.
 
 % =====================================================================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-We built a balanced multi-rule benchmark with sampled violation probabilities for two generators, matched
-predictors that share head, structure, labels and tuning, and a pre-specified evaluation of absolute risk and of
-matched changes on 22 held-out groups. If internal states win the substitutions, a lightweight pre-generation probe is a practical risk
-estimator for individual rules; if they help only when added to a text predictor, they are a complement, not a
-replacement; and if a frozen text encoder matches them, prompt-only forecasting suffices for these rule types.
-\todo{Replace with one sentence per finding (comparisons 1--3 and 7, 4--6, matched changes, own vs other generator).}
+Preliminary out-of-fold results on the training groups of our balanced multi-rule benchmark suggest that hidden states or rule attention forecast per-rule risk better than
+a frozen prompt embedding and complement a text predictor that sees the rule, but that no predictor consistently
+forecasts how risk changes under controlled edits. The 22 held-out groups will decide.\label{end:main}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
@@ -729,7 +726,7 @@ and are confounded with task text, and no within-family task comparison exists i
 \section{Planned appendix exhibits}
 \label{app:planned}
 
-\todo{Populate after test scoring, from saved tables only.} Evaluation~1, Objective~1: (A1) pooled NLL, Brier, AUROC and
+To be populated from the 22 test groups. Evaluation~1, Objective~1: (A1) pooled NLL, Brier, AUROC and
 ECE for every predictor and the seven contrasts with paired intervals, including the structure-only and other-generator
 references; (A2) reliability curves for key predictors; (A3) two 15-type $\times$ 7-comparison heatmaps of NLL reduction,
 five fixed-wording types above ten parameterised ones; (A3b) NLL reduction for fixed and parameterised rules and their
@@ -740,6 +737,143 @@ retained slot and transition (K-A) and skill by transition (K-B); companion cove
 (C-B); task sensitivity by $k$ and family (D-A, D-B) and skill by $k$ (D-C); the signed panels moved out of Figure~\ref{fig:eval2}: two 15-type $\times$ 4-$k$ first-to-last position
 heatmaps, two 15 $\times$ 15 target $\times$ companion heatmaps and the six-family task panel; secondary comparisons 4--6
 for every factor.
+
+\section{Preliminary training-set results: provenance and additional exhibits}
+\label{app:prelim}
+
+\paragraph{Provenance.} Split S3 (\texttt{split-s3-2026-11-23}, applied by \texttt{mife.splits}): 50 training groups,
+150 tasks, 36,900 prompts and 153,900 prompt--rule rows per generator, each with 20 verified responses from run
+\texttt{main} (3,078,000 rule outcomes per generator). No test-group prompt, label, feature or prediction is read. The
+historical 57/15 split and its V1 results are not used. Predictions are the V2 out-of-fold predictions at the
+CV-selected setting (\texttt{results/v2\_s3/predictions/}, version \texttt{v2-2026-11-20}, S3 rerun); for every row and
+predictor we checked that the stored fold equals the fold of the row's group in \texttt{results/cv\_s3/folds.json}, so
+each prediction comes from a model fitted on the other 40 groups. The evaluation code is a copy of the planned test
+evaluation re-pointed at the training groups (\texttt{src/mife/prelim\_train/}); outputs are in
+\texttt{results/preliminary\_train\_report/}. \emph{Deviations from the plan:} resampling units are 50 training groups,
+not 22 test groups; the training design has 246 configurations per task (no strict companion pairs at $k=4$, fewer
+append pairs); ECE bins are deciles of the same out-of-fold predictions; Objective~2 uses 2,000 bootstrap draws; the
+Objective~2 matched-change analysis (Table~\ref{tab:prelim_o2}) is a preliminary design choice not fixed by the plan.
+\emph{Noise-adjusted RMS:} a simulation with 50 pools, 20 responses per prompt and cells of 1, 2 or 4 prompts
+(\texttt{noise\_validation\_synthetic.csv}) gives a mean estimate within 0.1 points of the true RMS whenever the true
+RMS is at least 3 points, an upward bias of 0.5--1 point at an exact null (truncation at zero), and 91--100\% coverage
+of the 95\% interval.
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Preliminary out-of-fold scores (50 S3 training groups). Objective~1: pooled NLL per outcome, Brier, AUROC and
+ECE ($\times100$). Objective~2: RMSE of $\qhat$ (points) and Spearman ($\times100$). Training mean: per fold, the mean
+$\qhat$ of the other folds.}
+\label{tab:prelim_scores}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{lcccccccccccc}
+\toprule
+ & \multicolumn{6}{c}{Llama} & \multicolumn{6}{c}{Qwen} \\
+\cmidrule(lr){2-7}\cmidrule(lr){8-13}
+Predictor & NLL & Brier & AUROC & ECE & RMSE & Spear. & NLL & Brier & AUROC & ECE & RMSE & Spear. \\
+\midrule
+% BEGIN generated: generated/prelim/tab_app_scores_rows.tex
+Structure only & 0.503 & 0.139 & 69.5 & 6.7 & 14.77 & 29.9 & 0.356 & 0.091 & 70.9 & 5.6 & 11.84 & 34.4 \\
+Training mean & -- & -- & -- & -- & 15.34 & -18.9 & -- & -- & -- & -- & 12.31 & -17.7 \\
+B1 & 0.482 & 0.135 & 71.5 & 6.5 & 14.62 & 32.9 & 0.340 & 0.088 & 72.5 & 5.4 & 11.80 & 35.0 \\
+B2 & 0.401 & 0.115 & 78.9 & 4.6 & 13.27 & 51.5 & 0.293 & 0.077 & 77.1 & 3.7 & 11.50 & 36.0 \\
+H1+S & 0.414 & 0.118 & 77.4 & 4.2 & 12.67 & 61.5 & 0.282 & 0.077 & 80.3 & 3.8 & 11.04 & 47.1 \\
+H2+S & 0.393 & 0.112 & 80.2 & 4.4 & 12.67 & 60.0 & 0.274 & 0.074 & 81.2 & 3.4 & 11.01 & 47.3 \\
+RCAP & 0.390 & 0.111 & 80.2 & 4.4 & 12.51 & 59.9 & 0.274 & 0.073 & 81.5 & 3.8 & 11.00 & 46.5 \\
+B1+H1 & 0.413 & 0.118 & 79.0 & 5.4 & 12.69 & 61.3 & 0.288 & 0.078 & 79.6 & 3.9 & 11.06 & 47.0 \\
+B2+H1 & 0.385 & 0.111 & 80.8 & 4.4 & 12.73 & 59.9 & 0.274 & 0.074 & 81.1 & 3.3 & 11.04 & 47.4 \\
+B2+A1 & 0.382 & 0.110 & 81.2 & 4.4 & 12.52 & 59.7 & 0.273 & 0.073 & 81.5 & 3.8 & 11.19 & 45.0 \\
+Avg.\ Obj.~1 H2+S & -- & -- & -- & -- & 12.22 & 62.7 & -- & -- & -- & -- & 11.02 & 48.1 \\
+% END generated
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Preliminary $\Delta$-MSE reduction ($\times10^4$) for the secondary comparisons (Objective~1 matched changes).}
+\label{tab:prelim_sec}
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{llcccc}
+\toprule
+ & Comparison & Position & Strict append & Companion & Task \\
+\midrule
+% BEGIN generated: generated/prelim/tab_app_eval2_secondary_rows.tex
+Llama & 4: B1 \cto{} B1+H & 1.1 [-5.9, 8.3] & -17.7 [-36.4, -0.9] & -32.1 [-66.5, -2.2] & 112.8 [14.8, 211.7] \\
+Llama & 5: B2 \cto{} B2+H & 6.8 [3.1, 11.1] & 8.1 [3.0, 13.2] & 15.7 [7.7, 23.5] & 114.0 [50.7, 179.4] \\
+Llama & 6: B2 \cto{} B2+A & -16.5 [-28.8, -5.5] & 0.5 [-9.2, 10.6] & 7.0 [-4.2, 19.4] & 73.4 [12.9, 138.2] \\
+Qwen & 4: B1 \cto{} B1+H & -3.9 [-8.1, -1.0] & -9.0 [-18.2, -0.5] & -21.1 [-42.4, -2.2] & 16.9 [-20.7, 58.0] \\
+Qwen & 5: B2 \cto{} B2+H & -5.0 [-10.1, -1.6] & -4.0 [-11.4, 3.3] & -12.9 [-31.4, 4.8] & -30.5 [-53.5, -8.3] \\
+Qwen & 6: B2 \cto{} B2+A & -17.4 [-24.5, -11.1] & -10.6 [-19.8, -1.6] & -3.9 [-19.8, 11.0] & -16.8 [-42.7, 9.1] \\
+% END generated
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Preliminary Objective~2 matched changes (whole-prompt fraction violated; prompt-level pairs). Noise-adjusted
+RMS uses the response-level variance of the violated fraction. For append, the added rule enters the outcome and the
+denominator. Signed means in points; MSE values $\times10^4$; equal weight per $k$ or transition.}
+\label{tab:prelim_o2}
+\setlength{\tabcolsep}{1.6pt}
+\begin{tabular}{llcccc}
+\toprule
+ & Quantity & Position & Strict append & Companion & Task \\
+\midrule
+% BEGIN generated: generated/prelim/tab_app_obj2_eval2_rows.tex
+Llama & Observed noise-adj.\ RMS (pp) & 6.9 [6.0, 7.7] & 15.4 [14.1, 16.6] & 16.7 [15.3, 18.1] & 18.8 [16.9, 20.5] \\
+Llama & Observed signed mean (pp) & -0.1 [-0.3, 0.2] & 0.5 [0.0, 1.0] & -0.2 [-1.1, 0.7] & -0.4 [-2.1, 1.2] \\
+Llama & Zero-change MSE ($\times10^4$) & 65.4 [53.0, 79.4] & 259.8 [221.1, 299.4] & 299.5 [251.6, 349.3] & 376.3 [309.1, 446.5] \\
+Llama & $\Delta$-MSE 1 ($\times10^4$) & -6.2 [-9.9, -2.3] & 57.8 [39.9, 76.4] & 54.2 [29.6, 79.9] & -3.1 [-42.1, 37.9] \\
+Llama & $\Delta$-MSE 2 ($\times10^4$) & -3.7 [-5.9, -1.6] & 16.1 [6.2, 26.8] & 26.0 [14.4, 39.0] & 9.2 [-14.7, 34.1] \\
+Llama & $\Delta$-MSE 3 ($\times10^4$) & -15.3 [-22.3, -8.9] & 14.4 [0.3, 28.8] & 15.0 [-0.8, 32.7] & 13.5 [-28.3, 56.1] \\
+Llama & $\Delta$-MSE 7 ($\times10^4$) & 11.6 [6.4, 17.3] & 1.7 [-10.7, 15.3] & 11.0 [-2.1, 24.7] & -4.3 [-35.0, 29.1] \\
+\midrule
+Qwen & Observed noise-adj.\ RMS (pp) & 6.1 [5.4, 6.8] & 12.0 [10.5, 13.4] & 13.4 [11.7, 15.0] & 12.6 [10.8, 14.2] \\
+Qwen & Observed signed mean (pp) & 0.1 [-0.1, 0.2] & 1.1 [0.7, 1.5] & 0.3 [-0.5, 1.2] & -0.4 [-1.7, 0.7] \\
+Qwen & Zero-change MSE ($\times10^4$) & 45.1 [35.9, 55.1] & 152.2 [118.9, 187.4] & 188.0 [144.9, 234.5] & 166.9 [125.5, 211.4] \\
+Qwen & $\Delta$-MSE 1 ($\times10^4$) & -5.6 [-8.9, -2.8] & 17.0 [8.6, 26.5] & 20.7 [10.7, 32.2] & -12.2 [-29.1, 2.9] \\
+Qwen & $\Delta$-MSE 2 ($\times10^4$) & -5.6 [-8.7, -2.8] & 7.0 [-3.3, 17.2] & 12.7 [0.7, 25.6] & -11.8 [-28.9, 3.7] \\
+Qwen & $\Delta$-MSE 3 ($\times10^4$) & -6.2 [-9.3, -3.6] & 9.8 [-0.4, 21.8] & 6.5 [-4.3, 18.3] & -4.3 [-19.9, 12.2] \\
+Qwen & $\Delta$-MSE 7 ($\times10^4$) & 0.6 [-1.3, 2.6] & -2.8 [-11.1, 5.4] & 6.3 [-1.9, 15.2] & -7.5 [-20.5, 3.8] \\
+% END generated
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/prelim/e1_A3_per_type_nll_heatmap.png}
+\caption{Preliminary per-type NLL reduction for the seven comparisons (out-of-fold, 50 training groups).}
+\label{fig:prelim_heat}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/prelim/e1_A2_reliability.png}
+\caption{Preliminary reliability curves, Objective~1 (out-of-fold, 50 training groups).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/prelim/e2_pos_figure.png}
+\caption{Preliminary position analysis: (A) noise-adjusted RMS by type and (B) signed first-to-last change by type and $k$.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/prelim/e2_companion_figure.png}
+\caption{Preliminary companion analysis: RMS by target type and signed target $\times$ companion effects (named companion
+minus the mean of the other available companions in the same fixed context; outlined cells have fewer than 3 pools).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/prelim/e2_task_figure.png}
+\caption{Preliminary task analysis: RMS by type and signed task-family differences (descriptive associations, not causal
+effects of task family).}
+\end{figure}
+\clearpage
 
 \section{Training cross-validation diagnostics}
 \label{app:cv}
