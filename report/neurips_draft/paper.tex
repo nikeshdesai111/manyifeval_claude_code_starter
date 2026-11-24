@@ -28,8 +28,9 @@
 \newcommand{\blk}[1]{\textsf{#1}}
 \newcommand{\tbd}{\textcolor{red!70!black}{TBD}}
 \newcommand{\todo}[1]{\textcolor{red!70!black}{[\textbf{TODO:} #1]}}
+\newcommand{\cto}{$\rightarrow$}
 
-\title{Will It Follow the Rules? Predicting Instruction\\ Violations from Pre-Generation Internal States}
+\title{Will It Follow the Rules? Forecasting Per-Rule Instruction\\ Violations from Pre-Generation Internal States}
 
 \author{%
   Anonymous Authors\\
@@ -41,20 +42,19 @@
 \maketitle
 
 \begin{abstract}
-Language models often break some of the instructions in a prompt when they are given several at once, and the failure
-is noticed only after a response has been generated and checked. We ask whether the risk that a model violates each
-instruction can be predicted \emph{before} it generates anything, and whether the model's own internal state at the end
-of the prompt predicts this risk better than a strong text encoder that reads the same prompt. We build a controlled
-benchmark from ManyIFEval: its 216 tasks are arranged into 72 groups, each with its own pool of six automatically
-checkable rules, and a balanced design over rule subsets (one to five rules) and rule orders yields 53,136 prompts. Two
-instruction-tuned 8B models, Llama~3.1 and Qwen3, answer every prompt 20 times, and every rule is checked with the
-official verifiers, which gives an estimated violation probability for each rule and each prompt. We then compare
-predictors that read the generator's hidden state, or its attention to the rule's tokens, with predictors that read a
-frozen text embedding of the prompt. The two sides of each comparison share the same model form, structural features
-and tuning budget, so they differ only in how the prompt is represented. All choices are made by cross-validation on 50
-training groups, while 22 test groups, chosen so that every compatible pair of rule types appears in at least two of
-them, stay sealed until the analysis plan is frozen. This draft specifies the benchmark, the comparisons and the
-evaluation; test results are pending.
+Language models given several instructions at once often break some of them, and the failure is found only after
+generation. We study whether the probability that a model violates
+\emph{each} instruction in a prompt can be forecast before generation, and whether the model's own state at the end
+of the prompt is more useful for this than a text encoder reading the same prompt. From ManyIFEval we build a
+controlled benchmark of 72 groups of three tasks, each with its own pool of six automatically checkable rules, shown
+in balanced subsets of one to five rules and balanced orders. Two 8B instruction-tuned models, Llama~3.1 and Qwen3,
+answer every prompt 20 times, and every rule in every response is checked by its official verifier, which gives a
+sampled violation probability per rule and prompt. Predictors that read the generator's hidden state or its attention to
+the rule are compared with predictors that read a frozen text embedding of the prompt, with the same heads, structural
+features, labels and tuning grid. All choices are made by grouped cross-validation on 50 training
+groups; 22 held-out groups carry every rule subset of their pools (30,096 prompts per generator). We report
+held-out accuracy and whether each predictor forecasts how risk changes when a rule moves, a rule is appended, a
+companion is replaced or the task changes.
 \end{abstract}
 
 % =====================================================================================================
@@ -62,117 +62,119 @@ evaluation; test results are pending.
 \label{sec:intro}
 
 People rarely give a language model a single instruction. A typical request names a task and then adds constraints on
-length, format, wording and style. Compliance drops as such constraints accumulate: on ManyIFEval, the share of
-responses that satisfy every instruction falls steadily as the number of instructions grows from one to ten
-\citep{harada2025instructions}, and the decline continues up to hundreds of instructions \citep{jaroslawicz2025many}.
-The failure is also silent. A user learns that a rule was broken only after the response has been written and checked.
+length, format, wording and style, and failing to keep such constraints has real costs in long-context and agentic
+systems \citep{robinette2026repeatedly,wang2026compaction}. Compliance drops as constraints accumulate: on ManyIFEval
+the share of responses that satisfy every instruction falls steadily from one to ten instructions
+\citep{harada2025instructions}, and the decline continues to hundreds \citep{jaroslawicz2025many}. The failure is
+also silent: a user learns that a rule was broken only after the response has been written and checked.
 
-If we could estimate, before generation, how likely each rule is to be violated, a system could act on it: restate or
-reorder a risky rule, send the prompt to a stronger model, or sample more candidate responses. At that moment two
-sources of information exist: the prompt, which any external model can read, and the generating model's internal state
-after reading it. Work on \emph{probing}, which fits a simple classifier (a probe) to a model's internal activations,
-shows that these activations predict whether an answer will be correct
-\citep{kadavath2022know,azaria2023internal,orgad2025llms}, and recent work finds directions in them that track whether
-a single instruction will be followed \citep{heo2025know}. The attention a model pays to the tokens of a constraint has
-also been shown to predict whether factual constraints are met \citep{yuksekgonul2024attention}.
+If the risk that each rule is violated could be estimated before generation, a system could restate or reorder a
+risky rule, route the prompt to a stronger model, or sample more candidates. Prior work suggests this is possible. Linear probes on the state after the full prompt predict whether a greedy response will follow a
+single instruction \citep{heo2025know}, and probes on input tokens forecast properties of the whole output about as
+well as a fine-tuned prompt reader \citep{ashok2025predict}. Pre-generation activations also predict a model's
+expected success rate, estimated from repeated rollouts, on mathematics and coding problems
+\citep{lugoloobi2026encode}. For factual queries, the attention from the last prompt token to each constraint
+predicts whether that constraint will be satisfied \citep{yuksekgonul2024attention}.
 
-It is much less clear how much of this signal is specific to the model's internals. Whether a rule is violated depends
-strongly on what the rule asks: a requirement of exactly three paragraphs fails far more often than a ban on commas,
-and both facts can be read directly from the prompt. A probe can therefore do well simply because the prompt is encoded
-in the activations. The question that matters in practice is the incremental one: \emph{does the generator's internal
-state predict its violations better than an equally well-tuned predictor that sees only the prompt?} Existing studies
-rarely answer it, for three reasons. Labels usually come from one sampled response per prompt, so much of the target is
-sampling noise. Prompts are collected rather than designed, so rule identity, rule count, rule order and task vary
-together. And probes are compared with weak or differently built baselines, so any gap mixes the value of the
-representation with differences in architecture, inputs and tuning.
-
-We design a study that answers the incremental question for prompts with several rules:
+What remains open is how much of this signal requires the model's internals. A frozen embedding of the prompt alone
+can predict a model's mean reward over sampled responses \citep{hasanaliyev2026expected}, so a probe's accuracy does
+not show that internal states add anything beyond the prompt. And whether a rule is violated depends strongly on what
+the rule asks, which any reader of the prompt can see. We therefore ask, for prompts with several rules: \emph{does the
+generator's state at the end of the prompt forecast the violation probability of each rule better than a text
+representation of the same prompt, read by the same model with the same tuning, and does it add to that text
+representation?} We make three contributions:
 \begin{itemize}
-\item \textbf{A controlled multi-rule benchmark with probabilistic labels} (Section~\ref{sec:data}). From all 216
-ManyIFEval tasks we build 72 groups of three tasks, each with its own pool of six compatible rules, and present
-balanced subsets of each pool in balanced orders. This gives 53,136 prompts, 221,616 prompt--rule targets and 2.1
-million verified responses from two generators.
-\item \textbf{Matched comparisons that isolate the representation} (Section~\ref{sec:methods}). All predictors use the
-same per-rule-type regression heads, structural features and tuning grid. Each primary comparison swaps exactly one
-input: a frozen text embedding of the prompt, the generator's hidden state, or its attention to the target rule.
-\item \textbf{A pre-specified, group-level evaluation} (Section~\ref{sec:experiments}). All choices use
-cross-validation on 50 training groups. Effects on 22 held-out groups are reported as paired differences with
-group-level confidence intervals, alongside a cross-generator control, calibration, and controlled analyses of rule
-position, count, composition and task.
+\item \textbf{A controlled multi-rule benchmark with sampled per-rule labels} (Section~\ref{sec:data}): 72 groups
+of ManyIFEval tasks, each with its own pool of six compatible rules in balanced subsets and orders; 66,996 prompts and
+1.34 million responses per generator, each checked rule by rule.
+\item \textbf{Matched comparisons of internal and external representations} (Section~\ref{sec:methods}). Every
+predictor uses the same rule-type heads, structural features, labels, penalty grid and selection rule. Four primary
+comparisons substitute one representation for another; three secondary ones add an internal block to a fixed text
+predictor.
+\item \textbf{A two-part held-out evaluation} (Section~\ref{sec:experiments}): accuracy of absolute risk on 22 held-out
+groups, and, from strictly matched prompt pairs, whether each predictor forecasts the \emph{change} in risk caused by
+moving a rule, appending one, replacing a companion or changing the task.
 \end{itemize}
-The held-out groups have not been read. This draft specifies the experiments in full and marks test results as pending.
+No single ingredient is new; each has a precedent cited below. What is new is the setting: probabilistic forecasting
+of individual instruction violations under controlled multi-rule composition, comparing internal and external
+representations of the same prompt under matched readouts.
 
 % =====================================================================================================
 \section{Related work}
 \label{sec:related}
 
 \paragraph{Following many instructions at once.} IFEval introduced instructions whose compliance can be checked by a
-program, such as word counts, required keywords and formatting \citep{zhou2023ifeval}. ManyIFEval combines up to ten of
-15 IFEval instruction types in one prompt, shows that compliance falls with the number of instructions, and predicts
-performance on unseen combinations from the instruction count \citep{harada2025instructions}. FollowBench
-\citep{jiang2024followbench} adds constraints level by level, InFoBench \citep{qin2024infobench} breaks requirements
-into yes/no questions, ComplexBench \citep{wen2024complexbench} composes constraints with logical structure, IFBench
-\citep{pyatkin2025ifbench} tests unseen verifiable constraints, Multi-IF \citep{he2024multiif} extends IFEval to
-multi-turn and multilingual use, and IFScale \citep{jaroslawicz2025many} raises the count to hundreds of keyword
-instructions. Compliance also depends on where a constraint appears \citep{zeng2025order,liu2024lost} and on
-superficial formatting \citep{sclar2024quantifying}. All of these works measure compliance after generation. We predict
-the probability that one rule in one prompt will be violated before any token is generated, and our design turns the
-known effects of order and composition into controlled factors.
+program \citep{zhou2023ifeval}. ManyIFEval combines up to ten of 15 IFEval instruction types in one prompt, shows that
+compliance falls as instructions are added, and estimates accuracy on unseen combinations from the instruction count
+\citep{harada2025instructions}. FollowBench, InFoBench, ComplexBench, Multi-IF and IFScale vary constraint difficulty,
+decomposition, logical composition, turns and count
+\citep{jiang2024followbench,qin2024infobench,wen2024complexbench,he2024multiif,jaroslawicz2025many}. Controlled
+studies isolate single factors: compliance depends on constraint order \citep{zeng2025order} and on the type, count
+and position of up to 20 constraints \citep{purpura2026mosaic}, and across 15 models it decays multiplicatively with
+the number of constraints, with weak pairwise co-failure \citep{vasileva2026cse}. IFBench tests generalisation to 58
+new verifiable constraint types \citep{pyatkin2025ifbench}. These studies measure compliance after generation, as
+rates over prompts or factor levels. We forecast the violation probability of each rule in a given prompt before
+generation, and use the known factors (rule subset, count, order and task) as controlled design variables.
 
-\paragraph{Probing internal states.} Linear and other simple probes are the standard tool for asking what a
-representation encodes \citep{alain2016probes,belinkov2022probing}, with the caveat that an expressive probe can learn
-the task itself rather than reveal the representation \citep{hewitt2019control}. Probes detect whether a statement is
-true \citep{azaria2023internal,burns2023discovering,marks2023geometry,li2023iti,zou2023repe}, whether a model knows an
-answer \citep{kadavath2022know}, whether a generation is likely to be hallucinated
-\citep{kossen2024sep,orgad2025llms}, and how much a model knows about an entity before it generates anything
-\citep{gottesman2024estimating}. Closest to us, \citet{heo2025know} find a direction in input representations that
-predicts whether a response will follow a single IFEval instruction; it generalises across tasks but not across
-instruction types. \citet{stolfo2025steering} steer format and length compliance with activation differences,
-\citet{ashok2025predict} forecast properties of the whole output from probes on input tokens, and
-\citet{rocchetti2026follow} report that the probe signal for constraint satisfaction is weak before generation and
-grows during it. Our study differs in four ways: each prompt carries several rules, each a separate target; labels are
-probabilities from 20 samples per prompt; the comparators are text-only predictors with the same head, features and
-supervision; and a cross-generator control asks whether the signal is specific to the model that writes the response.
-The last two address the probing caveat, since a probe that wins only by encoding the prompt should not beat a matched
-text encoder or another model's states.
+\paragraph{Forecasting behaviour from internal states.} Simple probes test what a representation encodes
+\citep{alain2016probes,belinkov2022probing}; because expressive probes can fit control tasks with random labels, probe
+capacity should be held fixed when representations are compared \citep{hewitt2019control}. Hidden states carry
+information about later tokens \citep{pal2023future}, truthfulness \citep{azaria2023internal,burns2023discovering,marks2023geometry},
+whether a model knows an answer \citep{kadavath2022know} and what it knows about an entity before generating
+\citep{gottesman2024estimating}.
+Closest to us, \citet{heo2025know} pair five instruction types with the same 100 tasks (IFEval-simple); linear probes
+on the representation after the full prompt predict whether a greedy response follows the single instruction (AUROC
+0.74--0.88 on held-out tasks) but do not transfer to held-out instruction types. \citet{ashok2025predict} predict
+behaviours, including instruction-format failures, from input-token activations, add conformal guarantees, and
+compare with a fine-tuned BERT-large reading only the prompt, which the probe matches or beats in all but one setting.
+\citet{lugoloobi2026encode} predict a model's expected success rate from pre-generation activations, and
+\citet{stolfo2025steering} steer format and length compliance with activation differences.
+\citet{rocchetti2026follow} find that general probes show selective deficits relative to task-specific ones; their
+temporal analysis probes fixed responses with negatives swapped in from other prompts, so it addresses a different
+question from ours. Each forecasting study above predicts one outcome per prompt; we predict a separate violation
+probability for each rule in prompts with up to five rules.
 
-\paragraph{Attention as a predictive signal.} SAT Probe treats a factual query as a set of constraints and shows that
-the maximum attention from the final token to each constraint's tokens predicts whether the model will satisfy it
-\citep{yuksekgonul2024attention}. Lookback Lens detects hallucinations from how attention is split between the context
-and the generated text \citep{chuang2024lookback}, and PASTA improves instruction following by increasing attention to
-spans marked by the user \citep{zhang2024pasta}. We carry the SAT Probe construction over to instruction rules and
-compare it with hidden states and text embeddings under matched conditions. We take the maximum over a rule's tokens
-rather than the sum because much attention mass sits on a few ``sink'' tokens \citep{xiao2024sinks}, and we treat
-attention as a predictive feature, not as an explanation \citep{jain2019attention,wiegreffe2019attention}.
+\paragraph{Attention as a predictive signal.} SAT Probe treats a factual query as a set of constraints and predicts
+whether each will be satisfied from the maximum attention from the final prompt token to the constraint's tokens
+\citep{yuksekgonul2024attention}. Lookback Lens detects contextual hallucination during generation from attention
+ratios, matches hidden-state detectors, and transfers from a 7B to a 13B model through a learned head mapping
+\citep{chuang2024lookback}; PASTA improves instruction following by steering attention to user-marked spans
+\citep{zhang2024pasta}. Our attention predictor adapts SAT Probe's feature to instruction rules, changes the target to
+sampled rule-level violation probabilities, and compares the feature with hidden states and text under matched
+readouts. We treat attention as a predictive feature, not an explanation \citep{jain2019attention,wiegreffe2019attention}.
 
-\paragraph{Uncertainty, self-evaluation and routing.} Calibration, the agreement between predicted probabilities and
-observed frequencies \citep{guo2017calibration}, has been studied for language models through verbalised confidence
-\citep{lin2022teaching,tian2023just,xiong2024express}, self-evaluation \citep{kadavath2022know} and sampling-based
-semantic uncertainty \citep{kuhn2023semantic,farquhar2024detecting}, which semantic entropy probes approximate from a
-single forward pass \citep{kossen2024sep}. For instruction following, \citet{heo2025uncertainty} find that estimators
-built on internal states beat verbalised and logit-based ones but approach chance in their hardest setting. Routers
-choose a model before generation \citep{ding2024hybrid,ong2025routellm}. Most of these methods score an existing
-response or general answer quality. Ours run before generation and target each explicit constraint, and our
-probabilistic labels make calibration a natural secondary metric.
+\paragraph{Prompt-only prediction and comparing representations.} Routers choose a model before generation with
+predictors that read only the prompt \citep{ding2024hybrid,ong2025routellm}, and ridge regression on a frozen prompt
+embedding predicts a model's mean reward over 32 samples \citep{hasanaliyev2026expected}. Conditional probing
+measures what a representation adds beyond a baseline by comparing a probe on the baseline with a probe on the baseline
+plus the representation \citep{hewitt2021conditional}; following this motivation we both substitute internal features
+for a text representation and add them to a fixed text predictor. \citet{binder2025looking} compare a model
+fine-tuned to predict its own behaviour with a second model fine-tuned on the same data; inspired by this, we also
+predict each generator's violations from the other generator's states, with frozen generators and identical labels,
+and read any advantage of a model's own features as a conditional predictive gain, not as introspection.
+
+\paragraph{Uncertainty and calibration.} Calibration \citep{guo2017calibration} of language models has been studied
+through verbalised confidence \citep{lin2022teaching,tian2023just,xiong2024express}, self-evaluation
+\citep{kadavath2022know} and semantic uncertainty \citep{kuhn2023semantic,farquhar2024detecting,kossen2024sep}. For
+instruction following, internal representations help in some settings but remain unreliable for subtle violations
+\citep{heo2025uncertainty}. These methods score an existing response; ours run before generation, per constraint.
 
 % =====================================================================================================
 \section{Problem formulation}
 \label{sec:problem}
 
-A prompt $x$ consists of a task description followed by an ordered list of $k\le 5$ rules $(r_1,\dots,r_k)$. A
-generator $G$ samples a response $y\sim G(\cdot\mid x)$, and a deterministic verifier returns $c_r(y)\in\{0,1\}$ for
-each rule $r$, where $1$ means that the rule is violated. We care about properties of the response distribution, not
-of one response:
+A prompt $x$ is a task description followed by an ordered list of $k\le 5$ rules $(r_1,\dots,r_k)$. A generator $G$
+samples a response $y\sim G(\cdot\mid x)$, and a deterministic verifier returns $c_r(y)\in\{0,1\}$ for each rule, with
+$1$ meaning violated. The targets are properties of the response distribution:
 \begin{equation}
 p_r(x)=\Pr_{y\sim G(\cdot\mid x)}\!\left[c_r(y)=1\right],\qquad q(x)=\frac{1}{k}\sum_{j=1}^{k}p_{r_j}(x).
 \label{eq:targets}
 \end{equation}
-We estimate both from $n=20$ independent samples: $\phat_r(x)=v_r(x)/n$, where $v_r$ counts the violating responses,
-and $\qhat(x)$ is the mean of $\phat$ over the prompt's rules. Note that $q$ is the expected \emph{fraction} of rules
-violated, not the probability that at least one is. \textbf{Objective~1} is to predict $p_r(x)$ for every prompt--rule
-pair, and \textbf{Objective~2} is to predict $q(x)$ for every prompt. Predictors may use the prompt text, its known
-structure and the generator's activations on the prompt; responses are used only as labels. Each generator is a
-separate experiment.
+Both are estimated from $n=20$ independent samples: $\phat_r(x)=v_r(x)/n$, where $v_r$ counts violating responses,
+and $\qhat(x)$ is the mean violated fraction over the samples. \textbf{Objective~1} is to predict $p_r(x)$ for every
+prompt--rule pair; \textbf{Objective~2} is to predict $q(x)$, the expected \emph{fraction} of rules violated, for every
+prompt. A prompt-level head can differ from the mean of rule-level predictions because it weights prompts equally and
+sees all rules jointly; we report that mean as a reference. Predictors read the prompt, its structure and the generator's activations on it; responses are only labels.
 
 % =====================================================================================================
 \section{A controlled multi-rule benchmark}
@@ -181,198 +183,166 @@ separate experiment.
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[font=\scriptsize,
-  box/.style={draw=black!45, rounded corners=1.5pt, align=center, inner sep=2.6pt, text width=#1, fill=black!2},
+  box/.style={draw=black!45, rounded corners=1.5pt, align=center, inner sep=2.2pt, text width=#1, fill=black!2},
   box/.default=2.35cm, arr/.style={-{Stealth[length=1.5mm]}, draw=black!60, line width=0.45pt}]
 \node[box] (src) at (0,0) {\textbf{ManyIFEval}\\216 tasks, 15 rule types,\\official verifiers};
 \node[box] (grp) at (3.45,0) {\textbf{72 groups}\\3 tasks + a pool of 6\\sampled, compatible rules};
-\node[box] (des) at (6.9,0) {\textbf{Balanced design}\\6 nested subsets per $k$;\\1, 2, 6, 12, 20 orders};
-\node[box] (pr) at (10.35,0) {\textbf{53,136 prompts}\\246 per task;\\50 train / 22 test groups};
+\node[box] (des) at (6.9,0) {\textbf{Balanced design}\\subsets of $k{=}1..5$ rules;\\1, 2, 6, 12, 20 orders};
+\node[box] (pr) at (10.35,0) {\textbf{Split by group}\\50 train: 246 configs/task\\22 test: all 456 configs/task};
 \draw[arr] (src) -- (grp); \draw[arr] (grp) -- (des); \draw[arr] (des) -- (pr);
-\node[box=3.05cm, fill=orange!6] (lab) at (0.55,-1.75) {\textbf{Labels} (after generation)\\20 responses per prompt; every\\rule verified: $\phat_r$, $\qhat$};
-\node[box=3.05cm, fill=blue!5] (int) at (4.05,-1.75) {\textbf{Internal blocks}\\one forward pass on the prompt:\\\blk{H} hidden state, \blk{A} max attn.};
-\node[box=3.05cm, fill=green!6] (txt) at (7.55,-1.75) {\textbf{Text blocks}\\frozen BGE-M3: \blk{P} prompt,\\\blk{R} exact rule; \blk{S} structure};
-\node[box=2.15cm] (exp) at (10.75,-1.75) {\textbf{Test expansion}\\all subsets of the\\22 test pools: 30,096\\prompts per model};
-\coordinate (bus) at (10.35,-0.82);
-\draw[draw=black!60, line width=0.45pt] (pr.south) -- (bus);
-\draw[arr] (bus) -| (lab.north); \draw[arr] (bus) -| (int.north); \draw[arr] (bus) -| (txt.north); \draw[arr] (bus) -- ($(exp.north)+(-0.4,0)$);
-\node[box=9.4cm] (hd) at (4.05,-3.25) {\textbf{Matched predictors}: 15 rule-type logistic heads (Obj.~1) or one fractional-logit head (Obj.~2);
-same \blk{S}, same grid; swap one block (\blk{P} vs \blk{H} vs \blk{A}). Selection by 5-fold grouped CV on the 50 train groups only.};
-\draw[arr] (int.south) -- (int.south |- hd.north); \draw[arr] (txt.south) -- (txt.south |- hd.north);
-\draw[arr, dashed] (lab.south) -- (lab.south |- hd.north) node[midway, left, font=\tiny] {targets};
-\node[box=2.15cm, fill=red!4] (ev) at (10.75,-3.25) {\textbf{Sealed test}\\paired group bootstrap;\\controlled analyses};
-\draw[arr] (hd.east) -- (ev.west); \draw[arr] (exp.south) -- (ev.north);
+\node[box=3.3cm, fill=orange!6] (lab) at (0.2,-1.45) {\textbf{Labels}: 20 responses per prompt,\\every rule verified: $\phat_r$, $\qhat$};
+\node[box=3.3cm, fill=blue!5] (int) at (3.95,-1.45) {\textbf{Internal}: one forward pass,\\\blk{H} hidden state, \blk{A} max attention};
+\node[box=3.3cm, fill=green!6] (txt) at (7.7,-1.45) {\textbf{Text}: frozen BGE-M3,\\\blk{P} prompt, \blk{R} rule; \blk{S} structure};
+\node[box=2.1cm, fill=red!4] (ev) at (11.05,-1.45) {\textbf{Held-out}: accuracy;\\matched changes};
+\draw[arr] (pr.south) -- ++(0,-0.25) -| (lab.north); \draw[arr] (pr.south) -- ++(0,-0.25) -| (int.north);
+\draw[arr] (pr.south) -- ++(0,-0.25) -| (txt.north);
+\draw[arr] (txt.east) -- (ev.west) node[midway, above, font=\tiny] {heads};
 \end{tikzpicture}
-\caption{Overview of the study. Each generator supplies labels (from its sampled responses) and internal feature blocks
-(from one forward pass on the prompt alone). Predictors that differ only in how the prompt is represented are compared
-on held-out groups.}
+\caption{Overview. Each generator supplies labels (from its sampled responses) and internal feature blocks (from one
+forward pass on the prompt alone). Matched heads read different blocks and are compared on held-out groups.}
 \label{fig:overview}
 \end{figure}
 
 \paragraph{Source.} We use the released ManyIFEval code and data \citep{harada2025instructions} at a fixed commit: its
-216 task descriptions, its 15 instruction types (Appendix~\ref{app:types}) and the official verifier for each type,
-which come from IFEval \citep{zhou2023ifeval}. Our prompt builder reproduces all 2,160 released prompts exactly.
+216 task descriptions, its 15 instruction types (Appendix~\ref{app:types}) and the official verifiers inherited from
+IFEval \citep{zhou2023ifeval}. Our prompt builder reproduces all 2,160 released prompts exactly.
 
 \paragraph{Groups and rule pools.} We sort the 216 tasks into six families (informational, creative, persuasive,
-practical, analytical, transformation) with a written rubric. These labels are our own, not part of ManyIFEval; a
+practical, analytical, transformation) with a written rubric. These labels are ours, not part of ManyIFEval; a
 scripted version of the rubric agrees with the hand labels on 88\% of tasks (Cohen's $\kappa=0.85$;
-\citealp{landis1977kappa}). We then form 72 groups of three tasks from different families and give each group its own
-pool of six rules of six different types. Rule types that ManyIFEval never combines, such as ``all uppercase'' with
-``all lowercase'', are never placed in the same pool. Rule parameters (for example, the required number of paragraphs)
-are drawn with the released code's own default generators, so their distribution is defined by the released code
-alone. A pool is accepted only if a constructed example response passes all six official verifiers for each of the
-group's three tasks, which proves the rules are jointly satisfiable. Rules are fixed within a group and sampled
-independently across groups.
+\citealp{landis1977kappa}). We form 72 groups of three tasks from different families and give each group its own
+pool of six rules of six different types. Type combinations that ManyIFEval never allows (for example ``all
+uppercase'' with ``all lowercase'') never share a pool. Parameters (such as the required number of paragraphs) are
+drawn with the released code's default generators, and a pool is accepted only if a constructed response passes all
+six official verifiers for each of the group's tasks, which proves joint satisfiability. Rules are fixed within a
+group and sampled independently across groups.
 
-\paragraph{Rule subsets and orders.} Each prompt uses a subset of its group's pool. To control which rules appear
-together, we place the six rules in a random cyclic order and read off six overlapping \emph{chains} of five rules,
-each starting at a different rule. The first $k$ rules of each chain form one subset of size $k$, for $k=1,\dots,5$.
-Every $k$ therefore has six subsets, every rule appears equally often, and adding the next rule of a chain is a
-controlled change of one rule. To control order, each subset is shown in 1, 2, 6, 12 or 20 orders for $k=1,\dots,5$.
-The orders come from a component orthogonal array (COA; \citealp{yang2021coa}), a small set of permutations in which
+\paragraph{Rule subsets and orders.} The six rules of a pool are placed in a random cyclic order, which defines six
+overlapping \emph{chains} of five rules; the first $k$ rules of each chain form one subset of size $k$. Every $k$ thus
+has six subsets, every rule appears equally often, and moving along a chain appends one rule. Each subset is shown
+in 1, 2, 6, 12 or 20 orders for $k=1,\dots,5$, taken from a component orthogonal array (COA; \citealp{yang2021coa}):
 every rule appears in every position equally often and every ordered pair of rules appears in every pair of positions
-exactly once (Appendix~\ref{app:design}). The three tasks of a group share the same 246 ordered rule lists, so the task
-is controlled as well. A prompt consists of the task text, ManyIFEval's fixed header and one bullet per rule.
+exactly once (Appendix~\ref{app:design}). This gives 246 ordered configurations, shared by the three tasks of a group.
+For the 22 test groups we add every other subset of size 2, 3 and 4 with the same COA templates, giving all 456
+configurations per task; this supplies the matched pairs that the controlled analyses need. A prompt is the task
+text, ManyIFEval's fixed header and one bullet per rule.
 
 \paragraph{Responses and labels.} The generators are \texttt{Llama-3.1-8B-Instruct} \citep{grattafiori2024llama3} and
-\texttt{Qwen3-8B} \citep{yang2025qwen3} with its thinking mode disabled, both at fixed revisions and in bfloat16
-without quantisation. Each prompt is sent as one user turn in the model's chat template. We draw 20 responses per prompt
-with each model's recommended sampling settings and at most 2,048 new tokens, using vLLM \citep{kwon2023vllm}. Every
-rule is checked on every response with its official verifier; empty responses count as violations, and truncated or
-repetitive responses are kept.
+\texttt{Qwen3-8B} \citep{yang2025qwen3} with thinking disabled, at fixed revisions, in bfloat16 without quantisation.
+Each prompt is one user turn; we draw 20 responses with each model card's default sampling and at most 2,048 new
+tokens, using vLLM \citep{kwon2023vllm}. Every rule is checked on
+every response with its official verifier; empty responses count as violations, and truncated or repetitive responses
+are kept.
 
-\paragraph{Train/test split.} The group is the unit of independence, because the prompts of a group share tasks,
-rules and orders. We hold out 22 of the 72 groups as the test set (Table~\ref{tab:counts}). The split was chosen from
-pool metadata alone, before any test response was examined, by a seeded search (Appendix~\ref{app:split}). It requires
-that each of the 98 compatible pairs of rule types appear together in the pools of at least two test groups and at
-least one training group (one rare pair appears in only two pools and is placed in test), and that near-duplicate
-tasks stay on the same side. Test rules share types with training rules, so the test set measures generalisation to new
-tasks and new rule combinations, not to new kinds of rules.
+\paragraph{Train/test split.} The group is the unit of independence, because its prompts share tasks, rules and
+orders. We hold out 22 of the 72 groups (Table~\ref{tab:counts}), chosen from pool metadata alone by a seeded search
+(Appendix~\ref{app:split}) that requires each of the 98 compatible pairs of rule types to co-occur in at least two test
+pools and one training pool (one pair occurs in only two pools, both placed in test) and keeps near-duplicate tasks
+on one side. Test rules share types with training rules, so the test set measures generalisation to new tasks, new
+rule instances and new combinations, not to new kinds of rules.
 
 \begin{table}[t]
 \centering\small
-\caption{Dataset size per generator under the adopted split. Prompt--rule rows are the units of Objective~1, and prompts
-are the units of Objective~2. The test expansion adds every remaining rule subset of size 2, 3 and 4 for the 22 test
-groups.}
+\caption{Data per generator under the adopted split. The test set contains every rule subset of its 22 pools.
+Objective~1 scores each response $\times$ rule outcome; Objective~2 scores each prompt once.}
 \label{tab:counts}
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{lrrrrr}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lrrrr}
 \toprule
- & Per task & Train (50 groups) & Test (22 groups) & Test expansion & All \\
+ & Train (50 groups) & Test (22 groups) & Train per task & Test per task \\
 \midrule
-Tasks & 1 & 150 & 66 & (same 66) & 216 \\
-Prompts & 246 & 36,900 & 16,236 & +13,860 & 66,996 \\
-Prompt--rule rows & 1,026 & 153,900 & 67,716 & +47,520 & 269,136 \\
-Responses & 4,920 & 738,000 & 324,720 & +277,200 & 1,339,920 \\
+Tasks & 150 & 66 & -- & -- \\
+Prompts (ordered configurations) & 36,900 & 30,096 & 246 & 456 \\
+Prompt--rule rows & 153,900 & 115,236 & 1,026 & 1,746 \\
+Verified responses & 738,000 & 601,920 & 4,920 & 9,120 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Test expansion.} The design uses only six of the possible subsets for each $k$, which leaves few matched
-pairs for some controlled analyses (for example, swapping one companion rule). For the 22 test groups only, we
-therefore add every other subset of size 2, 3 and 4, ordered with the same COA templates. This gives 30,096 test prompts
-per generator. Generation for the expansion is under way, and no test response will be verified before the analysis
-plan is frozen.
-
 \paragraph{Pre-generation features.} For each prompt and generator we run one forward pass over the prompt and read the
-model's state at the \emph{final prompt token}, the position from which the first response token is sampled. We store
-the hidden state there, the 4,096-dimensional vector that each layer passes to the next, after every layer. For every
-layer $l$ and attention head $h$ we also store the largest attention weight from that token to any token of each rule,
+state at the \emph{final prompt token}, from which the first response token is sampled; this is the ``first token''
+representation of \citet{heo2025know}. We store the hidden state after every layer and, following
+\citet{yuksekgonul2024attention}, the maximum attention weight from that token to the tokens of each rule, separately
+for every layer $l$ and head $h$:
 \begin{equation}
 A_{l,h}(r)=\max_{t\in\mathrm{span}(r)}\alpha^{(l,h)}_{T,t},
 \label{eq:maxattn}
 \end{equation}
-where $T$ is the final prompt token and $\mathrm{span}(r)$ the tokens of rule $r$. This gives one value per layer and
-head: 1,024 per rule for Llama and 1,152 for Qwen. Features are computed with Hugging Face Transformers rather than the
-generation engine; on a 100-prompt check the two produced identical tokens and hidden states with cosine similarity of
-at least 0.998.
+where $T$ is the final prompt token and $\mathrm{span}(r)$ the tokens of rule $r$: 1,024 values per rule for Llama and
+1,152 for Qwen. Features come from Hugging Face Transformers (eager attention, bfloat16) on Apple MPS, while
+generation used vLLM on CUDA. On 100 training prompts the two feature backends (MPS and CUDA) gave identical tokens and
+hidden states with cosine similarity of at least 0.998; neither reproduces vLLM's numerics exactly.
 
 % =====================================================================================================
 \section{Matched predictors}
 \label{sec:methods}
 
-\subsection{Feature blocks and predictors}
-
-Every predictor is a penalised logistic-type regression on a concatenation of \emph{feature blocks} (dimensions given
-for Objective~1):
-\begin{itemize}
-\item \blk{S}, \textbf{structure} (20 features): $k$, the target rule's position, which of the 15 types the other rules
-in the prompt have, the prompt length, the length of the target rule and its distance from the final token, all
-counted in the generator's tokens. Rule parameters and task or group identifiers are never inputs.
-\item \blk{P}, \textbf{prompt embedding} (1,024): the frozen BGE-M3 text embedding \citep{chen2024bge} of the whole
-prompt.
-\item \blk{R}, \textbf{rule embedding} (1,024): the same encoder applied to the target rule's wording alone.
-\item \blk{H}, \textbf{hidden state} (4,096): the generator's hidden state at the final prompt token, at one selected
-layer.
-\item \blk{A}, \textbf{rule attention} (1,024 or 1,152): Eq.~\eqref{eq:maxattn} for the target rule, over all layers
-and heads.
-\end{itemize}
-\blk{P}, \blk{H} and \blk{A} are alternative representations of the prompt: one from an independent text encoder and
-two from the generator itself. \blk{R} tells the predictor exactly which rule is the target. Predictors are named by
-their blocks (Table~\ref{tab:predictors}). The text-only baselines are B1 $=$ \blk{S}+\blk{P} and B2 $=$
-\blk{S}+\blk{P}+\blk{R}. The hidden-state probes are H1 $=$ \blk{S}+\blk{H} and H2 $=$ \blk{S}+\blk{H}+\blk{R}. The
-rule-conditioned attention probe (RCAP) is \blk{S}+\blk{A}+\blk{R}. Finally, B1+H1, B2+H1 and B2+A1 add an internal
-block to a baseline.
+\paragraph{Feature blocks.} Every predictor is a ridge-penalised logistic regression on a concatenation of blocks
+(dimensions for Objective~1): \blk{S}, \textbf{structure} (20): $k$, the target rule's position, the types of the other
+rules, prompt length, rule length and distance to the final token, in the generator's tokens (never rule parameters or
+task or group identifiers); \blk{P}, \textbf{prompt embedding} (1,024): the frozen BGE-M3 embedding \citep{chen2024bge}
+of the whole prompt; \blk{R}, \textbf{rule embedding} (1,024): the same encoder on the target rule's wording;
+\blk{H}, \textbf{hidden state} (4,096): the final-prompt-token state at one selected layer; \blk{A}, \textbf{rule
+attention} (1,024 or 1,152): Eq.~\eqref{eq:maxattn} for the target rule over all layers and heads. \blk{P}, \blk{H}
+and \blk{A} are alternative representations of the prompt, one external and two internal. The text baselines are
+B1 $=$ \blk{S}+\blk{P} and B2 $=$ \blk{S}+\blk{P}+\blk{R}; the hidden-state probes are H1 $=$ \blk{S}+\blk{H} and
+H2 $=$ \blk{S}+\blk{H}+\blk{R}; the rule-conditioned attention probe is RCAP $=$ \blk{S}+\blk{A}+\blk{R}.
 
 \begin{table}[t]
 \centering\small
-\caption{Predictors and comparisons. In each primary comparison (top) the two predictors share \blk{S}, the head and
-the tuning grid, and differ only in the block that represents the prompt. Differences are reported as right minus left,
-so a positive change in loss means the left predictor is better.}
+\caption{Pre-specified comparisons, written comparator \cto{} candidate. Every difference is
+metric(comparator) $-$ metric(candidate) for losses and the reverse for AUROC and Spearman, so \emph{positive favours
+the candidate}. Within a row both predictors share \blk{S}, the head, the labels, the penalty grid and the selection
+rule.}
 \label{tab:predictors}
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{clllp{3.6cm}}
+\begin{tabular}{cllll}
 \toprule
-\# & Left & Right & Swap & Question \\
+\# & Comparator \cto{} candidate & Change & Family & Question \\
 \midrule
-1 & H1 (\blk{S}+\blk{H}) & B1 (\blk{S}+\blk{P}) & \blk{H} / \blk{P} & hidden state vs prompt text \\
-2 & H2 (\blk{S}+\blk{H}+\blk{R}) & B2 (\blk{S}+\blk{P}+\blk{R}) & \blk{H} / \blk{P} & same, given the exact rule \\
-3 & RCAP (\blk{S}+\blk{A}+\blk{R}) & B2 (\blk{S}+\blk{P}+\blk{R}) & \blk{A} / \blk{P} & rule attention vs prompt text \\
-7 & H2 (\blk{S}+\blk{H}+\blk{R}) & RCAP (\blk{S}+\blk{A}+\blk{R}) & \blk{H} / \blk{A} & hidden state vs rule attention \\
+1 & B1 \cto{} H1 & \blk{P} \cto{} \blk{H} & substitution & hidden state vs prompt text \\
+2 & B2 \cto{} H2 & \blk{P} \cto{} \blk{H} & substitution & same, given the exact rule \\
+3 & B2 \cto{} RCAP & \blk{P} \cto{} \blk{A} & substitution & rule attention vs prompt text \\
+7 & RCAP \cto{} H2 & \blk{A} \cto{} \blk{H} & substitution & hidden state vs rule attention \\
 \midrule
-4 & B1+H1 & B1 (frozen) & $+\blk{H}$ & what \blk{H} adds to B1 \\
-5 & B2+H1 & B2 (frozen) & $+\blk{H}$ & what \blk{H} adds to B2 \\
-6 & B2+A1 & B2 (frozen) & $+\blk{A}$ & what \blk{A} adds to B2 \\
-\midrule
-\multicolumn{5}{p{12.6cm}}{Reference predictors: structure only (\blk{S}); H1 fed the \emph{other} generator's hidden
-state; and, for Objective~2, Objective~1 predictions averaged over the prompt's rules.}\\
+4 & B1 \cto{} B1+H1 & $+\blk{H}$ & addition & what \blk{H} adds to B1 \\
+5 & B2 \cto{} B2+H1 & $+\blk{H}$ & addition & what \blk{H} adds to B2 \\
+6 & B2 \cto{} B2+A1 & $+\blk{A}$ & addition & what \blk{A} adds to B2 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Heads and losses}
+\paragraph{Comparisons.} Table~\ref{tab:predictors} lists the seven comparisons. The four substitutions (1, 2, 3, 7) are
+primary and ask which representation of the prompt is more useful to the same head. The three additions (4--6) are
+secondary and follow the logic of conditional probing \citep{hewitt2021conditional}: the baseline keeps its selected
+penalties and only the added block's penalty is tuned, with ``off'' as an option. We do not claim to estimate
+conditional $\mathcal{V}$-information, since our loss and regularisation differ. Holding the head and grid fixed
+holds probe capacity fixed \citep{hewitt2019control}, but the blocks still differ in dimension and source, and only
+\blk{H} receives a layer search (below). As a reference we also fit H1 on the \emph{other} generator's hidden states,
+and for Objective~2 we average the Objective~1 predictions over a prompt's rules.
 
-\textbf{Objective~1.} Each predictor has 15 \emph{heads}, one per rule type, and each prompt--rule row is sent to the
-head for its rule's type. Rules of the same type with different parameters share a head. Each head is a logistic
-regression, $\hat p=\sigma(\mathbf{w}^\top\mathbf{z}+b)$ on the standardised blocks $\mathbf{z}$, fitted to the
-violation counts with a separate ridge (squared $L_2$) penalty on each block:
+\paragraph{Heads and losses.} \textbf{Objective~1}: each predictor has 15 heads, one per rule type, and each
+prompt--rule row goes to the head of its rule's type (rules of one type but different parameters share a head). A head
+is $\hat p=\sigma(\mathbf{w}^\top\mathbf{z}+b)$ on standardised blocks $\mathbf{z}$, fitted to the counts:
 \begin{equation}
 \min_{\mathbf{w},b}\;-\sum_{i\in\tau}\Big[v_i\log\hat p_i+(n-v_i)\log(1-\hat p_i)\Big]
 +\lambda_S\lVert\mathbf{w}_S\rVert_2^2+\lambda_X\lVert\mathbf{w}_X\rVert_2^2+\lambda_R\lVert\mathbf{w}_R\rVert_2^2,
 \label{eq:obj1}
 \end{equation}
-where $\tau$ is the set of rows of one type and $X\in\{P,H,A\}$ is the predictor's prompt-representation block.
+where $\tau$ is the set of rows of one type and $X\in\{P,H,A\}$. A type whose training rows contain too few
+violations is replaced, identically for every predictor, by its smoothed rate (this fires only for Qwen's ``title''
+rule). \textbf{Objective~2}: one head per predictor, a fractional logit \citep{papke1996fractional} on $\qhat$ with
+equal weight per prompt; per-rule blocks are averaged over the prompt's rules and \blk{S} describes all five rule
+slots (92 features).
 
-\textbf{Objective~2.} Each predictor has a single head. Per-rule blocks are averaged over the prompt's rules, and
-\blk{S} is extended to describe all five rule slots (92 features; Appendix~\ref{app:recipe}). The head is a fractional
-logit model \citep{papke1996fractional}, a logistic regression whose target is the proportion $\qhat$ rather than a
-0/1 outcome, fitted with the loss of Eq.~\eqref{eq:obj1} and equal weight for every prompt.
-
-\subsection{Tuning with identical budgets}
-
-\textbf{Penalties.} The structure penalty $\lambda_S$ is fixed and weak in every predictor. The penalties $\lambda_X$
-and $\lambda_R$ are each tuned over the same six values, spaced by factors of ten; if any predictor picks an end of the
-grid, the grid is extended one step for every predictor. For the incremental comparisons 4--6, the baseline keeps its
-own selected setting and only the added block's penalty is tuned, with ``off'' as an extra option.
-
-\textbf{Hidden layer.} For each generator and objective, H1 is compared at five depths (25\% to 100\% of the network),
-and the chosen layer is used by every hidden-state predictor. Hidden-state predictors thus get a five-way search that
-the other predictors do not, and we note this next to every result. \blk{A} always uses all layers and heads.
-
-\textbf{Selection and refit.} The 50 training groups are split into five folds of ten groups each, so that no group is
-split between fitting and validation (grouped cross-validation). Each setting is scored by its pooled validation loss:
-mean log loss per response for Objective~1 and squared error of $\hat q$ for Objective~2. The selected settings are
-refitted on all 50 training groups, and only these refitted models are applied to the test groups. The fitting recipe,
-grids and tie-breaking rules were fixed and hashed before any selection ran (details in Appendix~\ref{app:recipe}).
+\paragraph{Tuning with identical budgets.} $\lambda_S$ is fixed and weak; $\lambda_X$ and $\lambda_R$ are tuned over
+the same grid of factors of ten. For each generator
+and objective, the layer for \blk{H} is chosen among five depths (25\% to 100\%) by H1's validation loss and then
+used by every hidden-state predictor. The 50 training groups form five folds of ten groups; each setting is scored by
+pooled validation loss (log loss per response for Objective~1, squared error of $\qhat$ for Objective~2), and the
+selected settings are refitted on all 50 groups. The recipe, grids and tie rules were hashed before selection
+(Appendix~\ref{app:recipe}). Cross-validation chose layer 12 (37.5\% depth) for Llama in both objectives and layers
+18 and 27 (50\% and 75\%) for Qwen in Objectives~1 and~2; all are interior to the searched range.
 
 % =====================================================================================================
 \section{Experiments}
@@ -380,120 +350,192 @@ grids and tie-breaking rules were fixed and hashed before any selection ran (det
 
 \subsection{Protocol}
 
-\paragraph{Test-set discipline.} No feature, label or prediction for a test group has been computed or read. The data
-loaders refuse test rows until unblinding is recorded, and an automated test checks this. The plan below will be
-frozen and hashed, together with the fitted models, before unblinding. Because settings were chosen to minimise
-cross-validation loss, those losses are optimistic \citep{cawley2010overfitting}; we use them only for selection and
-report them only as diagnostics (Appendix~\ref{app:cv}).
+\paragraph{Test-set discipline.} The evaluation plan, with every estimand, weight and exhibit below, was written from
+training data and design metadata before any test outcome was examined, and models were refitted before any test
+feature was extracted. Test scoring for Objective~1 was authorised on 24 November 2026; Objective~2
+test scoring follows the same frozen plan. Cross-validation losses are optimistic for the selected settings
+\citep{cawley2010overfitting} and appear only as selection diagnostics (Appendix~\ref{app:cv}).
 
-\paragraph{Primary metrics.} For Objective~1 the primary effect is the change in mean log loss per response, right
-minus left, so a positive value favours the left predictor in every row of Table~\ref{tab:predictors}. For
-Objective~2 it is the change in root mean squared error (RMSE) of $\hat q$, with every prompt weighted equally.
+\paragraph{Evaluation 1: absolute risk.} For Objective~1 the primary metric is the binomial negative log-likelihood per
+response $\times$ rule outcome, pooled over all 115,236 test prompt--rule rows; secondary metrics are AUROC on binary
+response-level outcomes, Brier score and expected calibration error with ten bins fixed from training out-of-fold
+predictions \citep{guo2017calibration}. ``Types improved'' counts rule types on which the candidate has strictly lower
+NLL; it is descriptive, not 15 significance tests. For Objective~2 the primary metric is RMSE of $\qhat$ over the
+30,096 test prompts, with Spearman correlation as support.
 
-\paragraph{Uncertainty.} Because prompts within a group are correlated, the group is the unit of resampling. A paired
-group bootstrap \citep{efron1979bootstrap} resamples whole test groups with replacement, using the same 10,000 draws
-for every predictor, and gives 95\% percentile intervals; a leave-one-group-out jackknife is a small-sample check. The
-four primary comparisons are pre-specified, intervals are not adjusted for multiplicity, and an interval that includes
-zero is not read as evidence of equal performance.
+\paragraph{Evaluation 2: matched changes (Objective~1).} From metadata alone we build strictly matched prompt pairs
+that differ in one respect, for every target rule kept on both sides: \textbf{(A) position}, the same exact rule set in
+COA orders that place the target in different slots ($k=2..5$; 57,420 target contrasts per generator);
+\textbf{(B) strict append}, one rule appended to an ordered prefix, scored on the retained rules (69,300);
+\textbf{(C) companion replacement}, one non-target rule replaced at a fixed slot, before or after the target
+(177,408); and \textbf{(D) task}, the same configuration attached to another task of the group (115,236). For a pair
+$(a,b)$, $d_{\text{obs}}=\phat_b-\phat_a$ and $d_M=\hat p_{M,b}-\hat p_{M,a}$. We report the observed effects, with
+squared effects corrected for binomial noise by subtracting $\hat V=\sum\phat(1-\phat)/(n-1)$ before averaging and
+taking one square root (``noise-adjusted RMS''), and each predictor's forecasting skill as paired $\Delta$-MSE,
+$\text{mean}(d_M-d_{\text{obs}})^2$ for the comparator minus that for the candidate. Observation noise enters every predictor's MSE equally in expectation, so the paired
+difference is interpretable. Factors are averaged with equal weight per $k$ or transition, per task and per group
+(Appendix~\ref{app:eval2}). These are changes induced by this design, not content-free causal effects: moving a rule
+also changes its distance to the end of the prompt, and an append also lengthens the prompt.
 
-\paragraph{Secondary metrics.} For Objective~1 we report the change in ROC AUC, the number of rule types on which the
-left predictor has lower loss, and the number of test groups that favour each side. For Objective~2 we report the
-change in mean absolute error (MAE) and errors broken down by $k$. For both we report expected calibration error and
-reliability diagrams \citep{guo2017calibration}.
+\paragraph{Uncertainty.} The 22 test groups are the units of resampling. A paired group bootstrap
+\citep{efron1979bootstrap} with 10,000 draws, shared by every predictor and contrast, gives pointwise 95\% percentile
+intervals; a $t_{21}$ interval on group-level estimates and leave-one-group-out are sensitivity checks. Intervals are
+not adjusted for multiplicity, so we treat a primary finding as supported only if its interval excludes zero for both
+generators, and an interval that includes zero is not read as equivalence.
 
-\paragraph{Controlled analyses.} The balanced design, completed by the test expansion, provides pairs of prompts that
-differ in exactly one respect: (A)~\emph{position}, the target rule moves within the same ordered set; (B)~\emph{count},
-one rule is added; (C)~\emph{composition}, one other rule is replaced; and (D)~\emph{task}, the same rules are attached
-to another task of the group. For each pair we compare the predicted change in risk with the observed change. This asks
-whether a predictor tracks how risk changes, not only its level. Sensitivity analyses repeat the primary metrics
-without the ``all uppercase'' rule (whose verifier can reject correct answers), without truncated responses and without
-repetitive ones.
-
-\paragraph{Interpretation.} Comparisons 2 and 3 are the central tests. B2 already sees the prompt, the exact rule and
-the structure, so if the hidden state or rule attention beats it, the generator's internal state exposes information
-to a linear head that a frozen encoder of the same prompt does not. Comparison 7 asks which internal signal is more
-useful. The other-generator reference separates signal specific to the generator from a better encoding of the prompt:
-if Qwen's hidden states predict Llama's violations as well as Llama's own do, the advantage reflects representation
-quality rather than self-knowledge.
-
-\subsection{Results}
+\subsection{Evaluation 1: forecasting absolute risk}
 \label{sec:results}
-
-Model selection and refitting on the training groups are complete. Cross-validation chose layer 12 (37.5\% depth) for
-Llama in both objectives, and layers 18 and 27 (50\% and 75\% depth) for Qwen in Objectives~1 and~2. Appendix~\ref{app:cv}
-lists the selected settings. Table~\ref{tab:main} will hold the test results.
 
 \begin{table}[t]
 \centering\small
-\caption{Primary comparisons on the 22 held-out groups (\emph{pending unblinding}). $\Delta$ is right minus left, so
-positive values favour the left predictor. Intervals are 95\% paired group-bootstrap intervals. ``Types'' counts the
-rule types on which the left predictor has lower log loss.}
+\caption{Held-out accuracy on the 22 test groups (\emph{pending}). Positive values favour the candidate (Table~\ref{tab:predictors}).
+Objective~1: NLL reduction per response $\times$ rule outcome over 115,236 prompt--rule rows, AUROC gain on binary
+outcomes, and the number of the 15 rule types with lower NLL. Objective~2: RMSE reduction of $\qhat$ (percentage
+points) and Spearman gain over 30,096 prompts. Paired 95\% group-bootstrap intervals; raw scores, Brier, ECE and references in
+Appendix~\ref{app:planned}.}
 \label{tab:main}
-\setlength{\tabcolsep}{3.3pt}
-\begin{tabular}{llcccccc}
+\footnotesize\setlength{\tabcolsep}{1.7pt}
+\begin{tabular}{llccccc}
 \toprule
  & & \multicolumn{3}{c}{Objective 1 (per rule)} & \multicolumn{2}{c}{Objective 2 (per prompt)} \\
 \cmidrule(lr){3-5}\cmidrule(lr){6-7}
-Gen. & Comparison (left vs right) & $\Delta$ log loss [95\% CI] & $\Delta$ AUC & Types & $\Delta$ RMSE [95\% CI] & $\Delta$ MAE \\
+ & Comparison & NLL red. [95\% CI] & AUROC gain [95\% CI] & Types & RMSE red. [95\% CI] & Spearman gain [95\% CI] \\
 \midrule
-\multirow{4}{*}{Llama} & 1: H1 vs B1 & \tbd{} [\tbd, \tbd] & \tbd & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd \\
- & 2: H2 vs B2 & \tbd{} [\tbd, \tbd] & \tbd & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd \\
- & 3: RCAP vs B2 & \tbd{} [\tbd, \tbd] & \tbd & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd \\
- & 7: H2 vs RCAP & \tbd{} [\tbd, \tbd] & \tbd & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd \\
+\multirow{7}{*}{\rotatebox{90}{Llama}}
+ & 1: B1 \cto{} H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 2: B2 \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 3: B2 \cto{} RCAP & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 7: RCAP \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+\cmidrule(lr){2-7}
+ & 4: B1 \cto{} B1+H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 5: B2 \cto{} B2+H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 6: B2 \cto{} B2+A1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
 \midrule
-\multirow{4}{*}{Qwen} & 1: H1 vs B1 & \tbd{} [\tbd, \tbd] & \tbd & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd \\
- & 2: H2 vs B2 & \tbd{} [\tbd, \tbd] & \tbd & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd \\
- & 3: RCAP vs B2 & \tbd{} [\tbd, \tbd] & \tbd & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd \\
- & 7: H2 vs RCAP & \tbd{} [\tbd, \tbd] & \tbd & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd \\
+\multirow{7}{*}{\rotatebox{90}{Qwen}}
+ & 1: B1 \cto{} H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 2: B2 \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 3: B2 \cto{} RCAP & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 7: RCAP \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+\cmidrule(lr){2-7}
+ & 4: B1 \cto{} B1+H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 5: B2 \cto{} B2+H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 6: B2 \cto{} B2+A1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd/15 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\todo{After unblinding: fill Table~\ref{tab:main} from saved tables; add a secondary table (comparisons 4--6 and
-references), reliability diagrams, per-type results and a figure of predicted vs observed change for analyses A--D;
-then discuss internal vs text (1--3), hidden state vs attention (7), increments (4--6), own vs other generator, where
-gains concentrate, calibration and sensitivity.}
+Table~\ref{tab:main} reports held-out accuracy. For Llama, replacing the prompt embedding with the hidden state
+(comparison~1) changes NLL by \tbd{} [\tbd, \tbd] per outcome and improves \tbd{} of 15 rule types; given the exact rule
+(comparison~2) the change is \tbd{} [\tbd, \tbd], and rule attention (comparison~3) gives \tbd{} [\tbd, \tbd]. For
+Qwen the corresponding values are \tbd, \tbd{} and \tbd. Hidden state and rule attention differ by \tbd{} (comparison~7).
+Added to B2, the hidden state and attention change NLL by \tbd{} and \tbd{} (comparisons~5 and~6). For Objective~2,
+\tbd. \todo{Fill from the saved test tables; one sentence each on calibration (Appendix~\ref{app:planned}), on whether
+gains are spread over rule types or concentrated, and on the fixed- vs parameterised-rule split.}
+
+\subsection{Evaluation 2: forecasting how risk changes}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[font=\scriptsize]
+\foreach \x/\t/\s in {0/(a) Position/{RMS by target type;\\signed first\cto{}last by $k$},
+                      3.45/(b) Strict append/{retained-rule change (pp)\\for $1{\to}2,\dots,4{\to}5$},
+                      6.9/(c) Companion/{RMS by target type;\\target $\times$ companion effects},
+                      10.35/(d) Task/{RMS by target type;\\family vs other two tasks}} {
+  \node[draw=black!40, dashed, fill=black!2, minimum width=3.25cm, minimum height=2.55cm, align=center] at (\x,0)
+    {\textbf{\t}\\[2pt]\s\\[4pt]\textcolor{red!70!black}{pending}};
+}
+\end{tikzpicture}
+\caption{Observed effects of the four controlled changes on Objective~1 risk, Llama and Qwen side by side
+(\emph{placeholder at final size}). (a) Noise-adjusted RMS change of a rule's violation probability over all position
+pairs, by target type, and signed first-to-last change by type and $k$. (b) Mean change in the violation probability
+of retained rules when one rule is appended, per transition. (c) Noise-adjusted RMS change when one companion is
+replaced, by target type, and signed effect of each companion type relative to the eligible alternatives. (d)
+Noise-adjusted RMS change across the group's tasks, by target type, and signed difference of each task family from the
+other two tasks. Points: 22-group cluster estimates with 95\% intervals; unsupported cells masked. Observed outcomes
+only; predictor skill is in Table~\ref{tab:eval2}.}
+\label{fig:eval2}
+\end{figure}
+
+\begin{table}[t]
+\centering\small
+\caption{Forecasting matched changes, primary comparisons (\emph{pending}): paired $\Delta$-MSE reduction ($\times10^{3}$) [95\% CI] of the
+predicted vs observed change in a rule's violation probability; positive favours the candidate. Contrasts per
+generator: position 57,420, append 69,300, companion 177,408, task 115,236; equal weight per $k$ or transition.}
+\label{tab:eval2}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llcccc}
+\toprule
+ & Comparator \cto{} candidate & Position & Strict append & Companion & Task \\
+\midrule
+\multirow{4}{*}{Llama}
+ & 1: B1 \cto{} H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 2: B2 \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 3: B2 \cto{} RCAP & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 7: RCAP \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+\midrule
+\multirow{4}{*}{Qwen}
+ & 1: B1 \cto{} H1 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 2: B2 \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 3: B2 \cto{} RCAP & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+ & 7: RCAP \cto{} H2 & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] & \tbd{} [\tbd, \tbd] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figure~\ref{fig:eval2} shows the observed changes. Moving a rule changes its violation probability by a noise-adjusted
+RMS of \tbd{} percentage points for Llama and \tbd{} for Qwen, with the largest sensitivity for \tbd; appending a rule
+changes the risk of retained rules by \tbd{} to \tbd{} points across transitions; replacing one companion changes the
+target's risk by an RMS of \tbd{}; and changing the task, with every rule fixed, by \tbd. Table~\ref{tab:eval2} asks
+whether predictors forecast these changes. \tbd. \todo{Fill from saved tables; secondary comparisons 4--6, per-$k$
+breakdowns and $\Delta$-MAE and zero-change references are in Appendix~\ref{app:planned}.}
 
 % =====================================================================================================
 \section{Discussion and limitations}
 \label{sec:discussion}
 
-\paragraph{What the design can and cannot show.} The matched comparisons answer a predictive question: with the same
-head, structure, rule identity and tuning budget, is one representation of the prompt more useful than another for
-forecasting a given model's violations? A win for the hidden state or for attention would show that this information
-is easier for a penalised linear model to read from the generator's activations than from a strong text embedding. It
-would not show that the model ``knows'' it will fail, that it uses this information, or that attention causes
-violations \citep{jain2019attention,wiegreffe2019attention}. Causal tests, such as steering along probe directions
-\citep{stolfo2025steering} or increasing attention to a rule \citep{zhang2024pasta}, are the natural next step. A loss
-would show only that the information is not more linearly accessible than in the text embedding at the layers we
-searched, not that it is absent.
+\paragraph{Reading the outcomes.} Comparisons~2 and~3 are the central tests: B2 already sees the structure, the prompt and the exact rule, so a
+candidate that beats it shows that the generator's state exposes violation-relevant information to a linear head that
+a frozen encoder of the same prompt does not. A gain in Evaluation~1 without a gain in Evaluation~2 would mean that a
+predictor ranks rules and prompts by difficulty but does not track how the same rule's risk moves with its context. The
+other-generator reference qualifies every internal-state result: on training cross-validation, the other model's
+hidden states already matched or beat the generator's own in two of four cells (Appendix~\ref{app:cv}), so an internal
+advantage may reflect a richer encoding of the prompt rather than anything specific to the model that answers. We read
+a gain from a model's own features as a conditional predictive gain, not as introspection.
 
-\paragraph{Limitations.} \emph{Baseline strength:} both text baselines use a frozen encoder. A stronger reader of the
-prompt, such as a fine-tuned language model or the generator asked to predict its own compliance, could narrow any gap.
-\emph{Unequal search:} hidden-state predictors get a five-layer search that the others do not. \emph{Label noise:}
-with 20 samples, each $\phat$ has a standard error of up to 0.11, and the verifiers are not perfect. \emph{Feature
-backend:} features come from a different software stack than generation and match it closely but not exactly.
-\emph{Statistical power:} inference rests on 22 independent test groups, and one pair of rule types never appears
-together in training. \emph{Earlier use of test groups:} 16 of the 22 test groups were training groups under an
-earlier split and informed earlier model selection, including the default penalty grids; the final models are
-refitted without them. \emph{Scope:} we study two open 8B models, English prompts, 15 programmatically checkable rule
-types, at most five rules, default sampling and no reasoning mode.
+\paragraph{What the design can and cannot show.} The comparisons answer a predictive question. A win for the hidden
+state or attention would not show that the model ``knows'' it will fail, uses this information, or that attention
+causes violations \citep{jain2019attention,wiegreffe2019attention}; that needs interventions such as ITI
+\citep{li2023iti} or activation or attention steering \citep{stolfo2025steering,zhang2024pasta}. A loss would show only
+that the information is not more linearly accessible at the searched layers.
 
-\paragraph{Future work.} Natural extensions are to transfer a predictor from one generator to another, to locate the
-layers and heads that carry the attention signal, and to use per-rule risk at generation time, for example to restate
-risky rules or decide how many candidates to sample, and measure the resulting gain in compliance. Larger models,
-reasoning modes and longer rule lists would test whether the findings hold at scale.
+\paragraph{Limitations.} \emph{Baseline strength:} the text predictors use a frozen encoder; a fine-tuned prompt reader,
+as in \citet{ashok2025predict}, could narrow any gap. \emph{Unequal search:} only hidden-state predictors get a layer
+search. \emph{Labels:} with 20 samples each $\phat$ has a standard error of up to 0.11, and the ``all uppercase''
+verifier can reject correct answers; sensitivity analyses drop that rule, truncated responses and repetitive ones.
+\emph{Backends:} features and generation use different software stacks. \emph{Power:} inference rests on 22
+groups, several rule types appear in only six test pools, and one type pair never co-occurs in training.
+\emph{Earlier use of test groups:} 16 of the 22 test groups were training groups under an earlier split and informed
+earlier design choices, including the penalty grids and layer candidates; the final models are refitted without them,
+which does not undo that influence. \emph{Scope:} two open 8B models, English, 15 programmatically checkable rule
+types, at most five rules, default sampling and no reasoning mode. We forecast violations of constraints that are in
+the model-visible prompt, not constraints lost before the prompt is assembled \citep{wang2026compaction}; our rules are
+compatible and of equal priority, unlike conflicting instructions of different privilege \citep{wallace2024hierarchy};
+and prompts are single-turn, unlike multi-turn evaluations \citep{sirdeshmukh2025multichallenge}.
+
+\paragraph{Future work.} Forecasts could drive risk-aware routing or sampling with conformal guarantees
+\citep{quach2024conformal,ashok2025predict} or guide rule reordering; newer constraint types \citep{pyatkin2025ifbench},
+larger models and reasoning modes would test whether the findings hold.
 
 % =====================================================================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-We ask whether a model's internal state, read once at the end of the prompt, predicts which of several instructions it
-will violate better than the prompt text does. To answer this cleanly we built a balanced multi-rule benchmark with
-sampled violation probabilities for two generators, and predictors whose comparisons differ in exactly one input.
-Training-side selection is complete and the test groups remain sealed. \todo{Summarise the findings for comparisons
-1--3 and 7, the other-generator control and the controlled analyses, and state what they imply for estimating risk
-before generation.}
+We asked whether a model's state, read once at the end of the prompt, forecasts which of several instructions it will
+violate better than the prompt text does, and whether it forecasts how that risk changes when the prompt changes in a
+controlled way. We built a balanced multi-rule benchmark with sampled violation probabilities for two generators,
+matched predictors that share head, structure, labels and tuning, and a pre-specified two-part evaluation on 22
+held-out groups. \todo{One sentence per finding: substitution (1--3, 7), addition (4--6), matched changes, own vs
+other generator; then what they imply for estimating risk before generation.}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
@@ -641,12 +683,57 @@ only on labels, so such a type contributes identical predictions to both sides o
 \textbf{Objective~2 weighting.} Each prompt has equal weight in the fractional-logit loss rather than counting its $20k$
 checks as separate examples. A sensitivity analysis keeps the per-rule blocks in ordered slots instead of averaging them.
 
-\textbf{Evaluation details.} The jackknife interval uses a $t_{21}$ reference. AUC gives half credit for ties. In the
-controlled analyses we score the mean absolute error of the predicted change and, on pairs whose observed change is
-reliably non-zero, the accuracy of its sign. Calibration bins are fixed from training predictions.
+\textbf{Evaluation details.} Probabilities are clipped to $[10^{-6},1-10^{-6}]$ before the logarithm. AUROC is
+computed on binary response-level outcomes, not on 20-sample rates, with half credit for ties. Calibration uses ten
+bins whose edges are fixed from each predictor's training out-of-fold predictions. The bootstrap uses 10,000 draws of
+the 22 test groups, the same draws for every predictor; the sensitivity interval uses a $t_{21}$ reference on
+group-level estimates, and leave-one-group-out reruns every headline estimate 22 times.
 
 \textbf{Objective~2 structure.} $k$, rendered prompt length, and for each of five ordered slots the one-hot rule type
 (15), span length, distance from the span end to the final token and a presence mask: $2+5\times18=92$ columns.
+
+\section{Evaluation 2: matching, estimands and weights}
+\label{app:eval2}
+
+\textbf{Matching.} Every matched pair is built from metadata before outcomes are read, holds the generator, group and
+exact rule texts fixed, and is never selected on observed outcomes or on whether a predictor is right. \emph{Position}
+holds the task, $k$, the exact subset and the target fixed and compares the target's slots; each slot cell averages the
+$k-1$ COA orders that put the target there, with equal weights, so the companions' positions are balanced rather than
+fixed. \emph{Strict append} matches an ordered prompt $(r_1,\dots,r_k)$ with $(r_1,\dots,r_k,r_{\text{new}})$ by full
+ordered rule identifiers; retained rules are the targets and the new rule is excluded; transitions $3\to4$ and
+$4\to5$ cover only the COA orders that contain an exact prefix. \emph{Companion replacement} fixes the task, $k$, the
+target and its slot and every other rule and slot, and replaces exactly one companion before or after the target; each
+unordered prompt pair is used once per retained target. \emph{Task} keeps the exact configuration and compares the
+three tasks of the group pairwise. The counts in Section~\ref{sec:experiments} are design counts; missing or
+unverified responses are reported, never filled.
+
+\textbf{Estimands.} Observed effects (Figure~\ref{fig:eval2}) and predictor skill (Table~\ref{tab:eval2}) are different
+quantities. Noise-adjusted RMS sensitivity for a target type averages $d_{\text{obs}}^2-\hat V$ with frozen weights,
+where $\hat V$ sums $a_h^2\phat_h(1-\phat_h)/(n_h-1)$ over the prompts $h$ in the two cells with cell weights $a_h$, and
+takes $\sqrt{\max(0,\cdot)}$ once; the corrected square is unbiased under independent responses, the clipped root is
+not. Signed effects (first-to-last position, appends, a named companion against the equal-weight mean of the eligible
+alternatives in the same context, a task family against the other two tasks of its group) are linear and need no
+correction. Predictor skill is $\Delta$-MSE; $\Delta$-MAE and a zero-change predictor are reported as checks.
+Sign-accuracy on pairs with a reliably non-zero observed change is not used, because filtering on the observed change
+selects large, noisy differences.
+
+\textbf{Weights.} Within a pair, retained targets are averaged before pairs are pooled; within a factor, tasks of a
+group get equal weight and groups get equal weight; the factor summary averages $k$ values (position, companion, task)
+or transitions (append) equally. A micro-weighted score is a sensitivity analysis. Task families are our own labels
+and are confounded with task text, and no within-family task comparison exists in this design.
+
+\section{Planned appendix exhibits}
+\label{app:planned}
+
+\todo{Populate after test scoring, from saved tables only.} Evaluation~1, Objective~1: (A1) pooled NLL, Brier, AUROC and
+ECE for every predictor and the seven contrasts with paired intervals, including the structure-only and other-generator
+references; (A2) reliability curves for key predictors; (A3) two 15-type $\times$ 7-comparison heatmaps of NLL reduction,
+five fixed-wording types above ten parameterised ones; (A3b) NLL reduction for fixed and parameterised rules and their
+difference, with paired intervals. Objective~2: (A5) RMSE, MAE, MSE, Pearson, Spearman and ECE; (A6) reliability
+curves; (A7) the training-mean and averaged-Objective-1 references. Evaluation~2: position profiles at every slot and
+all 20 position-pair strata (Pos-A), skill by $k$ (Pos-B), numerical effects and noise floors (Pos-C); append effects by
+retained slot and transition (K-A) and skill by transition (K-B); companion coverage and effects (C-A) and skill by $k$
+(C-B); task sensitivity by $k$ and family (D-A, D-B) and skill by $k$ (D-C); secondary comparisons 4--6 for every factor.
 
 \section{Training cross-validation diagnostics}
 \label{app:cv}
@@ -654,7 +741,10 @@ reliably non-zero, the accuracy of its sign. Calibration bins are fixed from tra
 Table~\ref{tab:cv} lists the pooled cross-validation loss of each predictor at its selected setting. These are the
 criteria used for selection, computed on the 50 training groups only; they are optimistically biased, carry no
 uncertainty estimate and are \emph{not} estimates of held-out performance. They are reported to document the selection,
-not to support any comparison.
+not to support any comparison. Two features matter for reading the test results. First, the frozen prompt embedding
+adds little to structure alone (B1 vs structure only), so B2's advantage over B1 comes mostly from the exact-rule
+embedding. Second, the other generator's hidden states (last row; its layer was selected the same way) score better
+than the generator's own H1 for Llama in Objective~1 and for Qwen in Objective~2, and worse in the other two cells.
 
 \begin{table}[h]
 \centering\footnotesize
@@ -673,17 +763,26 @@ An earlier version of the analysis compared 23 feature configurations per object
 and linear heads and a fine-tuned (LoRA) text encoder. A design review on training data found that adding a probe to a
 baseline did not isolate the probe: in Objective~1 the baselines used one shared head while every configuration with a
 probe used per-type heads, many configurations had identical inputs, one shared penalty over concatenated blocks made
-fusions non-nested, and there was no cross-generator control. The current analysis (Section~\ref{sec:methods}) was
-adopted in response, before any test row was read, with the fitting recipe hashed before selection. The test split was
-then enlarged from 15 to 22 groups to guarantee pair coverage, the training-only features were rebuilt, and selection
-and refitting were rerun under the new split. The earlier plan, its frozen analysis file and all earlier results are
-preserved unchanged.
+fusions non-nested, and there was no cross-generator control. Dated record of the changes that followed, all made
+before any test outcome was examined:
+\begin{itemize}
+\item \textbf{14 Nov 2026:} first pre-specification frozen (23 configurations, 15 test groups).
+\item \textbf{20 Nov:} the current analysis (Section~\ref{sec:methods}) adopted in response to the review; training-only
+maximum-attention extraction authorised; recipe hashed before selection (22 Nov).
+\item \textbf{22 Nov:} comparisons 1, 2, 3 and 7 designated primary and 4--6 secondary.
+\item \textbf{23 Nov:} test split enlarged from 15 to 22 groups to guarantee pair coverage; training-side features,
+selection and refits rerun on the 50 training groups; full-subset test expansion generated; evaluation and reporting
+plan (Section~\ref{sec:experiments}, Appendices~\ref{app:eval2}--\ref{app:planned}) written.
+\item \textbf{24 Nov:} test scoring for Objective~1 authorised.
+\end{itemize}
+The earlier plan, its frozen analysis file and all earlier results are preserved unchanged.
 
 \section{Compute}
 \label{app:compute}
 
 Generation ran with vLLM 0.25.0 in bfloat16 on single NVIDIA B200 GPUs; in the 2,000-response pilot, throughput was
-about 24,000 output tokens per second for Llama and 19,000 for Qwen. Pre-generation features were extracted on an Apple
+about 24,000 output tokens per second for Llama and 19,000 for Qwen. The test expansion (277,200 responses per
+generator) ran on the same cluster with the same engine, weights and decoding settings. Pre-generation features were extracted on an Apple
 M4 Max laptop (64\,GB unified memory) with PyTorch MPS. The maximum-attention store takes about 0.5\,GB per generator.
 All probe fitting ran on the same laptop.
 
@@ -701,3 +800,4 @@ run analyses and draft text. The authors reviewed the work and are responsible f
 
 
 \end{document}
+
