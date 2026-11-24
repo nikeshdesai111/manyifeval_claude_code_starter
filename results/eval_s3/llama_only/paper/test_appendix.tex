@@ -24,20 +24,20 @@ Llama & B2+A1 & 0.3508 [0.2976, 0.4113] & 0.1046 [0.0878, 0.1226] & 83.4 [78.3, 
 
 \begin{table}[h]
 \centering\scriptsize
-\caption{A1 (contrasts) and A4 (sensitivity). Raw NLL (nats) and AUROC ($\times100$), comparator / candidate; Brier reduction $\times10^3$ with paired interval; NLL-reduction $t_{21}$ jackknife interval and leave-one-pool-out range (nats).}
+\caption{A1 (contrasts) and A4 (sensitivity). Raw NLL (nats) and AUROC ($\times100$), comparator / candidate; Brier reduction with paired interval; NLL-reduction $t_{21}$ jackknife interval and leave-one-pool-out range (nats).}
 \label{tab:A1c}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{llccccc}
 \toprule
  & Comparison & NLL comp./cand. & Brier reduction & AUROC comp./cand. & NLL $t_{21}$ interval & NLL leave-one-pool-out \\
 \midrule
-Llama & 1: B1 \cto{} H1 & 0.4023 / 0.3711 & 12.19 [$-$1.71, 25.54] & 76.6 / 81.2 & [$-$0.0124, 0.0749] & 0.0237 to 0.0433 \\
-Llama & 2: B2 \cto{} H2 & 0.3880 / 0.3671 & 6.67 [$-$0.67, 13.91] & 81.3 / 83.0 & [$-$0.0015, 0.0432] & 0.0154 to 0.0275 \\
-Llama & 3: B2 \cto{} RCAP & 0.3880 / 0.3447 & 13.25 [4.16, 23.22] & 81.3 / 83.3 & [0.0085, 0.0781] & 0.0333 to 0.0471 \\
-Llama & 4: H2 \cto{} RCAP & 0.3671 / 0.3447 & 6.58 [$-$0.65, 14.57] & 83.0 / 83.3 & [$-$0.0078, 0.0526] & 0.0118 to 0.0259 \\
-Llama & 5: B1 \cto{} B1+H1 & 0.4023 / 0.3892 & 10.02 [$-$4.18, 23.87] & 76.6 / 81.3 & [$-$0.0346, 0.0608] & 0.0056 to 0.0265 \\
-Llama & 6: B2 \cto{} B2+H1 & 0.3880 / 0.3644 & 8.06 [2.33, 14.14] & 81.3 / 83.2 & [0.0052, 0.0419] & 0.0177 to 0.0278 \\
-Llama & 7: B2 \cto{} B2+A1 & 0.3880 / 0.3508 & 11.78 [5.53, 18.80] & 81.3 / 83.4 & [0.0141, 0.0603] & 0.0309 to 0.0398 \\
+Llama & 1: B1 \cto{} H1 & 0.4023 / 0.3711 & 0.0122 [$-$0.0017, 0.0255] & 76.6 / 81.2 & [$-$0.0124, 0.0749] & 0.0237 to 0.0433 \\
+Llama & 2: B2 \cto{} H2 & 0.3880 / 0.3671 & 0.0067 [$-$0.0007, 0.0139] & 81.3 / 83.0 & [$-$0.0015, 0.0432] & 0.0154 to 0.0275 \\
+Llama & 3: B2 \cto{} RCAP & 0.3880 / 0.3447 & 0.0132 [0.0042, 0.0232] & 81.3 / 83.3 & [0.0085, 0.0781] & 0.0333 to 0.0471 \\
+Llama & 4: H2 \cto{} RCAP & 0.3671 / 0.3447 & 0.0066 [$-$0.0007, 0.0146] & 83.0 / 83.3 & [$-$0.0078, 0.0526] & 0.0118 to 0.0259 \\
+Llama & 5: B1 \cto{} B1+H1 & 0.4023 / 0.3892 & 0.0100 [$-$0.0042, 0.0239] & 76.6 / 81.3 & [$-$0.0346, 0.0608] & 0.0056 to 0.0265 \\
+Llama & 6: B2 \cto{} B2+H1 & 0.3880 / 0.3644 & 0.0081 [0.0023, 0.0141] & 81.3 / 83.2 & [0.0052, 0.0419] & 0.0177 to 0.0278 \\
+Llama & 7: B2 \cto{} B2+A1 & 0.3880 / 0.3508 & 0.0118 [0.0055, 0.0188] & 81.3 / 83.4 & [0.0141, 0.0603] & 0.0309 to 0.0398 \\
 \bottomrule
 \end{tabular}
 }

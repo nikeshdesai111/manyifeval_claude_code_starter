@@ -92,24 +92,24 @@ Sensitivity (A4): NLL reduction t(49) interval and leave-one-pool-out range.
 | qwen | B2 + H1 | 0.2741 [0.2291, 0.3219] | 0.0745 [0.0620, 0.0876] | 81.1 [77.1, 84.8] | 3.35 [2.24, 4.59] |
 | qwen | B2 + A1 | 0.2734 [0.2286, 0.3221] | 0.0729 [0.0609, 0.0856] | 81.5 [77.4, 85.4] | 3.77 [2.61, 4.99] |
 
-Contrasts for all seven comparisons (Brier reduction ×10³):
+Contrasts for all seven comparisons (Brier reduction):
 
 | Generator | Comparison | Brier reduction [95% CI] |
 |---|---:|---:|
-| llama | #1 B1 → H1 + structure | 17.04 [10.56, 23.87] |
-| llama | #2 B2 → H2 + structure | 2.92 [-0.24, 6.11] |
-| llama | #3 B2 → rule-conditioned attention | 4.00 [-0.88, 8.88] |
-| llama | #4 H2 + structure → attention | 1.08 [-3.00, 5.70] |
-| llama | #5 B1 → B1 + H1 | 16.40 [9.20, 23.81] |
-| llama | #6 B2 → B2 + H1 | 4.19 [1.71, 6.63] |
-| llama | #7 B2 → B2 + A1 | 5.68 [2.35, 9.62] |
-| qwen | #1 B1 → H1 + structure | 11.80 [6.12, 17.79] |
-| qwen | #2 B2 → H2 + structure | 2.46 [-0.78, 5.64] |
-| qwen | #3 B2 → rule-conditioned attention | 3.81 [-0.56, 9.04] |
-| qwen | #4 H2 + structure → attention | 1.35 [-2.50, 5.58] |
-| qwen | #5 B1 → B1 + H1 | 10.16 [5.45, 15.27] |
-| qwen | #6 B2 → B2 + H1 | 2.38 [-0.89, 5.52] |
-| qwen | #7 B2 → B2 + A1 | 3.93 [-0.42, 9.18] |
+| llama | #1 B1 → H1 + structure | 0.0170 [0.0106, 0.0239] |
+| llama | #2 B2 → H2 + structure | 0.0029 [-0.0002, 0.0061] |
+| llama | #3 B2 → rule-conditioned attention | 0.0040 [-0.0009, 0.0089] |
+| llama | #4 H2 + structure → attention | 0.0011 [-0.0030, 0.0057] |
+| llama | #5 B1 → B1 + H1 | 0.0164 [0.0092, 0.0238] |
+| llama | #6 B2 → B2 + H1 | 0.0042 [0.0017, 0.0066] |
+| llama | #7 B2 → B2 + A1 | 0.0057 [0.0023, 0.0096] |
+| qwen | #1 B1 → H1 + structure | 0.0118 [0.0061, 0.0178] |
+| qwen | #2 B2 → H2 + structure | 0.0025 [-0.0008, 0.0056] |
+| qwen | #3 B2 → rule-conditioned attention | 0.0038 [-0.0006, 0.0090] |
+| qwen | #4 H2 + structure → attention | 0.0014 [-0.0025, 0.0056] |
+| qwen | #5 B1 → B1 + H1 | 0.0102 [0.0054, 0.0153] |
+| qwen | #6 B2 → B2 + H1 | 0.0024 [-0.0009, 0.0055] |
+| qwen | #7 B2 → B2 + A1 | 0.0039 [-0.0004, 0.0092] |
 
 ### Appendix A2 — Calibration (Objective 1)
 

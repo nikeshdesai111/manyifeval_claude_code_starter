@@ -160,10 +160,10 @@ def appendix():
     for g in ("llama", "qwen"):
         for cid in ORDER:
             x = con[(con.generator == g) & (con.comparison == cid)].iloc[0]
-            rows.append([GL[g], CL[cid], ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1e3, 2),
+            rows.append([GL[g], CL[cid], ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1, 4),
                          f"[{f(x.nll_t_lo, 4)}, {f(x.nll_t_hi, 4)}]",
                          f"{f(x.nll_loo_min, 4)} to {f(x.nll_loo_max, 4)}"])
-    w(tab(r"A1 (contrasts) and A4 (sensitivity). Brier reduction $\times10^3$; NLL reduction $t_{49}$ interval and "
+    w(tab(r"A1 (contrasts) and A4 (sensitivity). Brier reduction; NLL reduction $t_{49}$ interval and "
           r"leave-one-pool-out range (nats).", "tab:A1c",
           ["", "Comparison", "Brier reduction", r"NLL $t_{49}$ interval", "NLL leave-one-pool-out"], rows, align="llccc", mid=[7]))
     w(r"\subsection*{A2 --- Calibration (Objective 1)}")

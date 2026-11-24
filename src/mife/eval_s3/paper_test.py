@@ -164,12 +164,12 @@ def appendix():
             nc = a1[(a1.generator == g) & (a1.predictor == x.comparator)].iloc[0]
             nk = a1[(a1.generator == g) & (a1.predictor == x.candidate)].iloc[0]
             rows.append([GL[g], CL[cid], f"{f(nc.nll, 4)} / {f(nk.nll, 4)}",
-                         ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1e3, 2),
+                         ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1, 4),
                          f"{f(nc.auroc * 100)} / {f(nk.auroc * 100)}",
                          f"[{f(x.nll_t_lo, 4)}, {f(x.nll_t_hi, 4)}]",
                          f"{f(x.nll_loo_min, 4)} to {f(x.nll_loo_max, 4)}"])
     w(tab(r"A1 (contrasts) and A4 (sensitivity). Raw NLL (nats) and AUROC ($\times100$), comparator / candidate; "
-          r"Brier reduction $\times10^3$ with paired interval; NLL-reduction $t_{21}$ jackknife interval and "
+          r"Brier reduction with paired interval; NLL-reduction $t_{21}$ jackknife interval and "
           r"leave-one-pool-out range (nats).", "tab:A1c",
           ["", "Comparison", "NLL comp./cand.", "Brier reduction", "AUROC comp./cand.", r"NLL $t_{21}$ interval",
            "NLL leave-one-pool-out"], rows, align="llccccc", mid=[7 * i for i in range(1, NG)]))

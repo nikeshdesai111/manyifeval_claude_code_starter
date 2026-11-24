@@ -137,12 +137,12 @@ def main():
             rows.append([gen, PL[p], ci(x.nll, x.nll_lo, x.nll_hi, 1, 4), ci(x.brier, x.brier_lo, x.brier_hi, 1, 4),
                          ci(x.auroc, x.auroc_lo, x.auroc_hi, 100), ci(x.ece, x.ece_lo, x.ece_hi, 100, 2)])
     w(table(["Generator", "Predictor", "NLL", "Brier", "AUROC ×100", "ECE ×100"], rows))
-    w("\nContrasts for all seven comparisons (Brier reduction ×10³):\n")
+    w("\nContrasts for all seven comparisons (Brier reduction):\n")
     rows = []
     for gen in ("llama", "qwen"):
         for cid in ORDER:
             x = con[(con.generator == gen) & (con.comparison == cid)].iloc[0]
-            rows.append([gen, CL[cid], ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1e3, 2)])
+            rows.append([gen, CL[cid], ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1, 4)])
     w(table(["Generator", "Comparison", "Brier reduction [95% CI]"], rows))
     w("")
     # A2
