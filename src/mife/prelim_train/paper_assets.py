@@ -137,8 +137,8 @@ def tab_app():
     """Appendix: raw Objective 1/2 scores, secondary-comparison Delta-MSE, Objective 2 matched changes."""
     a1 = r("eval1_a1_metrics")
     s2 = r("obj2_eval1_scores")
-    lab = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "RCAP", "B1+H1": "B1+H1", "B2+H1": "B2+H1",
-           "B2+A1": "B2+A1", "REF_structure": "Structure only", "REF_trainmean": "Training mean"}
+    lab = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "RCAP", "B1+H1": "B1+H", "B2+H1": "B2+H",
+           "B2+A1": "B2+A", "REF_structure": "Structure only", "REF_trainmean": "Training mean"}
     L = []
     for p in ["REF_structure", "REF_trainmean", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1"]:
         row = [lab[p]]

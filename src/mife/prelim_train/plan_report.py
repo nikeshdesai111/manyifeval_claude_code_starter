@@ -19,11 +19,11 @@ T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "PRELIMINARY_RESULTS_FOLLOWING_PLAN.md"
 GEN = {"llama": "Llama-3.1-8B-Instruct", "qwen": "Qwen3-8B (non-thinking)"}
 CL = {"#1": "#1 B1 → H1 + structure", "#2": "#2 B2 → H2 + structure", "#3": "#3 B2 → rule-conditioned attention",
-      "#4": "#4 H2 + structure → attention", "#5": "#5 B1 → B1 + H1", "#6": "#6 B2 → B2 + H1", "#7": "#7 B2 → B2 + A1"}
+      "#4": "#4 H2 + structure → attention", "#5": "#5 B1 → B1 + H", "#6": "#6 B2 → B2 + H", "#7": "#7 B2 → B2 + A"}
 ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
 PRIM = {"#1", "#2", "#3", "#4"}
 PL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "Rule-cond. attention",
-      "B1+H1": "B1 + H1", "B2+H1": "B2 + H1", "B2+A1": "B2 + A1", "REF_structure": "Structure only (ref.)",
+      "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A", "REF_structure": "Structure only (ref.)",
       "REF_trainmean": "Training-fold mean (ref.)"}
 
 
