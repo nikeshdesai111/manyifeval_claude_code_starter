@@ -1,0 +1,4 @@
+model,check,n_prompts,max_abs_diff,n_exact
+llama,hidden row 12: new TEST extraction vs V1 main features (original prompts),602,0.0,602
+llama,rule-span attention SUM: new extraction vs V1 main features,602,0.0,602
+shared,BGE-M3 prompt embedding: TEST recompute vs V1 frozen cache,622,0.0,622
