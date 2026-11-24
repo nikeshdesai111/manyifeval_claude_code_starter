@@ -6,7 +6,7 @@ Recipe sha256 `d286c35b2e0c2c73…`, recorded 2026-11-20T16:46:47-0500, before a
 
 ## What changed from V1
 
-- **Predictors:** 7 planned comparisons (primary: 1, 2, 3 and 7; secondary: 4, 5 and 6) plus references, instead of 23 configurations. B2 is now B1 plus a *frozen* exact-rule embedding (no fine-tuning). A1 is the per-layer×head **max** attention over the target-rule span (new training-only extraction). The rule-conditioned attention probe is A1 + exact-rule embedding + structure.
+- **Predictors:** 7 planned comparisons (primary: 1, 2, 3 and 4; secondary: 5, 6 and 7) plus references, instead of 23 configurations. B2 is now B1 plus a *frozen* exact-rule embedding (no fine-tuning). A1 is the per-layer×head **max** attention over the target-rule span (new training-only extraction). The rule-conditioned attention probe is A1 + exact-rule embedding + structure.
 - **Architecture:** every Objective 1 predictor uses 15 per-type ridge-logistic heads with the same structure block. Every Objective 2 predictor uses one shared ridge fractional-logit head on the existing q_hat target. There are no MLP heads.
 - **Fitting:** summed binomial NLL (Objective 1) or fractional logit (Objective 2), with penalty λ/N. There are three penalty slots (fixed structure, tuned prompt representation, tuned rule embedding) on identical grids, a deterministic tie rule, a one-time ×10 boundary expansion, a block-off option for the incremental comparisons, and a sparse-head fallback that also uses group coverage.
 - **Layer search:** widened to 5 rows per generator, selected by H1 + structure, separately per objective.
@@ -127,7 +127,7 @@ Penalties are on the summed-loss scale. An expansion adds one ×10 step, once. A
 | qwen | 2 | REF_structure | Structure-only reference | none |  | nan | 92 | 0.0147855 |  |
 | qwen | 2 | XH1 | Other generator's H1 + structure (reference) | P=1000 |  | 12 | 4188 | 0.011802 |  |
 
-Objective 1 loss is the pooled mean log loss per completion; Objective 2 loss is the pooled squared error of the predicted fraction. `P` = prompt-representation penalty, `R` = rule-embedding penalty, `X` = added block in comparisons 4–6 ("off" = CV did not select the block, so the gain is 0 by construction; this is not evidence that the block carries no information).
+Objective 1 loss is the pooled mean log loss per completion; Objective 2 loss is the pooled squared error of the predicted fraction. `P` = prompt-representation penalty, `R` = rule-embedding penalty, `X` = added block in comparisons 5–7 ("off" = CV did not select the block, so the gain is 0 by construction; this is not evidence that the block carries no information).
 
 ## 5. Sparse-head fallbacks that fired (Objective 1)
 

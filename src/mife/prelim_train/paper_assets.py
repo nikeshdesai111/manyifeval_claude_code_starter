@@ -26,8 +26,8 @@ NAMES = {
     "detectable_format:title": "Title", "change_case:english_capital": "All uppercase",
     "change_case:english_lowercase": "All lowercase", "change_case:capital_word_frequency": "Uppercase-word count",
     "startend:quotation": "Quotation marks", "punctuation:no_comma": "No commas"}
-SHORT = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#7": r"7: RCAP \cto{} H2",
-         "#4": r"4: B1 \cto{} B1+H", "#5": r"5: B2 \cto{} B2+H", "#6": r"6: B2 \cto{} B2+A"}
+SHORT = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} A2", "#4": r"4: H2 \cto{} A2",
+         "#5": r"5: B1 \cto{} B1+H", "#6": r"6: B2 \cto{} B2+H", "#7": r"7: B2 \cto{} B2+A"}
 
 
 def r(n):
@@ -106,7 +106,7 @@ def tab_main():
             b = o2[(o2.generator == gen) & (o2.comparison == cid)].iloc[0]
             lines.append(" & " + " & ".join([
                 SHORT[cid],
-                c(a.nll_reduction, a.nll_reduction_lo, a.nll_reduction_hi, 1e3),
+                c(a.nll_reduction, a.nll_reduction_lo, a.nll_reduction_hi, 1, 4),
                 c(a.auroc_gain, a.auroc_gain_lo, a.auroc_gain_hi, 100),
                 f"{int(a.types_improved)}/15",
                 c(b.rmse_reduction, b.rmse_reduction_lo, b.rmse_reduction_hi, 100, 2),
@@ -122,7 +122,7 @@ def tab_eval2():
     lines = []
     for gen, lab in (("llama", "Llama"), ("qwen", "Qwen")):
         lines.append(r"\multirow{4}{*}{" + lab + "}")
-        for cid in ("#1", "#2", "#3", "#7"):
+        for cid in ("#1", "#2", "#3", "#4"):
             cells = []
             for f in ("position", "append", "companion", "task"):
                 s = sk[f]
@@ -137,8 +137,8 @@ def tab_app():
     """Appendix: raw Objective 1/2 scores, secondary-comparison Delta-MSE, Objective 2 matched changes."""
     a1 = r("eval1_a1_metrics")
     s2 = r("obj2_eval1_scores")
-    lab = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "RCAP", "B1+H1": "B1+H1", "B2+H1": "B2+H1",
-           "B2+A1": "B2+A1", "REF_structure": "Structure only", "REF_trainmean": "Training mean"}
+    lab = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "A2", "B1+H1": "B1+H", "B2+H1": "B2+H",
+           "B2+A1": "B2+A", "REF_structure": "Structure only", "REF_trainmean": "Training mean"}
     L = []
     for p in ["REF_structure", "REF_trainmean", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1"]:
         row = [lab[p]]
@@ -162,7 +162,7 @@ def tab_app():
     sk = {f: r(f"eval2_{f}_skill") for f in ("position", "append", "companion", "task")}
     L = []
     for gen, labg in (("llama", "Llama"), ("qwen", "Qwen")):
-        for cid in ("#4", "#5", "#6"):
+        for cid in ("#5", "#6", "#7"):
             cells = []
             for f in ("position", "append", "companion", "task"):
                 s = sk[f]
@@ -179,7 +179,7 @@ def tab_app():
                           ("dobs", "Observed signed mean (pp)", 100),
                           ("se_zero", r"Zero-change MSE ($\times10^4$)", 1e4),
                           ("dmse_#1", r"$\Delta$-MSE 1 ($\times10^4$)", 1e4), ("dmse_#2", r"$\Delta$-MSE 2 ($\times10^4$)", 1e4),
-                          ("dmse_#3", r"$\Delta$-MSE 3 ($\times10^4$)", 1e4), ("dmse_#7", r"$\Delta$-MSE 7 ($\times10^4$)", 1e4)):
+                          ("dmse_#3", r"$\Delta$-MSE 3 ($\times10^4$)", 1e4), ("dmse_#4", r"$\Delta$-MSE 4 ($\times10^4$)", 1e4)):
             cells = []
             for f in ("position", "append", "companion", "task"):
                 x = e[(e.generator == gen) & (e.factor == f) & (e.quantity == q)].iloc[0]

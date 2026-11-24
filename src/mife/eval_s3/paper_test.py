@@ -16,12 +16,12 @@ from .paths import EVAL_DIR
 T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "paper"
 FIGDIR = "figures/test_" + "_".join(GENS)
-ORDER = ["#1", "#2", "#3", "#7", "#4", "#5", "#6"]
-CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#7": r"7: RCAP \cto{} H2",
-      "#4": r"4: B1 \cto{} B1+H1", "#5": r"5: B2 \cto{} B2+H1", "#6": r"6: B2 \cto{} B2+A1"}
+ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
+CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} A2", "#4": r"4: H2 \cto{} A2",
+      "#5": r"5: B1 \cto{} B1+H", "#6": r"6: B2 \cto{} B2+H", "#7": r"7: B2 \cto{} B2+A"}
 GL = {"llama": "Llama", "qwen": "Qwen"}
-PL = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "RCAP", "B1+H1": "B1+H1", "B2+H1": "B2+H1",
-      "B2+A1": "B2+A1", "REF_structure": "Structure only"}
+PL = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "A2", "B1+H1": "B1+H", "B2+H1": "B2+H",
+      "B2+A1": "B2+A", "REF_structure": "Structure only"}
 NG = len(GENS)
 
 
@@ -92,13 +92,13 @@ def main_tables():
         row = [CL[cid]]
         for g in GENS:
             x = con[(con.generator == g) & (con.comparison == cid)].iloc[0]
-            row += [ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1e3),
+            row += [ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1, 4),
                     ci(x.auroc_gain, x.auroc_gain_lo, x.auroc_gain_hi, 100), f"{int(x.types_improved)}/15"]
         rows.append(row)
     pending = (r" Qwen: test features still being extracted at the time of this version." if GENS == ("llama",) else "")
     t2 = tab(r"Evaluation~1, Objective~1 on the 22 held-out S3 test groups: rule-level violation-risk prediction "
              r"(115,236 prompt--rule rows and 2,304,720 response $\times$ rule outcomes per generator). NLL reduction "
-             r"$=$ NLL(comparator) $-$ NLL(candidate), $\times10^{3}$ nats per outcome; AUROC gain $\times100$; Types $=$ "
+             r"$=$ NLL(comparator) $-$ NLL(candidate), in nats per outcome; AUROC gain $\times100$; Types $=$ "
              r"rule types with strictly lower NLL (descriptive). Positive favours the candidate. Paired, pointwise 95\% "
              r"intervals from a 22-pool cluster bootstrap (10,000 draws). Primary comparisons above the rule, secondary "
              r"below." + pending,
@@ -163,14 +163,14 @@ def appendix():
             x = con[(con.generator == g) & (con.comparison == cid)].iloc[0]
             nc = a1[(a1.generator == g) & (a1.predictor == x.comparator)].iloc[0]
             nk = a1[(a1.generator == g) & (a1.predictor == x.candidate)].iloc[0]
-            rows.append([GL[g], CL[cid], f"{f(nc.nll * 1e3)} / {f(nk.nll * 1e3)}",
-                         ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1e3, 2),
+            rows.append([GL[g], CL[cid], f"{f(nc.nll, 4)} / {f(nk.nll, 4)}",
+                         ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1, 4),
                          f"{f(nc.auroc * 100)} / {f(nk.auroc * 100)}",
-                         f"[{f(x.nll_t_lo * 1e3)}, {f(x.nll_t_hi * 1e3)}]",
-                         f"{f(x.nll_loo_min * 1e3)} to {f(x.nll_loo_max * 1e3)}"])
-    w(tab(r"A1 (contrasts) and A4 (sensitivity). Raw NLL ($\times10^3$) and AUROC ($\times100$), comparator / candidate; "
-          r"Brier reduction $\times10^3$ with paired interval; NLL-reduction $t_{21}$ jackknife interval and "
-          r"leave-one-pool-out range ($\times10^3$).", "tab:A1c",
+                         f"[{f(x.nll_t_lo, 4)}, {f(x.nll_t_hi, 4)}]",
+                         f"{f(x.nll_loo_min, 4)} to {f(x.nll_loo_max, 4)}"])
+    w(tab(r"A1 (contrasts) and A4 (sensitivity). Raw NLL (nats) and AUROC ($\times100$), comparator / candidate; "
+          r"Brier reduction with paired interval; NLL-reduction $t_{21}$ jackknife interval and "
+          r"leave-one-pool-out range (nats).", "tab:A1c",
           ["", "Comparison", "NLL comp./cand.", "Brier reduction", "AUROC comp./cand.", r"NLL $t_{21}$ interval",
            "NLL leave-one-pool-out"], rows, align="llccccc", mid=[7 * i for i in range(1, NG)]))
     w(r"\subsection*{A2 --- Calibration (Objective 1)}")
@@ -178,7 +178,7 @@ def appendix():
           r"each predictor's \emph{training} out-of-fold predictions (fixed before test scoring); unit: response "
           r"$\times$ rule outcome. Bin support: \texttt{tables/eval1\_calibration.csv}.", width=r"\linewidth" if NG > 1 else r"0.62\linewidth"))
     w(r"\subsection*{A3 --- Per-type NLL reduction}")
-    w(fig("e1_A3_per_type_nll_heatmap.png", r"A3. Per-type test NLL reduction ($\times100$) for the seven comparisons; five "
+    w(fig("e1_A3_per_type_nll_heatmap.png", r"A3. Per-type test NLL reduction (nats) for the seven comparisons; five "
           r"fixed-wording types above the line, ten parameterised types below; positive (red) favours the candidate. "
           r"All 210 values per generator with paired intervals and support: \texttt{tables/eval1\_per\_type.csv}."))
     fp = r("eval1_fixed_vs_param")
@@ -188,17 +188,17 @@ def appendix():
             mids.append(len(rows))
         for cid in ORDER:
             x = fp[(fp.generator == g) & (fp.comparison == cid)].iloc[0]
-            rows.append([GL[g] if cid == "#1" else "", CL[cid], ci(x.fixed_dnll, x.fixed_lo, x.fixed_hi, 1e3),
-                         ci(x.parameterized_dnll, x.parameterized_lo, x.parameterized_hi, 1e3),
-                         ci(x["diff_dnll"], x.diff_lo, x.diff_hi, 1e3),
-                         f"{f(x.fixed_typeeq_dnll * 1e3)} / {f(x.param_typeeq_dnll * 1e3)}"])
+            rows.append([GL[g] if cid == "#1" else "", CL[cid], ci(x.fixed_dnll, x.fixed_lo, x.fixed_hi, 1, 4),
+                         ci(x.parameterized_dnll, x.parameterized_lo, x.parameterized_hi, 1, 4),
+                         ci(x["diff_dnll"], x.diff_lo, x.diff_hi, 1, 4),
+                         f"{f(x.fixed_typeeq_dnll, 4)} / {f(x.param_typeeq_dnll, 4)}"])
     rates = "; ".join(f"{GL[g]}: fixed {100 * fp[fp.generator == g].fixed_viol_rate.iloc[0]:.1f}\\% "
                       f"({int(fp[fp.generator == g].fixed_outcomes.iloc[0]):,} outcomes), parameterised "
                       f"{100 * fp[fp.generator == g].parameterized_viol_rate.iloc[0]:.1f}\\% "
                       f"({int(fp[fp.generator == g].parameterized_outcomes.iloc[0]):,})" for g in GENS)
     w(r"\subsection*{A3b --- Fixed versus parameterised rule types (Objective 1 only)}")
     w(tab(r"A3b. NLL reductions of the same seven predictor comparisons, calculated separately on rule-level outcomes from "
-          r"the five fixed and ten parameterised ManyIFEval rule types ($\times10^3$). Positive improvement favours the "
+          r"the five fixed and ten parameterised ManyIFEval rule types (nats). Positive improvement favours the "
           r"candidate (right of the arrow). The fixed-minus-parameterised column compares improvements between subgroups, "
           r"not raw violation rates. Intervals are paired pointwise 95\% intervals from resampling the 22 test rule pools "
           r"(identical draws for both classes); all seven subgroup differences are exploratory. Last column: "

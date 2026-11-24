@@ -27,8 +27,8 @@ remains pending.
 | Reproduction | Pooled OOF NLL reproduces `results/v2_s3/tables/selected_settings.csv` cv_loss (e.g. Llama B2 0.401253 vs 0.401254) | |
 | Not used | Historical 57/15 split, V1 results (`results/tables/`, `results/cv/`), V1 "B2" (LoRA), pilot or CUDA data, any TEST file | |
 
-Seven comparisons (unchanged from the plan): primary 1 B1→H1, 2 B2→H2, 3 B2→RCAP, 7 RCAP→H2; secondary 4 B1→B1+H1,
-5 B2→B2+H1, 6 B2→B2+A1. All seven have valid OOF predictions for both generators and both objectives.
+Seven comparisons (unchanged from the plan): primary 1 B1→H1, 2 B2→H2, 3 B2→A2, 4 H2→A2 (A2 = rule-conditioned attention, S+R+A; RCAP in code); secondary 5 B1→B1+H,
+6 B2→B2+H, 7 B2→B2+A (renumbered and comparison 4 reversed on 2026-11-24 at the owner's request). All seven have valid OOF predictions for both generators and both objectives.
 
 ## Completed / partial / unavailable
 

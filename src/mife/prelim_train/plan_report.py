@@ -18,12 +18,12 @@ from .paths import EVAL_DIR
 T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "PRELIMINARY_RESULTS_FOLLOWING_PLAN.md"
 GEN = {"llama": "Llama-3.1-8B-Instruct", "qwen": "Qwen3-8B (non-thinking)"}
-CL = {"#1": "#1 B1 → H1 + structure", "#2": "#2 B2 → H2 + structure", "#3": "#3 B2 → rule-conditioned attention",
-      "#7": "#7 attention → H2 + structure", "#4": "#4 B1 → B1 + H1", "#5": "#5 B2 → B2 + H1", "#6": "#6 B2 → B2 + A1"}
-ORDER = ["#1", "#2", "#3", "#7", "#4", "#5", "#6"]
-PRIM = {"#1", "#2", "#3", "#7"}
-PL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "Rule-cond. attention",
-      "B1+H1": "B1 + H1", "B2+H1": "B2 + H1", "B2+A1": "B2 + A1", "REF_structure": "Structure only (ref.)",
+CL = {"#1": "#1 B1 → H1 + structure", "#2": "#2 B2 → H2 + structure", "#3": "#3 B2 → A2 (rule-conditioned attention)",
+      "#4": "#4 H2 → A2", "#5": "#5 B1 → B1 + H", "#6": "#6 B2 → B2 + H", "#7": "#7 B2 → B2 + A"}
+ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
+PRIM = {"#1", "#2", "#3", "#4"}
+PL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "A2: rule-cond. attention",
+      "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A", "REF_structure": "Structure only (ref.)",
       "REF_trainmean": "Training-fold mean (ref.)"}
 
 
@@ -103,7 +103,7 @@ def main():
     con = r("eval1_contrasts")
     w("## Evaluation 1, Objective 1\n")
     w("### Table 2 — Rule-level violation-risk prediction (§4.4), TRAIN OOF\n")
-    w("NLL reduction ×10³ nats per response × rule outcome, pooled over 153,900 TRAIN prompt–rule rows per generator; "
+    w("NLL reduction in nats per response × rule outcome, pooled over 153,900 TRAIN prompt–rule rows per generator; "
       "AUROC gain ×100 on response-level binary outcomes; types improved = strictly positive per-type NLL reduction "
       "(descriptive, not 15 significance tests). 95% CIs: paired 50-pool cluster bootstrap.\n")
     for gen in ("llama", "qwen"):
@@ -111,7 +111,7 @@ def main():
         rows = []
         for cid in ORDER:
             x = con[(con.generator == gen) & (con.comparison == cid)].iloc[0]
-            rows.append([bold(cid, CL[cid]), bold(cid, ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1e3)),
+            rows.append([bold(cid, CL[cid]), bold(cid, ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1, 4)),
                          ci(x.auroc_gain, x.auroc_gain_lo, x.auroc_gain_hi, 100),
                          f"{int(x.types_improved)}/15" + (f" ({int(x.types_undefined)} undefined)" if x.types_undefined else "")])
         w(table(["Method comparison (comparator → candidate)", "NLL reduction [95% CI] ↑", "AUROC gain [95% CI] ↑",
@@ -122,9 +122,9 @@ def main():
     for gen in ("llama", "qwen"):
         for cid in ORDER:
             x = con[(con.generator == gen) & (con.comparison == cid)].iloc[0]
-            rows.append([gen, CL[cid], f"[{f(x.nll_t_lo * 1e3)}, {f(x.nll_t_hi * 1e3)}]",
-                         f"{f(x.nll_loo_min * 1e3)} to {f(x.nll_loo_max * 1e3)}"])
-    w(table(["Generator", "Comparison", "t(49) 95% interval (×10³)", "Leave-one-pool-out range (×10³)"], rows))
+            rows.append([gen, CL[cid], f"[{f(x.nll_t_lo, 4)}, {f(x.nll_t_hi, 4)}]",
+                         f"{f(x.nll_loo_min, 4)} to {f(x.nll_loo_max, 4)}"])
+    w(table(["Generator", "Comparison", "t(49) 95% interval (nats)", "Leave-one-pool-out range (nats)"], rows))
     w("")
 
     # A1
@@ -137,12 +137,12 @@ def main():
             rows.append([gen, PL[p], ci(x.nll, x.nll_lo, x.nll_hi, 1, 4), ci(x.brier, x.brier_lo, x.brier_hi, 1, 4),
                          ci(x.auroc, x.auroc_lo, x.auroc_hi, 100), ci(x.ece, x.ece_lo, x.ece_hi, 100, 2)])
     w(table(["Generator", "Predictor", "NLL", "Brier", "AUROC ×100", "ECE ×100"], rows))
-    w("\nContrasts for all seven comparisons (Brier reduction ×10³):\n")
+    w("\nContrasts for all seven comparisons (Brier reduction):\n")
     rows = []
     for gen in ("llama", "qwen"):
         for cid in ORDER:
             x = con[(con.generator == gen) & (con.comparison == cid)].iloc[0]
-            rows.append([gen, CL[cid], ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1e3, 2)])
+            rows.append([gen, CL[cid], ci(x.brier_reduction, x.brier_reduction_lo, x.brier_reduction_hi, 1, 4)])
     w(table(["Generator", "Comparison", "Brier reduction [95% CI]"], rows))
     w("")
     # A2
@@ -155,13 +155,13 @@ def main():
     w("![A3 heatmap](figures/e1_A3_per_type_nll_heatmap.png)\n")
     pt = r("eval1_per_type")
     for gen in ("llama", "qwen"):
-        w(f"**{GEN[gen]}** — NLL reduction ×10³ by type (columns = comparisons)\n")
+        w(f"**{GEN[gen]}** — NLL reduction (nats) by type (columns = comparisons)\n")
         rows = []
         for t in types_order(pt.rule_type.unique()):
             row = [tn(t) + (" (fixed)" if t in FIXED_TYPES else "")]
             for cid in ORDER:
                 x = pt[(pt.generator == gen) & (pt.rule_type == t) & (pt.comparison == cid)].iloc[0]
-                row.append(f(x.nll_reduction * 1e3))
+                row.append(f(x.nll_reduction, 4))
             n = pt[(pt.generator == gen) & (pt.rule_type == t)].iloc[0]
             row.append(int(n.n_pools))
             rows.append(row)
@@ -172,7 +172,7 @@ def main():
     # A3b
     fp = r("eval1_fixed_vs_param")
     w("### Appendix A3b — Fixed versus parameterised NLL improvement (Objective 1 only)\n")
-    w("*NLL reductions (×10³) of the same seven comparisons, calculated separately on rule-level outcomes from the five fixed "
+    w("*NLL reductions (nats) of the same seven comparisons, calculated separately on rule-level outcomes from the five fixed "
       "and ten parameterised rule types. Fixed-minus-parameterised compares improvements, not raw violation rates. Paired "
       "pointwise 95% intervals from resampling the 50 TRAIN pools; all subgroup differences are exploratory.*\n")
     for gen in ("llama", "qwen"):
@@ -183,10 +183,10 @@ def main():
         rows = []
         for cid in ORDER:
             x = fp[(fp.generator == gen) & (fp.comparison == cid)].iloc[0]
-            rows.append([bold(cid, CL[cid]), ci(x.fixed_dnll, x.fixed_lo, x.fixed_hi, 1e3),
-                         ci(x.parameterized_dnll, x.parameterized_lo, x.parameterized_hi, 1e3),
-                         ci(x["diff_dnll"], x.diff_lo, x.diff_hi, 1e3),
-                         f"{f(x.fixed_typeeq_dnll * 1e3)} / {f(x.param_typeeq_dnll * 1e3)}"])
+            rows.append([bold(cid, CL[cid]), ci(x.fixed_dnll, x.fixed_lo, x.fixed_hi, 1, 4),
+                         ci(x.parameterized_dnll, x.parameterized_lo, x.parameterized_hi, 1, 4),
+                         ci(x["diff_dnll"], x.diff_lo, x.diff_hi, 1, 4),
+                         f"{f(x.fixed_typeeq_dnll, 4)} / {f(x.param_typeeq_dnll, 4)}"])
         w(table(["Comparator → candidate", "Fixed (5 types): ΔNLL ↑", "Parameterised (10 types): ΔNLL ↑",
                  "Fixed − parameterised", "Type-equal-weight sensitivity (fixed / param.)"], rows))
         w("")
@@ -234,7 +234,7 @@ def main():
                          ci(x.pearson_gain, x.pearson_gain_lo, x.pearson_gain_hi, 100)])
     w(table(["Generator", "Comparison", "MAE reduction (pp)", "MSE reduction ×10⁴", "Pearson gain ×100"], rows))
     w("")
-    w("### Appendix A6 — Fraction calibration (Objective 2; key predictors B2, H2, RCAP)\n")
+    w("### Appendix A6 — Fraction calibration (Objective 2; key predictors B2, H2, A2)\n")
     rows = []
     for gen in ("llama", "qwen"):
         for p in ["B2", "H2", "RCAP"]:
@@ -247,7 +247,7 @@ def main():
     rows = []
     for gen in ("llama", "qwen"):
         for p, lab in [("REF_trainmean", "Training-fold mean (constant within fold)"), ("AVG1_H2", "Mean of Objective 1 H2 p̂"),
-                       ("AVG1_B2", "Mean of Objective 1 B2 p̂"), ("AVG1_RCAP", "Mean of Objective 1 RCAP p̂"), ("H2", "Objective 2 H2 head")]:
+                       ("AVG1_B2", "Mean of Objective 1 B2 p̂"), ("AVG1_RCAP", "Mean of Objective 1 A2 p̂"), ("H2", "Objective 2 H2 head")]:
             x = s2[(s2.generator == gen) & (s2.predictor == p)].iloc[0]
             sp = "undefined within fold (constant)" if p == "REF_trainmean" else f(x.spearman * 100)
             rows.append([gen, lab, f(x.rmse * 100, 2), sp])
@@ -437,9 +437,9 @@ def main():
             sp = sup[(sup.generator == gen) & (sup.factor == fac)].iloc[0]
             q = lambda n, s=1e4, d=1: ci(g.loc[n, "est"], g.loc[n, "lo"], g.loc[n, "hi"], s, d)
             rows.append([gen, fac, f"{int(sp.n_prompt_pairs):,}", q("rms_pp_noise_adjusted", 1), q("dobs", 100, 2),
-                         f(g.loc["se_zero", "est"] * 1e4), q("dmse_#1"), q("dmse_#2"), q("dmse_#3"), q("dmse_#7")])
+                         f(g.loc["se_zero", "est"] * 1e4), q("dmse_#1"), q("dmse_#2"), q("dmse_#3"), q("dmse_#4")])
     w(table(["Generator", "Factor", "Prompt pairs", "Observed RMS (pp)", "Signed mean (pp)", "Zero-change MSE ×10⁴",
-             "Δ-MSE #1", "Δ-MSE #2", "Δ-MSE #3", "Δ-MSE #7"], rows))
+             "Δ-MSE #1", "Δ-MSE #2", "Δ-MSE #3", "Δ-MSE #4"], rows))
     w("\nSecondary comparisons and per-stratum values: `tables/obj2_eval2.csv`.\n")
 
     w("## Not available tonight / deviations\n")

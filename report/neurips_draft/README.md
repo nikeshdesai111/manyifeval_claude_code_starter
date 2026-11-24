@@ -47,7 +47,7 @@ then Related Work's attention paragraph. Recompile and check that the Conclusion
   signed heatmaps (type x k, target x companion, family) move to the appendix. This is a deviation from the plan to
   fit 8 pages and is stated in the figure caption; Nicky may prefer a different cut.
 - The overview figure moved to Appendix A to make room.
-- The plan's Table 4 (Evaluation 2 skill) shows the four primary comparisons in the main text; comparisons 4–6 are in
+- The plan's Table 4 (Evaluation 2 skill) shows the four primary comparisons in the main text; comparisons 5–7 are in
   the appendix list, to fit the page limit. Restore them if space allows.
 - The plan's Table 1 (test inventory with A/B/C/D coverage) is split between Table 1 (data) and the counts given in
   Section 6.1 and the Table 4 caption.
