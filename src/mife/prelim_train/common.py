@@ -17,10 +17,11 @@ COMPS = [
     ("#5", "B1", "B1+H1", "#5 B1 → B1 + H", False),
     ("#6", "B2", "B2+H1", "#6 B2 → B2 + H", False),
     ("#7", "B2", "B2+A1", "#7 B2 → B2 + A", False),
+    ("#8", "B2+H1", "B2+H1+A1", "#8 B2 + H → B2 + H + A", False),
 ]
-PREDS = ["B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1"]
+PREDS = ["B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1", "B2+H1+A1"]
 PRED_LABEL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure",
-              "RCAP": "A2: rule-cond. attention (S+R+A)", "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A",
+              "RCAP": "A2: rule-cond. attention (S+R+A)", "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A", "B2+H1+A1": "B2 + H + A",
               "REF_structure": "Structure only (ref.)"}
 OOF_DIR = ROOT / "results" / "v2_s3" / "predictions"
 

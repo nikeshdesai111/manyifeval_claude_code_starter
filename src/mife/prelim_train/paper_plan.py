@@ -15,12 +15,15 @@ from .paths import EVAL_DIR
 
 T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "paper"
-ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
+ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8"]
+MAIN = ORDER[:4]   # prespecified primary comparisons (main text)
+INC = ORDER[4:]    # does a block add information? (appendix)
 CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} A2", "#4": r"4: H2 \cto{} A2",
-      "#5": r"5: B1 \cto{} B1+H", "#6": r"6: B2 \cto{} B2+H", "#7": r"7: B2 \cto{} B2+A"}
+      "#5": r"5: B1 \cto{} B1+H", "#6": r"6: B2 \cto{} B2+H", "#7": r"7: B2 \cto{} B2+A",
+      "#8": r"8: B2+H \cto{} B2+H+A"}
 GL = {"llama": "Llama", "qwen": "Qwen"}
 PL = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "A2", "B1+H1": "B1+H", "B2+H1": "B2+H",
-      "B2+A1": "B2+A", "REF_structure": "Structure only", "REF_trainmean": "Training-fold mean",
+      "B2+A1": "B2+A", "B2+H1+A1": "B2+H+A", "REF_structure": "Structure only", "REF_trainmean": "Training-fold mean",
       "AVG1_H2": r"Mean of Obj.~1 H2", "AVG1_B2": r"Mean of Obj.~1 B2", "AVG1_RCAP": r"Mean of Obj.~1 A2"}
 
 
@@ -80,7 +83,7 @@ def main_tables():
              rows, resize=False, size=r"\footnotesize")
     # Table 2 Obj1
     rows = []
-    for cid in ORDER:
+    for cid in MAIN:
         row = [CL[cid]]
         for g in ("llama", "qwen"):
             x = con[(con.generator == g) & (con.comparison == cid)].iloc[0]
@@ -92,14 +95,14 @@ def main_tables():
              r"generator; not held-out test performance). NLL reduction $=$ NLL(comparator) $-$ NLL(candidate), "
              r"in nats per outcome; AUROC gain $\times100$; Types $=$ rule types with strictly lower NLL "
              r"(descriptive). Positive favours the candidate. Paired, pointwise 95\% intervals from a 50-pool cluster "
-             r"bootstrap. Primary comparisons above the rule, secondary below.",
+             r"bootstrap. The four prespecified primary comparisons; comparisons 5--8 are in Appendix~\ref{app:incremental}.",
              "tab:e1o1", ["Comparison", "NLL red.", "AUROC gain", "Types", "NLL red.", "AUROC gain", "Types"], rows,
-             align="lcccccc", mid=[4], size=r"\footnotesize")
+             align="lcccccc", size=r"\footnotesize")
     t2 = t2.replace(r"\toprule", r"\toprule" + "\n" + r" & \multicolumn{3}{c}{Llama} & \multicolumn{3}{c}{Qwen} \\"
                     + "\n" + r"\cmidrule(lr){2-4}\cmidrule(lr){5-7}", 1)
     # Table 3 Obj2
     rows = []
-    for cid in ORDER:
+    for cid in MAIN:
         row = [CL[cid]]
         for g in ("llama", "qwen"):
             x = c2[(c2.generator == g) & (c2.comparison == cid)].iloc[0]
@@ -108,9 +111,10 @@ def main_tables():
         rows.append(row)
     t3 = tab(r"\emph{Preliminary} Evaluation~1, Objective~2: prompt-level expected fraction of rules violated, "
              r"out-of-fold on 36,900 training prompts per generator. RMSE reduction in percentage points; Spearman gain "
-             r"$\times100$. Positive favours the candidate. Paired 95\% 50-pool bootstrap intervals (2,000 draws).",
+             r"$\times100$. Positive favours the candidate. Paired 95\% 50-pool bootstrap intervals (2,000 draws). Comparisons "
+             r"5--8: Appendix~\ref{app:incremental}.",
              "tab:e1o2", ["Comparison", "RMSE red. (pp)", "Spearman gain", "RMSE red. (pp)", "Spearman gain"], rows,
-             align="lcccc", mid=[4], size=r"\footnotesize")
+             align="lcccc", size=r"\footnotesize")
     t3 = t3.replace(r"\toprule", r"\toprule" + "\n" + r" & \multicolumn{2}{c}{Llama} & \multicolumn{2}{c}{Qwen} \\"
                     + "\n" + r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}", 1)
     # Table 4
@@ -118,7 +122,7 @@ def main_tables():
     for g in ("llama", "qwen"):
         if g == "qwen":
             mids.append(len(rows))
-        for cid in ORDER:
+        for cid in MAIN:
             row = [GL[g] if cid == "#1" else "", CL[cid]]
             for fac in sk:
                 s = sk[fac]
@@ -134,10 +138,58 @@ def main_tables():
              r"reduction ($\times10^{4}$) [95\% interval] of the predicted versus observed change in a rule's violation "
              r"probability, MSE(comparator) $-$ MSE(candidate); positive favours the candidate. Equal weight per $k$ "
              r"(position, companion, task) or transition (append), then pool, task and context. The zero-change row is "
-             r"the MSE of predicting no change. By-stratum values and $\Delta$-MAE in Appendices Pos-B, K-B, C-B and D-C.",
+             r"the MSE of predicting no change. Comparisons 5--8: Appendix~\ref{app:incremental}; by-stratum values and "
+             r"$\Delta$-MAE in Appendices Pos-B, K-B, C-B and D-C.",
              "tab:eval2", ["", "Comparison", "Position", "Strict append", "Companion", "Task"], rows, align="llcccc",
              mid=mids, size=r"\footnotesize")
     return {"t1": t1, "t2": t2, "t3": t3, "t4": t4}
+
+
+def incremental():
+    """Appendix: does a block add information? Comparisons 5-8 for both objectives and Evaluation 2."""
+    con, c2, sk = r("eval1_contrasts"), r("obj2_eval1_contrasts"), {x: r(f"eval2_{x}_skill") for x in
+                                                                      ("position", "append", "companion", "task")}
+    out = []
+    w = out.append
+    w(r"\section{Does a feature block add information? Comparisons 5--8}")
+    w(r"\label{app:incremental}")
+    w("Comparisons 5--7 add the hidden-state block H or the attention block A to a frozen text predictor (B1 or B2); "
+      "comparison 8 adds A to B2+H and asks whether rule attention adds information beyond the hidden state. Each "
+      "baseline keeps its cross-validated settings and only the added block's penalty is tuned on the training folds "
+      "(same grid, with ``off'' allowed, in which case the gain is zero by construction). Comparison 8 was added after "
+      "the evaluation plan was written, at the project owner's request, and fitted with this same recipe on the training "
+      "groups before any test scoring.\n")
+    rows, mids = [], []
+    for gi, g in enumerate(("llama", "qwen")):
+        if gi:
+            mids.append(len(rows))
+        for cid in INC:
+            x = con[(con.generator == g) & (con.comparison == cid)].iloc[0]
+            y = c2[(c2.generator == g) & (c2.comparison == cid)].iloc[0]
+            rows.append([GL[g] if cid == INC[0] else "", CL[cid], ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1, 4),
+                         ci(x.auroc_gain, x.auroc_gain_lo, x.auroc_gain_hi, 100), f"{int(x.types_improved)}/15",
+                         ci(y.rmse_reduction, y.rmse_reduction_lo, y.rmse_reduction_hi, 100, 2),
+                         ci(y.spearman_gain, y.spearman_gain_lo, y.spearman_gain_hi, 100)])
+    w(tab(r"\emph{Preliminary} Evaluation~1, comparisons 5--8 (out-of-fold, 50 training groups). Objective~1: NLL reduction "
+          r"(nats per outcome), AUROC gain ($\times100$), rule types with lower NLL. Objective~2: RMSE reduction (points) "
+          r"and Spearman gain ($\times100$). Positive favours the candidate; paired 95\% pool-bootstrap intervals.",
+          "tab:inc_e1", ["", "Comparison", "NLL red.", "AUROC gain", "Types", "RMSE red.", "Spearman gain"], rows,
+          align="llccccc", mid=mids))
+    rows, mids = [], []
+    for gi, g in enumerate(("llama", "qwen")):
+        if gi:
+            mids.append(len(rows))
+        for cid in INC:
+            row = [GL[g] if cid == INC[0] else "", CL[cid]]
+            for fac in sk:
+                s = sk[fac]
+                x = s[(s.generator == g) & (s.stratum == "macro") & (s.quantity == f"dmse_{cid}")].iloc[0]
+                row.append(ci(x.est, x.lo, x.hi, 1e4))
+            rows.append(row)
+    w(tab(r"\emph{Preliminary} Evaluation~2, comparisons 5--8: paired $\Delta$-MSE reduction ($\times10^{4}$) [95\% "
+          r"interval], same matches and weights as Table~\ref{tab:eval2}.", "tab:inc_e2",
+          ["", "Comparison", "Position", "Strict append", "Companion", "Task"], rows, align="llcccc", mid=mids))
+    return "\n".join(out)
 
 
 # ------------------------------------------------------------------------------------------------- appendix
@@ -149,7 +201,7 @@ def appendix():
     for g in ("llama", "qwen"):
         if g == "qwen":
             mids.append(len(rows))
-        for p in ["REF_structure", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1"]:
+        for p in ["REF_structure", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1", "B2+H1+A1"]:
             x = a1[(a1.generator == g) & (a1.predictor == p)].iloc[0]
             rows.append([GL[g], PL[p], ci(x.nll, x.nll_lo, x.nll_hi, 1, 4), ci(x.brier, x.brier_lo, x.brier_hi, 1, 4),
                          ci(x.auroc, x.auroc_lo, x.auroc_hi, 100), ci(x.ece, x.ece_lo, x.ece_hi, 100, 2)])
@@ -165,7 +217,7 @@ def appendix():
                          f"{f(x.nll_loo_min, 4)} to {f(x.nll_loo_max, 4)}"])
     w(tab(r"A1 (contrasts) and A4 (sensitivity). Brier reduction; NLL reduction $t_{49}$ interval and "
           r"leave-one-pool-out range (nats).", "tab:A1c",
-          ["", "Comparison", "Brier reduction", r"NLL $t_{49}$ interval", "NLL leave-one-pool-out"], rows, align="llccc", mid=[7]))
+          ["", "Comparison", "Brier reduction", r"NLL $t_{49}$ interval", "NLL leave-one-pool-out"], rows, align="llccc", mid=[8]))
     w(r"\subsection*{A2 --- Calibration (Objective 1)}")
     w(r"\begin{figure}[h]\centering\includegraphics[width=\linewidth]{figures/prelim/e1_A2_reliability.png}"
       r"\caption{A2. Reliability curves (out-of-fold, decile bins of each predictor's own predictions).}\end{figure}")
@@ -203,7 +255,7 @@ def appendix():
     for g in ("llama", "qwen"):
         if g == "qwen":
             mids.append(len(rows))
-        for p in ["B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1", "REF_structure"]:
+        for p in ["B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1", "B2+H1+A1", "REF_structure"]:
             x = s2[(s2.generator == g) & (s2.predictor == p)].iloc[0]
             rows.append([GL[g], PL[p], f(x.rmse * 100, 2), f(x.mae * 100, 2), f(x.mse * 1e4), f(x.pearson * 100),
                          f(x.spearman * 100), f(x.ece * 100, 2)])
@@ -219,7 +271,7 @@ def appendix():
                          ci(x.mse_reduction, x.mse_reduction_lo, x.mse_reduction_hi, 1e4),
                          ci(x.pearson_gain, x.pearson_gain_lo, x.pearson_gain_hi, 100)])
     w(tab("A5 (contrasts). MAE reduction (points), MSE reduction ($\\times10^4$) and Pearson gain ($\\times100$).", "tab:A5c",
-          ["", "Comparison", "MAE reduction", "MSE reduction", "Pearson gain"], rows, align="llccc", mid=[7]))
+          ["", "Comparison", "MAE reduction", "MSE reduction", "Pearson gain"], rows, align="llccc", mid=[8]))
     rows = []
     for g in ("llama", "qwen"):
         for p in ["B2", "H2", "RCAP"]:
@@ -414,6 +466,7 @@ def run():
     for k, v in main_tables().items():
         (OUT / f"plan_{k}.tex").write_text(v + "\n")
     (OUT / "plan_appendix.tex").write_text(appendix() + "\n")
+    (OUT / "plan_incremental.tex").write_text(incremental() + "\n")
     print("ok")
 
 

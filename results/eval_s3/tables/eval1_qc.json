@@ -1,0 +1,40 @@
+[
+  {
+    "generator": "llama",
+    "rows": 115236,
+    "outcomes": 2304720,
+    "violations": 374220,
+    "pools": 22,
+    "tasks": 66,
+    "prompts": 30096,
+    "clipped_rows": {
+      "B1": 0,
+      "B2": 0,
+      "H1": 0,
+      "H2": 0,
+      "RCAP": 0,
+      "B1+H1": 28,
+      "B2+H1": 0,
+      "B2+A1": 0
+    }
+  },
+  {
+    "generator": "qwen",
+    "rows": 115236,
+    "outcomes": 2304720,
+    "violations": 234085,
+    "pools": 22,
+    "tasks": 66,
+    "prompts": 30096,
+    "clipped_rows": {
+      "B1": 246,
+      "B2": 264,
+      "H1": 225,
+      "H2": 225,
+      "RCAP": 81,
+      "B1+H1": 205,
+      "B2+H1": 221,
+      "B2+A1": 80
+    }
+  }
+]

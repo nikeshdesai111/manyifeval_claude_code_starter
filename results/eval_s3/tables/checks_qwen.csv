@@ -1,0 +1,15 @@
+generator,check,pass,detail
+qwen,TEST and S3 TRAIN prompts disjoint,True,36900 train prompts
+qwen,refits fitted under split S3,True,split-s3-2026-11-23
+qwen,"115,236 rows, n = 20",True,
+qwen,"predictions finite in (0,1)",True,
+qwen,TEST structure code reproduces stored TRAIN S1,True,max diff 0.00e+00
+qwen,NLL/AUROC B1 recomputed directly,True,nll 0.331021 vs 0.331021; auc 0.758116 vs 0.758116
+qwen,NLL/AUROC B2 recomputed directly,True,nll 0.298599 vs 0.298599; auc 0.800476 vs 0.800476
+qwen,NLL/AUROC H1 recomputed directly,True,nll 0.295879 vs 0.295879; auc 0.805990 vs 0.805990
+qwen,NLL/AUROC H2 recomputed directly,True,nll 0.288214 vs 0.288214; auc 0.817345 vs 0.817345
+qwen,NLL/AUROC RCAP recomputed directly,True,nll 0.274445 vs 0.274445; auc 0.831111 vs 0.831111
+qwen,NLL/AUROC B1+H1 recomputed directly,True,nll 0.302404 vs 0.302404; auc 0.801170 vs 0.801170
+qwen,NLL/AUROC B2+H1 recomputed directly,True,nll 0.288669 vs 0.288669; auc 0.816893 vs 0.816893
+qwen,NLL/AUROC B2+A1 recomputed directly,True,nll 0.274972 vs 0.274972; auc 0.830156 vs 0.830156
+qwen,Position Δ-MSE #2 equals explicit-weight sum,True,-4.446e-04 vs -4.446e-04; weights sum 1.000000

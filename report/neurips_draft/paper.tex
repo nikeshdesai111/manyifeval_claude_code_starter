@@ -90,9 +90,10 @@ representation?} We make three contributions:
 of ManyIFEval tasks, each with its own pool of six compatible rules in balanced subsets and orders; 66,996 prompts and
 1.34 million responses per generator, each checked rule by rule.
 \item \textbf{Matched comparisons of internal and external representations} (Section~\ref{sec:methods}). Every
-predictor uses the same rule-type heads, structural features, labels, penalty grid and selection rule. Four primary
-comparisons substitute one representation for another; three secondary ones add an internal block to a fixed text
-predictor.
+predictor uses the same rule-type heads, structural features, labels, penalty grid and selection rule. Four prespecified primary
+comparisons rank the representations: the hidden state, rule attention and a text predictor that also embeds the
+exact rule are compared pairwise, and the hidden state is compared with prompt text alone. Whether adding a block to a
+fixed predictor helps is examined in an appendix.
 \item \textbf{A two-part evaluation} (Section~\ref{sec:experiments}; preliminary out-of-fold results on the training
 groups in this version): accuracy of absolute risk, and, from strictly matched prompt pairs, whether each predictor forecasts the \emph{change} in risk caused by
 moving a rule, appending one, replacing a companion or changing the task.
@@ -275,10 +276,10 @@ H2 $=$ \blk{S}+\blk{H}+\blk{R}; the rule-conditioned attention probe, the attent
 
 \begin{table}[t]
 \centering\small
-\caption{Pre-specified comparisons, written comparator \cto{} candidate. Every difference is
+\caption{The four prespecified primary comparisons, written comparator \cto{} candidate. Every difference is
 metric(comparator) $-$ metric(candidate) for losses and the reverse for AUROC and Spearman, so \emph{positive favours
 the candidate}. Within a row both predictors share \blk{S}, the head, the labels, the penalty grid and the selection
-rule.}
+rule. Comparisons 5--8, which add a block to a fixed predictor, are defined in Appendix~\ref{app:incremental}.}
 \label{tab:predictors}
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{cllll}
@@ -289,17 +290,16 @@ rule.}
 2 & B2 \cto{} H2 & \blk{P} \cto{} \blk{H} & substitution & same, given the exact rule \\
 3 & B2 \cto{} A2 & \blk{P} \cto{} \blk{A} & substitution & rule attention vs prompt text \\
 4 & H2 \cto{} A2 & \blk{H} \cto{} \blk{A} & substitution & rule attention vs hidden state \\
-\midrule
-5 & B1 \cto{} B1+H & $+\blk{H}$ & addition & what \blk{H} adds to B1 \\
-6 & B2 \cto{} B2+H & $+\blk{H}$ & addition & what \blk{H} adds to B2 \\
-7 & B2 \cto{} B2+A & $+\blk{A}$ & addition & what \blk{A} adds to B2 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Comparisons.} Table~\ref{tab:predictors} lists the seven comparisons. The four substitutions (1, 2, 3, 4) are
-primary and ask which representation of the prompt is more useful to the same head. The three additions (5--7) are
-secondary and follow the logic of conditional probing \citep{hewitt2021conditional}: the baseline keeps its selected
+\paragraph{Comparisons.} Table~\ref{tab:predictors} lists the four comparisons that were prespecified as primary. They
+form a ranking: comparisons 2, 3 and 4 compare every pair of B2, H2 and A2, which share the structure and the
+exact-rule embedding and differ only in how the prompt is represented (text embedding, hidden state or attention);
+comparison 1 compares the hidden state with prompt text when no rule embedding is present. Appendix~\ref{app:incremental}
+asks a different question with comparisons 5--8: whether adding \blk{H} or \blk{A} to a fixed predictor (B1, B2 or
+B2+H) helps. These follow the logic of conditional probing \citep{hewitt2021conditional}: the baseline keeps its selected
 penalties and only the added block's penalty is tuned, with ``off'' as an option. We do not claim to estimate
 conditional $\mathcal{V}$-information, since our loss and regularisation differ. Fixing the head and grid fixes the probe
 family and tuning budget \citep{hewitt2019control}, but not effective capacity: the blocks differ in dimension and
@@ -314,7 +314,7 @@ is $\hat p=\sigma(\mathbf{w}^\top\mathbf{z}+b)$ on standardised blocks $\mathbf{
 +\lambda_S\lVert\mathbf{w}_S\rVert_2^2+\lambda_X\lVert\mathbf{w}_X\rVert_2^2+\lambda_R\lVert\mathbf{w}_R\rVert_2^2,
 \label{eq:obj1}
 \end{equation}
-where $\tau$ is the set of rows of one type and $X\in\{P,H,A\}$; a block added in comparisons 5--7 gets
+where $\tau$ is the set of rows of one type and $X\in\{P,H,A\}$; a block added in comparisons 5--8 gets
 its own penalty term of the same form. A type whose training rows contain too few
 violations is replaced, identically for every predictor, by its smoothed rate (this fires only for Qwen's ``title''
 rule). \textbf{Objective~2}: one head per predictor, a fractional logit \citep{papke1996fractional} on $\qhat$ with
@@ -427,13 +427,12 @@ Qwen; rule attention (comparison~3) gives 0.0116 [$-0.0039$, 0.0275] and 0.0186 
 indistinguishable (comparison~4, H2 \cto{} A2: 0.0037 [$-0.0104$, 0.0199] and 0.0000 [$-0.0129$, 0.0130]). These comparisons test predictive
 accuracy, not mechanism.
 
-\paragraph{Incremental information and breadth.} Added to B2, the hidden state (comparison~6) and attention
-(comparison~7) improve NLL for both generators (0.0163 and 0.0192 nats for Llama, 0.0186 and 0.0192 for Qwen; all intervals above
-zero), and comparison~5 matches comparison~1. AUROC agrees in direction: every candidate except in comparison~4 gains
-1.3--7.7 points. The breadth counts are point estimates, not per-type tests; the per-type heatmap (Appendix A3) and the
-fixed-versus-parameterised split (A3b) show that the gains of comparisons~1 and~5 come mostly from the ten parameterised
-types (comparison~1: Llama 0.100 vs 0.007 nats for the fixed types; Qwen 0.085 vs 0.008). Calibration (A1--A2) is similar across
-predictors (ECE 3.3--6.7 points).
+\paragraph{Breadth and calibration.} AUROC agrees in direction: comparisons~1--3 gain 1.3--7.7 points for both
+generators and comparison~4 is near zero (0.0 and 0.3). The breadth counts are point estimates, not per-type tests; the
+per-type heatmap (Appendix A3) and the fixed-versus-parameterised split (A3b) show that the gain of comparison~1 comes
+mostly from the ten parameterised types (Llama 0.100 vs 0.007 nats for the fixed types; Qwen 0.085 vs 0.008).
+Calibration (A1--A2) is similar across predictors (ECE 3.3--6.7 points). Whether adding a block to a fixed predictor
+helps (comparisons 5--8) is reported in Appendix~\ref{app:incremental}.
 
 \begin{table}[t]
 \centering\footnotesize
@@ -465,7 +464,7 @@ Comparison & RMSE red. (pp) & Spearman gain & RMSE red. (pp) & Spearman gain \\
 RMSE against B1 by 1.94 [0.84, 3.06] points for Llama and 0.76 [$-0.11$, 1.61] for Qwen. Against B2 the hidden state and
 attention reduce RMSE by 0.5--0.8 points, with intervals excluding zero only for Llama, while Spearman gains of 8--12
 points exclude zero for both generators, so the internal predictors rank prompts by violation burden better even where
-RMSE changes little. Comparison~4 is null, and the incremental comparisons~5--7 track~1--3. Averaging the Objective~1
+RMSE changes little. Comparison~4 is null (comparisons 5--8: Appendix~\ref{app:incremental}). Averaging the Objective~1
 H2 predictions over a prompt's rules is as accurate as the dedicated prompt-level head, and every learned predictor beats
 the training-fold mean (Appendix A5--A7).
 
@@ -839,8 +838,8 @@ curves; (A7) the training-mean and averaged-Objective-1 references. Evaluation~2
 all 20 position-pair strata (Pos-A), skill by $k$ (Pos-B), numerical effects and noise floors (Pos-C); append effects by
 retained slot and transition (K-A) and skill by transition (K-B); companion coverage and effects (C-A) and skill by $k$
 (C-B); task sensitivity by $k$ and family (D-A, D-B) and skill by $k$ (D-C); the signed panels moved out of Figures~\ref{fig:e2pos}--\ref{fig:e2task}: two 15-type $\times$ 4-$k$ first-to-last position
-heatmaps, two 15 $\times$ 15 target $\times$ companion heatmaps and the six-family task panel; secondary comparisons 5--7
-for every factor.
+heatmaps, two 15 $\times$ 15 target $\times$ companion heatmaps and the six-family task panel; comparisons 5--8
+for every factor (Appendix~\ref{app:incremental}).
 
 \section{Preliminary training-set results: provenance and planned appendix exhibits}
 \label{app:prelim}
@@ -1482,11 +1481,14 @@ before any test outcome was examined:
 \item \textbf{14 Nov 2026:} first pre-specification frozen (23 configurations, 15 test groups).
 \item \textbf{20 Nov:} the current analysis (Section~\ref{sec:methods}) adopted in response to the review; training-only
 maximum-attention extraction authorised; recipe hashed before selection (22 Nov).
-\item \textbf{22 Nov:} comparisons 1, 2, 3 and 4 designated primary and 5--7 secondary.
+\item \textbf{22 Nov:} comparisons 1, 2, 3 and 4 designated primary and 5--7 secondary (numbering as in this version).
 \item \textbf{23 Nov:} test split enlarged from 15 to 22 groups to guarantee pair coverage; training-side features,
 selection and refits rerun on the 50 training groups; full-subset test expansion generated; evaluation and reporting
 plan (Section~\ref{sec:experiments}, Appendices~\ref{app:eval2}--\ref{app:planned}) written.
 \item \textbf{24 Nov:} test scoring for Objective~1 authorised.
+\item \textbf{24 Nov:} at the project owner's request, the comparisons were renumbered (hidden state vs attention became 4,
+written H2 \cto{} A2), the main text was restricted to the four primary comparisons, and comparison 8 (B2+H \cto{} B2+H+A)
+was added; it was fitted on the training groups with the incremental recipe before any test scoring.
 \end{itemize}
 The earlier plan, its frozen analysis file and all earlier results are preserved unchanged.
 
