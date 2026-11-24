@@ -5,9 +5,11 @@ Unblinding of the S3 TEST set for Objective 1 was requested by the project owner
 """
 from __future__ import annotations
 
+import os
+
 from ..config import DATA_DIR, ROOT
 
-EVAL_DIR = ROOT / "results" / "eval_s3"
+EVAL_DIR = ROOT / "results" / "eval_s3" / os.environ.get("MIFE_EVAL_SUB", "")  # sub-run (e.g. llama_only)
 EXP_DIR = DATA_DIR / "evaluation_expansion_s3"
 TEST_FEAT = DATA_DIR / "probing_features_v2" / "test_s3"
 EXP_RUN = "expansion_s3_20261123"

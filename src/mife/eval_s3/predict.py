@@ -33,8 +33,8 @@ def test_frames():
     return P, PR
 
 
-def structure(model: str, P, PR) -> np.ndarray:
-    tok = pd.read_parquet(EXP_DIR / f"tokenized_{model}.parquet",
+def structure(model: str, P, PR, tok_path=None) -> np.ndarray:
+    tok = pd.read_parquet(tok_path or EXP_DIR / f"tokenized_{model}.parquet",
                           columns=["prompt_id", "n_input_tokens", "rule_token_spans"]).set_index("prompt_id").loc[P.prompt_id]
     n_tok = tok["n_input_tokens"].values.astype(np.float64)
     npm = len(P)

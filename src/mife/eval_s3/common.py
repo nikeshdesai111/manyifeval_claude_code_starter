@@ -6,7 +6,7 @@ import pandas as pd
 from ..config import ROOT
 from .matches import FIXED_TYPES
 
-GENS = ("llama", "qwen")
+GENS = tuple(__import__("os").environ.get("MIFE_EVAL_GENS", "llama,qwen").split(","))
 GEN_LABEL = {"llama": "Llama-3.1-8B-Instruct", "qwen": "Qwen3-8B (non-thinking)"}
 # (id, comparator, candidate, label, primary)
 COMPS = [

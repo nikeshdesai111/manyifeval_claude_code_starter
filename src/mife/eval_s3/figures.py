@@ -99,7 +99,8 @@ def e1_heatmap():
     types = _types(d, "rule_type")
     cols = [c[0] for c in COMPS]
     vmax = np.nanquantile(np.abs(d.nll_reduction) * 100, 0.97)
-    fig, axes = plt.subplots(1, 2, figsize=(13, 6.2), constrained_layout=True)
+    fig, axes = plt.subplots(1, len(GENS), figsize=(6.5 * len(GENS), 6.2), constrained_layout=True, squeeze=False)
+    axes = axes[0]
     for ax, gen in zip(axes, GENS):
         s = d[d.generator == gen].pivot(index="rule_type", columns="comparison", values="nll_reduction").reindex(types)[cols]
         heat(ax, 100 * s.values, types, cols, f"{'AB'[GENS.index(gen)]}. {GEN_LABEL[gen]}", vmax,
@@ -112,7 +113,8 @@ def e1_heatmap():
 def e1_calibration():
     c = r("eval1_calibration")
     keys = ["B1", "B2", "H1", "H2", "RCAP"]
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.8), constrained_layout=True, sharey=True)
+    fig, axes = plt.subplots(1, len(GENS), figsize=(5.5 * len(GENS), 4.8), constrained_layout=True, sharey=True, squeeze=False)
+    axes = axes[0]
     for ax, gen in zip(axes, GENS):
         ax.plot([0, 1], [0, 1], color=BASE, lw=1, ls="--")
         for p, colr in zip(keys, SERIES):
@@ -123,7 +125,7 @@ def e1_calibration():
         ax.set_xlabel("mean predicted violation probability (bin)")
         ax.set_title(f"{'AB'[GENS.index(gen)]}. {GEN_LABEL[gen]}", loc="left")
     axes[0].set_ylabel("observed violation rate (bin)")
-    axes[1].legend(loc="upper left", fontsize=8)
+    axes[-1].legend(loc="upper left", fontsize=8)
     return _save(fig, "e1_A2_reliability")
 
 
@@ -132,8 +134,8 @@ def e2_pos():
     a = r("eval2_position_rms_by_type")
     b = r("eval2_position_signed_type_k")
     types = _types(a)
-    fig = plt.figure(figsize=(15, 6.2), constrained_layout=True)
-    gs = fig.add_gridspec(1, 3, width_ratios=[1.15, 1, 1])
+    fig = plt.figure(figsize=(5 + 5 * len(GENS), 6.2), constrained_layout=True)
+    gs = fig.add_gridspec(1, 1 + len(GENS), width_ratios=[1.15] + [1] * len(GENS))
     ax = fig.add_subplot(gs[0])
     dot_types(ax, a, "rms_pp", "rms_lo", "rms_hi", types, "noise-adjusted RMS change (pp)",
               "A. Position sensitivity, all position pairs", zero=False)
@@ -151,7 +153,7 @@ def e2_pos():
 def e2_pos_curves():
     s = r("eval2_position_slot_risk")
     p = r("eval2_position_pair_strata")
-    fig, axes = plt.subplots(2, 4, figsize=(14, 6.4), constrained_layout=True, sharey=True)
+    fig, axes = plt.subplots(len(GENS), 4, figsize=(14, 3.2 * len(GENS)), constrained_layout=True, sharey=True, squeeze=False)
     for i, gen in enumerate(GENS):
         for j, k in enumerate([2, 3, 4, 5]):
             ax = axes[i, j]
@@ -166,7 +168,7 @@ def e2_pos_curves():
             ax.set_title(f"{GEN_LABEL[gen].split(' ')[0]} · k={k}", loc="left")
             if j == 0:
                 ax.set_ylabel("target violation risk (%)")
-            if i == 1:
+            if i == len(GENS) - 1:
                 ax.set_xlabel("target slot")
     return _save(fig, "e2_posA_slot_curves")
 
@@ -193,8 +195,8 @@ def e2_companion():
     a = r("eval2_companion_rms_by_type")
     m = r("eval2_companion_signed_matrix")
     types = _types(a)
-    fig = plt.figure(figsize=(19, 7.2), constrained_layout=True)
-    gs = fig.add_gridspec(1, 3, width_ratios=[0.9, 1.15, 1.15])
+    fig = plt.figure(figsize=(5.5 + 6.8 * len(GENS), 7.2), constrained_layout=True)
+    gs = fig.add_gridspec(1, 1 + len(GENS), width_ratios=[0.9] + [1.15] * len(GENS))
     ax = fig.add_subplot(gs[0])
     dot_types(ax, a, "rms_pp", "rms_lo", "rms_hi", types, "noise-adjusted RMS change (pp)",
               "A. Sensitivity to companion identity", zero=False)
@@ -233,7 +235,7 @@ def e2_task():
         s = f[f.generator == gen].set_index("family").reindex(fams)
         ax.errorbar(s.effect_pp, y + (-0.15 if k == 0 else 0.15), xerr=[s.effect_pp - s.lo, s.hi - s.effect_pp], fmt="o",
                     ms=5, color=COL[gen], elinewidth=1.4, label=GEN_LABEL[gen])
-        if k == 1:
+        if k == len(GENS) - 1:
             for yy, (fam, rr) in zip(y, s.iterrows()):
                 ax.text(1.01, yy, f"{int(rr.n_pools)} pools", transform=ax.get_yaxis_transform(), fontsize=7, color=MUTED,
                         va="center")
@@ -251,7 +253,8 @@ def e2_task_family_heat():
     types = _types(m)
     fams = sorted(m.family.unique())
     vmax = np.nanquantile(np.abs(m.effect_pp), 0.97)
-    fig, axes = plt.subplots(1, 2, figsize=(12, 6), constrained_layout=True)
+    fig, axes = plt.subplots(1, len(GENS), figsize=(6 * len(GENS), 6), constrained_layout=True, squeeze=False)
+    axes = axes[0]
     for k, (ax, gen) in enumerate(zip(axes, GENS)):
         M = m[m.generator == gen].pivot(index="type_id", columns="family", values="effect_pp").reindex(index=types, columns=fams)
         heat(ax, M.values, types, fams, f"{'AB'[k]}. {GEN_LABEL[gen]}", vmax, "pp (family task − other two)", fig,
