@@ -1,6 +1,7 @@
-"""Stage 3: build the pairwise compatibility matrix and summary from the final run + written proofs.
+"""Stage 3: build the pairwise compatibility matrix and summary from the version results + written proofs.
 
-Inputs: data/stage3/final.jsonl (one builder version for every non-proven pair),
+Inputs: data/stage3/versions.jsonl (the version rule of 2026-11-24 applied to the final run, one
+builder version for every non-proven pair; see scripts/stage3_versions.py),
 src/mife_ifb/stage3_proofs.py, data/stage3/six_pilot.jsonl (if present), data/stage3/timing.jsonl.
 Outputs: freeze/stage3_pairs.json (per-pair status and success share) and
 freeze/stage3_summary.json (counts, lists, per-type tables, pilot acceptance).
@@ -17,6 +18,7 @@ sys.path.insert(0, str(IFB / "src"))
 sys.path.insert(0, str(IFB / "scripts"))
 from mife_ifb import inventory, stage3_proofs as P  # noqa: E402
 import stage3_audit as A  # noqa: E402
+import stage3_versions as V  # noqa: E402
 
 D = IFB / "data" / "stage3"
 # Pairs whose 50 draws did not finish: the run for this pair went for more than an hour of builder
@@ -31,17 +33,20 @@ def load(name):
 
 
 def main():
-    final = {tuple(r["pair"]): r for r in load("final.jsonl")}
+    final = {tuple(r["pair"]): r for r in load("versions.jsonl")}
     full = {tuple(r["pair"]): r for r in load("full.jsonl")}
+    old = {tuple(r["pair"]): r for r in load("final.jsonl")}
     pairs = A.all_pairs()
     proven, hand, loop = P.proven(), P.hand_witnesses(), P.loophole_only()
+    cur = hashlib.sha256((IFB / "src" / "mife_ifb" / "witness.py").read_bytes()).hexdigest()[:12]
+    for p, r in final.items():  # thesis pairs: current builder; the rest: final-run builder (see stage3_versions.py)
+        assert r["builder_sha"] == (cur if set(p) & V.RERUN_TYPES else V.FINAL_SHA), (p, r["builder_sha"])
     shas = Counter(r["builder_sha"] for r in final.values())
-    assert len(shas) == 1, f"final run mixes builder versions: {shas}"
     missing = [p for p in pairs if p not in final and p not in proven and p not in TIMED_OUT]
     assert not missing, f"pairs with no result: {missing[:5]}"
     # a proof must never meet a witness in any run
     for p in proven:
-        for run in (final, full):
+        for run in (final, full, old):
             assert not (p in run and run[p]["compatible"]), f"proven pair {p} has a witness"
 
     rows = []
@@ -55,14 +60,23 @@ def main():
                          "top_reasons": [["50 draws did not finish within an hour", 0]]})
             continue
         r = final[p]
-        row = {"pair": list(p), "success": r["success"], "draws": r["draws"], "share": r["share"],
-               "seconds": r["seconds"]}
+        row = {"pair": list(p), "category": r["category"], "success": r["success"], "versions": r["versions"],
+               "share": r["share"], "seconds": r["seconds"]}
         if r["compatible"]:
             row["status"] = "compatible"
         else:
             row["status"] = "unsupported_by_builder"
-            row["why"] = ("hand_witness" if p in hand else "loophole_only" if p in loop else "no_witness_no_proof")
-            row["top_reasons"] = r["top_reasons"][:3]
+            row["why"] = ("hand_witness" if p in hand else "loophole_only" if p in loop
+                          else "fixed_seed" if r["category"] == "fixed" and old.get(p, {}).get("compatible")
+                          else "no_witness_no_proof")
+            if row["why"] == "fixed_seed":
+                row["note"] = (f"{old[p]['success']} of 50 seeds gave a witness in the final run; the single version "
+                               "(seed 0, 24 attempts) did not")
+            agg = Counter()
+            for v in r["version_records"]:
+                for k, c in v["reasons"]:
+                    agg[k] += c
+            row["top_reasons"] = [list(x) for x in agg.most_common(3)]
             if p in loop:
                 row["note"] = loop[p]
         rows.append(row)
@@ -83,7 +97,7 @@ def main():
     ov = defaultdict(lambda: [0, 0])
     for p, r in final.items():
         if "ratio:overlap" in p:
-            for d in r["draw_records"]:
+            for d in r["version_records"]:
                 ov[d["task_index"]][0] += d["ok"]
                 ov[d["task_index"]][1] += 1
     ov_tasks = {"tasks_tried": len(ov), "tasks_with_any_witness": sum(1 for a, b in ov.values() if a),
@@ -115,21 +129,28 @@ def main():
 
     lists = {s: sorted([r["pair"] for r in rows if r["status"] == s]) for s in ("proven_conflict", "unsupported_by_builder")}
     summary = {
-        "builder_sha": next(iter(shas)),
+        "builder_sha": cur, "builder_sha_by_pairs": dict(shas),
         "witness_py_sha256": hashlib.sha256((IFB / "src" / "mife_ifb" / "witness.py").read_bytes()).hexdigest(),
         "seed": A.SEED, "draws": A.DRAWS, "attempts": A.ATTEMPTS,
+        "version_rule": "24 attempts per version; 1 version if both rules are fixed; every parameter combination "
+                        "if a pair has fewer than 50; otherwise 50 parameter draws (Nicky, 2026-11-24)",
+        "pairs_by_category": dict(Counter(V.category(p) for p in pairs)),
+        "versions_run": sum(r["versions"] for r in final.values()),
+        "new_versions": sum(r["new_versions"] for r in final.values()),
         "pairs": len(pairs), "counts": dict(st),
         "proven_by_basis": dict(Counter(r["basis"] for r in rows if r["status"] == "proven_conflict")),
         "unsupported_by_why": dict(Counter(r["why"] for r in rows if r["status"] == "unsupported_by_builder")),
         "compatible_share": {"median": median(shares), "min": min(shares),
                              "below_0.1": sum(s < 0.1 for s in shares), "below_0.5": sum(s < 0.5 for s in shares),
-                             "all_50": sum(s == 1 for s in shares)},
+                             "all_versions": sum(s == 1 for s in shares)},
         "final_run_seconds": round(sum(r["seconds"] for r in final.values())),
         "overlap_tasks": ov_tasks,
         "proven_conflicts": lists["proven_conflict"],
-        "unsupported_by_builder": [{"pair": r["pair"], "why": r["why"], "top_reasons": r["top_reasons"]}
+        "unsupported_by_builder": [{"pair": r["pair"], "why": r["why"], "top_reasons": r["top_reasons"],
+                                    **({"note": r["note"]} if "note" in r else {})}
                                    for r in rows if r["status"] == "unsupported_by_builder"],
-        "low_share_pairs": sorted(([r["pair"], r["success"]] for r in comp if r["share"] < 0.1), key=lambda x: x[1]),
+        "low_share_pairs": sorted(([r["pair"], r["success"], r["versions"]] for r in comp if r["share"] < 0.1),
+                                  key=lambda x: x[1] / x[2]),
         "per_type": per_type,
         "six_rule_pilot": pilot,
     }

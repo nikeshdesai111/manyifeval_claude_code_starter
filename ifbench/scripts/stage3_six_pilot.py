@@ -24,9 +24,9 @@ SEED = 20261125
 
 
 def blocked_pairs():
-    """Proven conflicts plus every pair with no witness in the final pairwise run."""
+    """Proven conflicts plus every pair with no witness under the version rule (versions.jsonl)."""
     from mife_ifb import stage3_proofs
-    rows = [json.loads(l) for l in (IFB / "data" / "stage3" / "final.jsonl").open()]
+    rows = [json.loads(l) for l in (IFB / "data" / "stage3" / "versions.jsonl").open()]
     from stage3_summary import TIMED_OUT
     covered = {tuple(r["pair"]) for r in rows} | set(stage3_proofs.proven()) | TIMED_OUT
     assert covered == set(A.all_pairs()), "final run is incomplete"

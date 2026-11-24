@@ -3,9 +3,9 @@
 This document is the single reference for how the IFBench witness builder works and why it was built that way. It covers the rule study the builder relies on, how it relates to the ManyIFEval feasibility check, each step of the construction, the tests, every fix made during the stage-3 audit together with the failure that caused it, and worked examples. The paper can cite it as the place where this reasoning is recorded.
 
 - Code: `ifbench/src/mife_ifb/witness.py` (builder), `lexicon.py` (word inventory), `plain_meaning.py` (frozen plain-meaning checks), `source.py` (the only route to IFBench code), `stage3_proofs.py` (written proofs).
-- State described: branch `claude/project-thread-we2kwj`, commit `c0c2e7a` (2026-11-23). No experiment code or result was changed while writing this document.
+- State described: branch `claude/project-thread-we2kwj`. First written at commit `c0c2e7a` (2026-11-23) without changing code or results; updated on 2026-11-24 for the version rule (Section 7.1) and the thesis fix (fix 17), both approved by Nicky.
 - Companion reports: `docs/stage1_report.md`, `docs/plain_meaning_checks.md`, `docs/stage2_report.md`, `docs/stage2_builder_limits.md`, `docs/stage3_report.md`.
-- Section 10 lists two findings made while writing this document. They are recorded there and have not been acted on.
+- Section 10 lists two findings made while writing this document. The first has since been fixed (fix 17); the second needs no action.
 
 ---
 
@@ -22,7 +22,7 @@ If a witness exists for all six rules, then every subset of the pool is satisfia
 
 There are two levels of feasibility, both taken from ManyIFEval:
 
-- **D1, type compatibility.** Can two rule *types* appear in the same pool at all? Stage 3 settled this with a pairwise audit: 50 parameter draws per pair, up to 24 builder attempts per draw. A pair is compatible if any draw yields a witness.
+- **D1, type compatibility.** Can two rule *types* appear in the same pool at all? Stage 3 settled this with a pairwise audit. Each *version* of a pair (one setting of its parameters) gets exactly 24 builder attempts: one version when both rules are fixed, every parameter combination when there are fewer than 50, and 50 parameter draws otherwise (Section 7.1). A pair is compatible if any version yields a witness.
 - **D3, pool feasibility.** Is this particular six-rule pool, with its exact sampled parameters, satisfiable? In stage 5 the sampler will ask the builder for one joint witness for the whole pool and redraw parameters or types when none is found.
 
 Three asymmetries shape everything below:
@@ -93,7 +93,7 @@ These library behaviours are easy to miss. Each one changed how the builder writ
 | NLTK Punkt (`sent_tokenize`) only ends a sentence at `.`, `?` or `!` **followed by whitespace**. "Apples.Pears.Plums" is one sentence. | With `format:no_whitespace`, the text is always one sentence. This is the basis of 15 of the proofs. The builder joins tokens with commas. |
 | A text-final `?!` is split by Punkt into two sentences, `?` and `!`. | The `?!` sentence needed by `count:punctuation` is never placed last, unless the extra `!` sentence is wanted (`ratio:sentence_type` + punctuation adds the `?!` and `!` sentences at the end on purpose). |
 | Punkt does **not** split at `‽` inside a sentence, and `count:punctuation` accepts `‽` as the interrobang. | When exactly three sentences are required (`ratio:sentence_words`), the interrobang goes inside a sentence as `‽`, so no extra sentence is created. |
-| `"<i>x</i>."` ends a sentence for Punkt, but `"<i>x.</i> Y"` does not split before Y. | The thesis's terminal mark goes after `</i>`, so the thesis is a sentence of its own. See also Section 10.1. |
+| `"<i>x</i>."` ends a sentence for Punkt, but `"<i>x.</i> Y"` does not split before Y. | The thesis's terminal mark goes after `</i>`, so the thesis is a sentence of its own, except under `words:last_first`, where it stays inside the tag (fix 17, Section 10.1). |
 | `nltk.word_tokenize` splits `<` and `>` off, leaving the tag letters `i` and `em` as lower-case tokens. | `format:title_case` with `format:thesis` is impossible (proof). |
 | Most word-shape verifiers (`words:consonants`, `words:prime_lengths`, `words:odd_even_syllables`, `words:alphabet`) read **every whitespace token as a word**, including a lone emoji, a list marker or a bullet `*`. | Under shape rules, emoji and markers are attached to a word with no space ("tight" markers, Section 5.3). |
 | `syllapy` ignores emoji, and an ordinal such as "3rd" counts as 0 syllables (even parity). | An emoji attached to a word does not change its syllable parity. Ordinals count as even-parity words. |
@@ -132,7 +132,7 @@ Nicky decided on 2026-11-22: "Do not use an LLM witness generator for now… Use
 1. **A verdict is not a proof.** An LLM judge saying "these rules are compatible" can be wrong. The project's labels come from deterministic verifiers, so feasibility has to be decided by the same verifiers on a concrete text. An LLM judge was considered when the plan was written and rejected.
 2. **Same method as ManyIFEval.** The ManyIFEval manifest used a programmatic witness. Keeping that method means the two datasets' feasibility guarantees mean the same thing.
 3. **Reproducibility.** Every witness is a pure function of the rules, the parameters, the task text and the seed. An LLM adds sampling noise and a model version to pin.
-4. **Cost and scale.** Stage 3 alone ran about 84,000 pair draws across the full and final runs, plus 300 six-rule pools. Most builder calls take under a second on a CPU (median 0.1 s per pair over 50 draws).
+4. **Cost and scale.** Stage 3 alone ran about 84,000 pair draws across the full and final runs, plus 600 six-rule pools. Most builder calls take under a second on a CPU (median 0.1 s per pair over 50 draws).
 
 The alternative left open in the plan was that an LLM might **draft** candidate texts for the hard cases, with the official verifiers and plain-meaning checks still deciding. This is deferred, not adopted. Nothing in the current builder uses a model.
 
@@ -245,7 +245,7 @@ The word stream becomes text in two parts.
 - **Emoji.** An emoji goes after each sentence body, before its terminal mark. Under shape rules it is attached to the last word with no space.
 - **Layout prefixes.**
   - template labels;
-  - `<i>…</i>` around the first sentence, with its terminal mark after `</i>`;
+  - `<i>…</i>` around the first sentence, with its terminal mark after `</i>` (inside the tag when `words:last_first` is present);
   - list separator, `*` or `-`, or bullet `*`. These are attached with no space under shape rules or one-word-per-line (tight markers).
 
 **`finalize`** applies the whole-text forms after `compose`:
@@ -329,13 +329,20 @@ Stage 2 (commit `e344e7f`, 2026-11-22) tested what the builder can construct. It
 
 ### 7.1 How the audit ran
 
-All runs used 4 CPU workers. The seed is `20261124`. Each pair gets 50 parameter draws, and each draw gets up to 24 attempts. `ratio:overlap` pairs use 222 provisional base tasks: released IFBench prompts with the rule text removed, using verbatim rows only and texts only. Each draw uses a different task.
+All runs used 4 CPU workers. The seed is `20261124`. The timing, full and final runs gave every pair 50 parameter draws with up to 24 attempts each; the version rule below then replaced this for the reported result. `ratio:overlap` pairs use 222 provisional base tasks: released IFBench prompts with the rule text removed, using verbatim rows only and texts only. Each draw uses a different task.
 
 | run | pairs | pairs with no witness | builder time | role |
 |---|---|---|---|---|
 | timing | 50 (25 hypothesised conflicts + 25 random) | 18 | 0.09 h | Time per pair and the order of runs |
 | full | 860 of 861 | 100 | 6.2 h | Find builder gaps. The builder changed during this run, so the results come from mixed builder versions. |
-| final | 818 (all pairs except the proven ones) | 32 | 7.9 h | **The reported result.** One builder version: `witness.py` sha256 `1ae17eb3…`, as recorded in `freeze/stage3_summary.json`. One pair (`ratio:overlap` + `words:keywords_specific_position`) did not finish its 50 draws in over an hour and counts as unsupported. |
+| final | 818 (all pairs except the proven ones) | 32 | 7.9 h | One builder version: `witness.py` sha256 `1ae17eb3…`, as recorded in `freeze/stage3_summary.json`. One pair (`ratio:overlap` + `words:keywords_specific_position`) did not finish its 50 draws in over an hour and counts as unsupported. |
+| versions | 816 (all pairs except the proven and the timed-out one) | 33 | replayed, plus 125 new combinations and 524 thesis-pair versions rerun (under a minute) | **The reported result**: the version rule applied to the final run (below). Thesis pairs use the builder with fix 17; the rest are replayed from the final run's builder, which differs only in the thesis branch. |
+
+**The version rule (Nicky, 2026-11-24).** Fifty draws only make sense when a pair has parameters to vary. The rule now is: every version of a pair gets exactly 24 attempts; a pair whose two rules are both fixed has **one** version; a pair with at least one parameterised rule has **every parameter combination** if there are fewer than 50 (this covers `format:list` with 4 separators, `count:conjunctions`, `words:repeats` and `sentence:increment` with 5 values, `count:numbers` with 6 and `count:pronouns` with 25, and the 10 pairs of two of these), and **50 parameter draws** otherwise. That gives 351 fixed pairs, 172 all-combination pairs and 338 draw pairs (`tests/test_stage3_versions.py` checks the value lists against the released generators).
+
+Because the builder is deterministic, the rule was applied by replay (`scripts/stage3_versions.py`): a fixed pair's version is the final run's draw 0 (seed 0); an all-combination pair takes, for each combination, the first final-run draw that used it; the 125 combinations the final run never drew were run with seeds 50 + their index. For each compatible pair the first passing version was rebuilt to confirm the replay and store its text. Four fixed pairs that had witnesses on other seeds fail on the single version and are now unsupported (reason "fixed_seed"): `words:alphabet` + `words:vowel` (2 of 50 seeds in the final run), `format:no_whitespace` + `words:prime_lengths` (3 of 50), `format:thesis` + `words:odd_even_syllables` (29 of 50) and `format:parentheses` + `words:start_verb` (40 of 50). Nicky chose exactly 24 attempts for every version knowing this. No all-combination pair changed verdict.
+
+Fix 17 (the thesis terminal, approved the same day) changes `witness.py` only inside the thesis layout branch, so it can only alter texts for pairs that contain `format:thesis`. All 39 non-proven thesis pairs were therefore rerun with the corrected builder (524 versions, same parameters, seeds and task texts), and `stage3_summary.py` checks that thesis pairs carry the new builder hash and every other pair the final-run hash. Only `format:thesis` + `words:last_first` changed (now compatible).
 
 **Why a full final run instead of a partial rerun.** The first plan was to rerun about 160 pairs: those touching the four types changed first, plus two crash pairs. After about eight more fixes, a partial rerun would have mixed builder versions in one matrix. So every non-proven pair was rerun on the final builder. Nicky asked about this on 2026-11-23 and was told so.
 
@@ -361,8 +368,9 @@ The "first" column is the failure reason recorded in the full run (from `data/st
 | 14 | "search budget exhausted": `alphabet` + `paragraph_last_first` | A line's first and last words must be the same, but the letters advance by one per word, so this is only possible with 26k + 1 words per line. | Use 27-word lines when both rules are present. | 0 → 50 |
 | 15 | "verify words:vowel": `paragraph_last_first` + `vowel` | `paragraph_last_first` put each sentence on its own line, but `vowel` needs exactly one line. | When `vowel` is present, keep one line (then the whole text is one paragraph, whose first word equals its last). | 0 → 50 |
 | 16 | "official verifier fails" on `words_position`: `keywords_specific_position` + `words_position` | When the keyword sentence is the last sentence and m = L − 1, the two pins took the same slot. | If the keyword sentence is last, its minimum length is m + 2. Collisions between different pinned words are infeasible. When the same word is pinned twice, the second pin is skipped. | 0 → 50 |
+| 17 | 0 of 50 in the final run (50 of 50 in the full run): `thesis` + `last_first` (found while writing this document, Section 10.1) | Fix 6 put the terminal after `</i>`, so `words:last_first` read the thesis's last word as "glass</i". | Place the terminal per plan: inside the tag when `words:last_first` is present, after it otherwise. Approved by Nicky 2026-11-24; all thesis pairs rerun. | 0 → 1 of 1 (fixed pair, one version) |
 
-Fixes 1–2 removed crashes. Fixes 3–16 were capability fixes. Each was first checked at 10 draws on the affected pairs, and then measured in the final run.
+Fixes 1–2 removed crashes. Fixes 3–17 were capability fixes. Each was first checked at 10 draws on the affected pairs. Fixes 1–16 were then measured in the final run, and fix 17 in the version run.
 
 ### 7.3 What could not be fixed, and why
 
@@ -373,10 +381,11 @@ Fixes 1–2 removed crashes. Fixes 3–16 were capability fixes. Each was first 
   The proofs use the verifier facts in Section 3.2. Three of those facts are tested mechanically (`tests/test_stage3_proofs.py`), so a library change that broke an argument would fail the tests: Punkt needs whitespace, the template labels contain five vowels, and the italic tag letters are tokens. A fourth test checks that only "and" has a consonant cluster among the conjunctions.
 
   No proven pair produced a witness in the full or final run. `stage3_summary.py` asserts this.
-- **31 pairs are unsupported by the builder.** They break down as follows:
+- **34 pairs are unsupported by the builder.** They break down as follows:
   - **8 are layout combinations** (for example list + thesis, template + sub-bullets). The builder writes one layout at a time. A hand-written witness for each passes every check, so they are feasible and are listed as builder gaps.
   - **5 are loophole-only**: only texts that glue words together pass. Examples: "shirt-shirt" is two keyword matches but one word for `words:repeats`, and a template label glued to the previous word ("grow.Future").
-  - **17 have no witness and no proof.**
+  - **4 are fixed pairs whose single version failed** (Section 7.1); each had witnesses on other seeds.
+  - **16 have no witness and no proof.**
   - **1 timed out.**
 
 ---
@@ -389,11 +398,11 @@ The pilot is an estimate of how often stage 5 will have to redraw. It does not t
 - Fresh default parameters for each pool.
 - One joint witness per pool, with up to 24 attempts.
 
-**Result: 137 of 300 pools (46%) accepted.**
+**Result (rerun on 2026-11-24 with the version-rule blocked pairs and the thesis fix): 144 of 300 pools (48%) accepted.** The first pilot, before those changes, accepted 137 (46%).
 
-- Median builder time is 0.02 s per pool; the slowest pool took 516 s.
-- Witnesses have a median length of 54 words; the longest has 1,600.
-- Pools containing `ratio:overlap` passed 1 time in 63. The other types ranged from 14% (`ratio:sentence_words`) to 66% acceptance. Per-type acceptance is confounded by the other five types in each pool.
+- Median builder time is 0.02 s per pool; the slowest pool took 572 s.
+- Witnesses have a median length of 52 words; the longest has 1,600.
+- Pools containing `ratio:overlap` passed 1 time in 63. The other types ranged from 14% (`ratio:sentence_words`) to 69% (`format:no_whitespace`) acceptance. Per-type acceptance is confounded by the other five types in each pool.
 
 ---
 
@@ -501,19 +510,17 @@ This passes both verifiers and both plain checks (tested). The builder does not 
 
 ---
 
-## 10. Findings made while writing this document (not acted on)
+## 10. Findings made while writing this document
 
-These were found by re-checking the stage-3 data for this document. Following the instruction to change no code or results, they are recorded here and raised with Nicky.
+These were found by re-checking the stage-3 data for this document and raised with Nicky. 10.1 was fixed on 2026-11-24 with Nicky's approval; 10.2 needs no action.
 
-### 10.1 `format:thesis` + `words:last_first` is compatible: the stage-3 matrix lists it as unsupported
+### 10.1 `format:thesis` + `words:last_first` was wrongly listed as unsupported (fixed)
 
 - The full run found witnesses on **50 of 50** draws for this pair. The final run found **0 of 50**. This is the only pair that a fix made worse by more than 10 draws.
 - **Cause:** fix 6 moved the thesis's terminal mark outside the tag. `words:last_first` strips trailing punctuation from the thesis sentence `"<i>… glass</i>."`, which leaves `"glass</i"`. That no longer equals the next sentence's first word "Glass". With the old placement `"… glass.</i> Glass …"`, Punkt did not split at the tag, and the chain held.
 - **Check:** the witness stored from the full run still passes every current official verifier and plain check. Re-verified on 2026-11-24 with `witness.verify`.
 - So the pair is compatible, and the reported classification ("unsupported, no witness and no proof") is wrong for this one pair. It was also blocked in the six-rule pilot.
-- **Suggested correction, awaiting a decision:**
-  1. Count a pair as compatible if a stored witness from any run passes the current checks.
-  2. Choose the thesis terminal placement per plan: inside the tag when `last_first` is present, outside when a sentence-count rule needs the thesis to be its own sentence.
+- **Correction (Nicky approved, 2026-11-24): fix 17.** The thesis terminal is placed per plan: inside the tag when `words:last_first` is present, after the tag otherwise. All 39 non-proven pairs with `format:thesis` were rerun with the corrected builder under the version rule (524 versions, same seeds and task texts). Only `format:thesis` + `words:last_first` changed: its single version now has a witness, so it is compatible. No other thesis version changed its result.
 
 ### 10.2 The `!?!?` list separator is read by Punkt as sentences
 

@@ -1,14 +1,26 @@
 {
- "builder_sha": "1ae17eb3ee01",
- "witness_py_sha256": "1ae17eb3ee014335bae8b6d87e4cf5bd8b6d606e54e1bb42699d82b47e08093e",
+ "builder_sha": "f9b3b1f2c1b6",
+ "builder_sha_by_pairs": {
+  "1ae17eb3ee01": 777,
+  "f9b3b1f2c1b6": 39
+ },
+ "witness_py_sha256": "f9b3b1f2c1b641b04b0bd6c905bf97b50781009e5c79d777648c237dc1f45801",
  "seed": 20261124,
  "draws": 50,
  "attempts": 24,
+ "version_rule": "24 attempts per version; 1 version if both rules are fixed; every parameter combination if a pair has fewer than 50; otherwise 50 parameter draws (Nicky, 2026-11-24)",
+ "pairs_by_category": {
+  "draws": 338,
+  "fixed": 351,
+  "all_combinations": 172
+ },
+ "versions_run": 18488,
+ "new_versions": 645,
  "pairs": 861,
  "counts": {
-  "compatible": 786,
+  "compatible": 783,
   "proven_conflict": 44,
-  "unsupported_by_builder": 31
+  "unsupported_by_builder": 34
  },
  "proven_by_basis": {
   "official": 18,
@@ -16,18 +28,19 @@
  },
  "unsupported_by_why": {
   "timed_out": 1,
+  "fixed_seed": 4,
   "loophole_only": 5,
-  "no_witness_no_proof": 17,
+  "no_witness_no_proof": 16,
   "hand_witness": 8
  },
  "compatible_share": {
   "median": 1.0,
   "min": 0.02,
-  "below_0.1": 12,
-  "below_0.5": 37,
-  "all_50": 681
+  "below_0.1": 10,
+  "below_0.5": 33,
+  "all_versions": 689
  },
- "final_run_seconds": 28509,
+ "final_run_seconds": 28004,
  "overlap_tasks": {
   "tasks_tried": 222,
   "tasks_with_any_witness": 206,
@@ -227,6 +240,20 @@
   },
   {
    "pair": [
+    "words:alphabet",
+    "words:vowel"
+   ],
+   "why": "fixed_seed",
+   "top_reasons": [
+    [
+     "search budget exhausted",
+     24
+    ]
+   ],
+   "note": "2 of 50 seeds gave a witness in the final run; the single version (seed 0, 24 attempts) did not"
+  },
+  {
+   "pair": [
     "format:output_template",
     "words:alphabet"
    ],
@@ -234,9 +261,10 @@
    "top_reasons": [
     [
      "verify words:alphabet: official verifier fails",
-     1200
+     24
     ]
-   ]
+   ],
+   "note": "'My' then 'Answer' breaks the letter sequence unless 'My' is glued to a preceding word."
   },
   {
    "pair": [
@@ -247,7 +275,7 @@
    "top_reasons": [
     [
      "only 3 palindromes pass the word filters (need 10)",
-     1200
+     24
     ]
    ]
   },
@@ -260,9 +288,24 @@
    "top_reasons": [
     [
      "verify words:consonants: official verifier fails",
-     1200
+     24
     ]
-   ]
+   ],
+   "note": "'Future' has no consonant cluster unless it is glued to the previous word ('grow.Future')."
+  },
+  {
+   "pair": [
+    "format:parentheses",
+    "words:start_verb"
+   ],
+   "why": "fixed_seed",
+   "top_reasons": [
+    [
+     "verify words:start_verb: official verifier fails",
+     24
+    ]
+   ],
+   "note": "40 of 50 seeds gave a witness in the final run; the single version (seed 0, 24 attempts) did not"
   },
   {
    "pair": [
@@ -273,7 +316,7 @@
    "top_reasons": [
     [
      "verify words:prime_lengths: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -307,9 +350,24 @@
    "top_reasons": [
     [
      "verify words:prime_lengths: official verifier fails",
-     1200
+     24
     ]
-   ]
+   ],
+   "note": "'Answer' has 6 letters unless glued to the slot text ('Answer:a')."
+  },
+  {
+   "pair": [
+    "format:no_whitespace",
+    "words:prime_lengths"
+   ],
+   "why": "fixed_seed",
+   "top_reasons": [
+    [
+     "verify words:prime_lengths: official verifier fails",
+     24
+    ]
+   ],
+   "note": "3 of 50 seeds gave a witness in the final run; the single version (seed 0, 24 attempts) did not"
   },
   {
    "pair": [
@@ -320,7 +378,7 @@
    "top_reasons": [
     [
      "verify words:last_first: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -333,7 +391,7 @@
    "top_reasons": [
     [
      "verify words:paragraph_last_first: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -346,7 +404,7 @@
    "top_reasons": [
     [
      "exactly three sentences, but another rule needs more",
-     1200
+     24
     ]
    ]
   },
@@ -359,7 +417,7 @@
    "top_reasons": [
     [
      "exactly three sentences, but another rule needs more",
-     1200
+     24
     ]
    ]
   },
@@ -382,7 +440,8 @@
      "verify count:keywords_multiple: official verifier fails",
      56
     ]
-   ]
+   ],
+   "note": "Repeated keywords break 'all words different' unless copies are joined by hyphens."
   },
   {
    "pair": [
@@ -393,7 +452,7 @@
    "top_reasons": [
     [
      "layout puts a non-verb first",
-     1200
+     96
     ]
    ]
   },
@@ -406,7 +465,7 @@
    "top_reasons": [
     [
      "layout puts a non-verb first",
-     1200
+     24
     ]
    ]
   },
@@ -419,7 +478,7 @@
    "top_reasons": [
     [
      "verify words:start_verb: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -432,7 +491,7 @@
    "top_reasons": [
     [
      "layout puts a non-verb first",
-     1200
+     24
     ]
    ]
   },
@@ -455,7 +514,22 @@
      "'air' is required 5 times but words may repeat at most 4 times",
      24
     ]
-   ]
+   ],
+   "note": "The 7-times keyword exceeds the repeat cap (at most 5) unless copies are joined by hyphens ('shirt-shirt' is two keyword matches but one word for words:repeats)."
+  },
+  {
+   "pair": [
+    "format:thesis",
+    "words:odd_even_syllables"
+   ],
+   "why": "fixed_seed",
+   "top_reasons": [
+    [
+     "verify words:odd_even_syllables: official verifier fails",
+     24
+    ]
+   ],
+   "note": "29 of 50 seeds gave a witness in the final run; the single version (seed 0, 24 attempts) did not"
   },
   {
    "pair": [
@@ -466,20 +540,7 @@
    "top_reasons": [
     [
      "verify words:odd_even_syllables: official verifier fails",
-     1200
-    ]
-   ]
-  },
-  {
-   "pair": [
-    "format:thesis",
-    "words:last_first"
-   ],
-   "why": "no_witness_no_proof",
-   "top_reasons": [
-    [
-     "verify words:last_first: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -492,7 +553,7 @@
    "top_reasons": [
     [
      "verify words:last_first: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -505,7 +566,7 @@
    "top_reasons": [
     [
      "verify words:paragraph_last_first: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -518,7 +579,7 @@
    "top_reasons": [
     [
      "verify words:paragraph_last_first: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -531,7 +592,7 @@
    "top_reasons": [
     [
      "verify format:list: official verifier fails",
-     1200
+     96
     ]
    ]
   },
@@ -544,7 +605,7 @@
    "top_reasons": [
     [
      "verify format:list: official verifier fails",
-     1200
+     96
     ]
    ]
   },
@@ -557,7 +618,7 @@
    "top_reasons": [
     [
      "verify format:list: official verifier fails",
-     1200
+     96
     ]
    ]
   },
@@ -570,7 +631,7 @@
    "top_reasons": [
     [
      "verify format:sub-bullets: no '*' bullet",
-     1200
+     24
     ]
    ]
   },
@@ -583,7 +644,7 @@
    "top_reasons": [
     [
      "verify format:no_bullets_bullets: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -596,7 +657,7 @@
    "top_reasons": [
     [
      "verify format:thesis: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -609,7 +670,7 @@
    "top_reasons": [
     [
      "verify format:sub-bullets: no '*' bullet",
-     1200
+     24
     ]
    ]
   },
@@ -622,7 +683,7 @@
    "top_reasons": [
     [
      "verify format:no_bullets_bullets: official verifier fails",
-     1200
+     24
     ]
    ]
   },
@@ -646,84 +707,80 @@
     "ratio:overlap",
     "words:alphabet"
    ],
-   1
+   1,
+   50
   ],
   [
    [
     "ratio:overlap",
     "ratio:sentence_words"
    ],
-   1
+   1,
+   50
   ],
   [
    [
     "ratio:overlap",
     "words:paragraph_last_first"
    ],
-   1
+   1,
+   50
   ],
   [
    [
     "format:title_case",
     "ratio:overlap"
    ],
-   1
+   1,
+   50
   ],
   [
    [
     "count:keywords_multiple",
     "words:paragraph_last_first"
    ],
-   1
+   1,
+   50
   ],
   [
    [
     "ratio:overlap",
     "words:odd_even_syllables"
    ],
-   2
+   2,
+   50
   ],
   [
    [
     "ratio:overlap",
     "words:words_position"
    ],
-   2
+   2,
+   50
   ],
   [
    [
     "format:no_whitespace",
     "ratio:overlap"
    ],
-   2
-  ],
-  [
-   [
-    "words:alphabet",
-    "words:vowel"
-   ],
-   2
+   2,
+   50
   ],
   [
    [
     "count:word_count_range",
     "ratio:overlap"
    ],
-   3
+   3,
+   50
   ],
   [
    [
     "ratio:overlap",
     "words:prime_lengths"
    ],
-   3
-  ],
-  [
-   [
-    "format:no_whitespace",
-    "words:prime_lengths"
-   ],
-   3
+   3,
+   50
   ]
  ],
  "per_type": {
@@ -782,16 +839,16 @@
    "mean_share": 0.981
   },
   "words:alphabet": {
-   "compatible": 36,
+   "compatible": 35,
    "proven": 4,
-   "unsupported": 1,
-   "mean_share": 0.87
+   "unsupported": 2,
+   "mean_share": 0.914
   },
   "words:vowel": {
-   "compatible": 34,
+   "compatible": 33,
    "proven": 7,
-   "unsupported": 0,
-   "mean_share": 0.878
+   "unsupported": 1,
+   "mean_share": 0.908
   },
   "words:consonants": {
    "compatible": 38,
@@ -809,7 +866,7 @@
    "compatible": 39,
    "proven": 1,
    "unsupported": 1,
-   "mean_share": 0.987
+   "mean_share": 0.99
   },
   "count:punctuation": {
    "compatible": 41,
@@ -818,10 +875,10 @@
    "mean_share": 0.99
   },
   "format:parentheses": {
-   "compatible": 41,
+   "compatible": 40,
    "proven": 0,
-   "unsupported": 0,
-   "mean_share": 0.986
+   "unsupported": 1,
+   "mean_share": 0.991
   },
   "format:quotes": {
    "compatible": 41,
@@ -830,10 +887,10 @@
    "mean_share": 0.99
   },
   "words:prime_lengths": {
-   "compatible": 38,
+   "compatible": 37,
    "proven": 0,
-   "unsupported": 3,
-   "mean_share": 0.885
+   "unsupported": 4,
+   "mean_share": 0.908
   },
   "format:newline": {
    "compatible": 37,
@@ -851,19 +908,19 @@
    "compatible": 32,
    "proven": 6,
    "unsupported": 3,
-   "mean_share": 0.879
+   "mean_share": 0.888
   },
   "words:start_verb": {
-   "compatible": 37,
+   "compatible": 36,
    "proven": 0,
-   "unsupported": 4,
-   "mean_share": 0.978
+   "unsupported": 5,
+   "mean_share": 0.989
   },
   "words:repeats": {
    "compatible": 40,
    "proven": 0,
    "unsupported": 1,
-   "mean_share": 0.97
+   "mean_share": 0.971
   },
   "sentence:keyword": {
    "compatible": 40,
@@ -875,25 +932,25 @@
    "compatible": 41,
    "proven": 0,
    "unsupported": 0,
-   "mean_share": 0.96
+   "mean_share": 0.962
   },
   "words:odd_even_syllables": {
-   "compatible": 39,
+   "compatible": 38,
    "proven": 1,
-   "unsupported": 1,
-   "mean_share": 0.951
+   "unsupported": 2,
+   "mean_share": 0.963
   },
   "words:last_first": {
-   "compatible": 33,
+   "compatible": 34,
    "proven": 5,
-   "unsupported": 3,
+   "unsupported": 2,
    "mean_share": 0.951
   },
   "words:paragraph_last_first": {
    "compatible": 35,
    "proven": 3,
    "unsupported": 3,
-   "mean_share": 0.925
+   "mean_share": 0.924
   },
   "sentence:increment": {
    "compatible": 40,
@@ -923,13 +980,13 @@
    "compatible": 35,
    "proven": 2,
    "unsupported": 4,
-   "mean_share": 0.848
+   "mean_share": 0.853
   },
   "format:thesis": {
    "compatible": 31,
    "proven": 2,
    "unsupported": 8,
-   "mean_share": 0.956
+   "mean_share": 0.99
   },
   "format:sub-bullets": {
    "compatible": 34,
@@ -974,21 +1031,21 @@
    "mean_share": 0.978
   },
   "format:no_whitespace": {
-   "compatible": 21,
+   "compatible": 20,
    "proven": 20,
-   "unsupported": 0,
-   "mean_share": 0.909
+   "unsupported": 1,
+   "mean_share": 0.952
   }
  },
  "six_rule_pilot": {
   "pools": 300,
-  "accepted": 137,
-  "acceptance": 0.457,
+  "accepted": 144,
+  "acceptance": 0.48,
   "per_type": {
    "count:conjunctions": {
-    "pools": 48,
-    "accepted": 25,
-    "acceptance": 0.521
+    "pools": 49,
+    "accepted": 29,
+    "acceptance": 0.592
    },
    "count:keywords_multiple": {
     "pools": 38,
@@ -997,23 +1054,23 @@
    },
    "count:numbers": {
     "pools": 55,
-    "accepted": 28,
-    "acceptance": 0.509
+    "accepted": 29,
+    "acceptance": 0.527
    },
    "count:person_names": {
     "pools": 52,
-    "accepted": 21,
-    "acceptance": 0.404
+    "accepted": 20,
+    "acceptance": 0.385
    },
    "count:pronouns": {
     "pools": 49,
-    "accepted": 22,
-    "acceptance": 0.449
+    "accepted": 23,
+    "acceptance": 0.469
    },
    "count:punctuation": {
-    "pools": 48,
-    "accepted": 30,
-    "acceptance": 0.625
+    "pools": 50,
+    "accepted": 32,
+    "acceptance": 0.64
    },
    "count:unique_word_count": {
     "pools": 56,
@@ -1027,13 +1084,13 @@
    },
    "format:emoji": {
     "pools": 38,
-    "accepted": 25,
-    "acceptance": 0.658
+    "accepted": 26,
+    "acceptance": 0.684
    },
    "format:line_indent": {
-    "pools": 46,
-    "accepted": 24,
-    "acceptance": 0.522
+    "pools": 47,
+    "accepted": 25,
+    "acceptance": 0.532
    },
    "format:list": {
     "pools": 39,
@@ -1042,18 +1099,18 @@
    },
    "format:newline": {
     "pools": 46,
-    "accepted": 25,
-    "acceptance": 0.543
+    "accepted": 26,
+    "acceptance": 0.565
    },
    "format:no_bullets_bullets": {
-    "pools": 35,
-    "accepted": 17,
-    "acceptance": 0.486
+    "pools": 36,
+    "accepted": 18,
+    "acceptance": 0.5
    },
    "format:no_whitespace": {
     "pools": 16,
-    "accepted": 8,
-    "acceptance": 0.5
+    "accepted": 11,
+    "acceptance": 0.688
    },
    "format:output_template": {
     "pools": 18,
@@ -1061,19 +1118,19 @@
     "acceptance": 0.444
    },
    "format:parentheses": {
-    "pools": 56,
-    "accepted": 30,
-    "acceptance": 0.536
+    "pools": 53,
+    "accepted": 32,
+    "acceptance": 0.604
    },
    "format:quote_unquote": {
-    "pools": 53,
-    "accepted": 30,
-    "acceptance": 0.566
+    "pools": 54,
+    "accepted": 31,
+    "acceptance": 0.574
    },
    "format:quotes": {
-    "pools": 60,
-    "accepted": 36,
-    "acceptance": 0.6
+    "pools": 61,
+    "accepted": 39,
+    "acceptance": 0.639
    },
    "format:sub-bullets": {
     "pools": 26,
@@ -1081,14 +1138,14 @@
     "acceptance": 0.423
    },
    "format:thesis": {
-    "pools": 28,
-    "accepted": 18,
-    "acceptance": 0.643
+    "pools": 26,
+    "accepted": 17,
+    "acceptance": 0.654
    },
    "format:title_case": {
     "pools": 57,
-    "accepted": 26,
-    "acceptance": 0.456
+    "accepted": 32,
+    "acceptance": 0.561
    },
    "ratio:overlap": {
     "pools": 63,
@@ -1101,9 +1158,9 @@
     "acceptance": 0.429
    },
    "ratio:sentence_type": {
-    "pools": 43,
-    "accepted": 24,
-    "acceptance": 0.558
+    "pools": 44,
+    "accepted": 26,
+    "acceptance": 0.591
    },
    "ratio:sentence_words": {
     "pools": 35,
@@ -1127,18 +1184,18 @@
    },
    "sentence:keyword": {
     "pools": 44,
-    "accepted": 16,
-    "acceptance": 0.364
+    "accepted": 17,
+    "acceptance": 0.386
    },
    "words:alphabet": {
     "pools": 39,
-    "accepted": 8,
-    "acceptance": 0.205
+    "accepted": 10,
+    "acceptance": 0.256
    },
    "words:consonants": {
-    "pools": 37,
-    "accepted": 13,
-    "acceptance": 0.351
+    "pools": 39,
+    "accepted": 16,
+    "acceptance": 0.41
    },
    "words:keywords_specific_position": {
     "pools": 36,
@@ -1146,19 +1203,19 @@
     "acceptance": 0.583
    },
    "words:last_first": {
-    "pools": 33,
-    "accepted": 9,
-    "acceptance": 0.273
+    "pools": 35,
+    "accepted": 10,
+    "acceptance": 0.286
    },
    "words:no_consecutive": {
     "pools": 42,
-    "accepted": 21,
-    "acceptance": 0.5
+    "accepted": 22,
+    "acceptance": 0.524
    },
    "words:odd_even_syllables": {
-    "pools": 36,
-    "accepted": 18,
-    "acceptance": 0.5
+    "pools": 39,
+    "accepted": 22,
+    "acceptance": 0.564
    },
    "words:palindrome": {
     "pools": 44,
@@ -1171,40 +1228,40 @@
     "acceptance": 0.324
    },
    "words:prime_lengths": {
-    "pools": 41,
-    "accepted": 13,
-    "acceptance": 0.317
+    "pools": 36,
+    "accepted": 14,
+    "acceptance": 0.389
    },
    "words:repeats": {
     "pools": 42,
-    "accepted": 22,
-    "acceptance": 0.524
+    "accepted": 23,
+    "acceptance": 0.548
    },
    "words:start_verb": {
-    "pools": 45,
-    "accepted": 28,
-    "acceptance": 0.622
+    "pools": 43,
+    "accepted": 27,
+    "acceptance": 0.628
    },
    "words:vowel": {
-    "pools": 30,
+    "pools": 26,
     "accepted": 12,
-    "acceptance": 0.4
+    "acceptance": 0.462
    },
    "words:words_position": {
-    "pools": 45,
-    "accepted": 17,
-    "acceptance": 0.378
+    "pools": 46,
+    "accepted": 19,
+    "acceptance": 0.413
    }
   },
   "types_never_sampled": [],
   "witness_words": {
-   "median": 54,
+   "median": 52.0,
    "max": 1600
   },
   "seconds": {
    "median": 0.02,
-   "max": 516.47,
-   "total": 3113
+   "max": 571.57,
+   "total": 3464
   },
   "top_failure_reasons": [
    [
@@ -1213,7 +1270,7 @@
    ],
    [
     "search budget exhausted",
-    629
+    666
    ],
    [
     "exactly three sentences, but another rule needs more",
@@ -1221,7 +1278,7 @@
    ],
    [
     "verify words",
-    485
+    330
    ],
    [
     "verify sentence",
@@ -1229,23 +1286,23 @@
    ],
    [
     "search found no word sequence",
-    274
-   ],
-   [
-    "required words use more than three vowels",
-    240
+    280
    ],
    [
     "verify count",
-    237
+    224
    ],
    [
     "verify ratio",
-    197
+    201
+   ],
+   [
+    "required words use more than three vowels",
+    192
    ],
    [
     "verify format",
-    196
+    187
    ]
   ]
  }

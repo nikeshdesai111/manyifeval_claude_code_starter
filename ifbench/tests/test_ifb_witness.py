@@ -57,3 +57,13 @@ def test_lexicon_closed_classes_match_official_verifiers():
     assert source.official_check("count:pronouns", {"N": len(lx.PRONOUNS)}, " ".join(lx.PRONOUNS))
     assert source.official_check("count:conjunctions", {"small_n": 7}, " ".join(lx.CONJUNCTIONS) + " end")
     assert source.official_check("words:palindrome", {}, " ".join(lx.PALINDROMES))
+
+
+@pytest.mark.parametrize("other", ["words:last_first", "ratio:sentence_type", "sentence:increment"])
+def test_thesis_terminal_placement(other):
+    # inside </i> under words:last_first, after it for sentence-count rules (fix 17)
+    rules = {"format:thesis": {}, other: source.sample_default_kwargs(other, rng_seed=7)}
+    r = witness.build_witness(rules, seed=0)
+    assert r.ok, r.reasons.most_common(3)
+    import re
+    assert bool(re.search(r"[.?!]</i>", r.text)) == (other == "words:last_first")

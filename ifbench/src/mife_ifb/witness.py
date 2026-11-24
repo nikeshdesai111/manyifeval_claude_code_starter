@@ -795,8 +795,14 @@ def compose(plan: Plan, stream: list[list[str]], rng: random.Random) -> list[str
         if plan.layout == "output_template":
             text = TEMPLATE[li] + " " + text
         elif plan.layout == "thesis" and li == 0:
-            # terminal punctuation after the closing tag, so the sentence still ends in . ? or !
-            text = "<i>" + bodies[grp[0]] + "</i>" + plan.terms[grp[0]] + ("" if len(grp) == 1 else " " + " ".join(sents[i] for i in grp[1:]))
+            rest = "" if len(grp) == 1 else " " + " ".join(sents[i] for i in grp[1:])
+            if plan.last_first:
+                # terminal inside the tag: words:last_first strips punctuation from the sentence end, and
+                # "word</i>." would leave "word</i", which no longer matches the next sentence's first word
+                text = "<i>" + sents[grp[0]] + "</i>" + rest
+            else:
+                # terminal after the closing tag, so NLTK ends the thesis sentence there (sentence-count rules)
+                text = "<i>" + bodies[grp[0]] + "</i>" + plan.terms[grp[0]] + rest
         elif plan.layout == "list":
             text = plan.sep + ("" if plan.tight else " ") + text
         elif plan.layout == "sub-bullets":
