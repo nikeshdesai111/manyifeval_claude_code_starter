@@ -1,0 +1,52 @@
+{
+  "already_generated_for_new_subset_ids_qwen": 0,
+  "chunk_prompt_counts": {
+    "0": 1155,
+    "1": 1155,
+    "2": 1155,
+    "3": 1155,
+    "4": 1155,
+    "5": 1155,
+    "6": 1155,
+    "7": 1155,
+    "8": 1155,
+    "9": 1155,
+    "10": 1155,
+    "11": 1155
+  },
+  "existing_original_s3_test_responses_qwen": 324720,
+  "missing_original_s3_test_responses_qwen": 0,
+  "model_key": "qwen",
+  "n_chunks": 12,
+  "new_s3_subset_prompts_qwen": 13860,
+  "new_s3_subset_responses_qwen": 277200,
+  "not_read": [
+    "response_text",
+    "verification",
+    "features",
+    "predictions",
+    "any TEST outcome"
+  ],
+  "original_prompts_partially_complete": 0,
+  "outstanding_formula_check": true,
+  "outstanding_responses": 277200,
+  "rows_duplicate_prompt_sample": 0,
+  "rows_empty_response": 0,
+  "rows_for_expanded_prompts": 324720,
+  "rows_invalid_provenance": 0,
+  "rows_other_prompts": 738000,
+  "rows_valid_unique": 324720,
+  "run_name": "expansion_s3_20261123",
+  "seeding": "per-sample: derive_seed(seeds.generation=20261115, 'vllm', model, 'expansion_s3_20261123', prompt_id, sample_index) % 2^31 (= generate_vllm.sample_seed)",
+  "settings_hash": "90f7b9ede9aa77ac",
+  "shards_read": 108,
+  "source_runs_checked": [
+    "main",
+    "expansion_s3_20261123"
+  ],
+  "tokenized_parquet_sha256": "a1587650eb985e78e7c9ecdbf022164740b25943afdf0195a370fc95465c45ff",
+  "version": "expansion-s3-2026-11-23",
+  "worklist_parquet": "worklist_qwen.parquet",
+  "worklist_records_sha256": "f07a5ea966dd635ef034d7a7e64a33b4b3231f5f5e38293caf56e0b079ca957c",
+  "worklist_sha256": "ae70ddab745c92cb5decca5d8079a490875edc3414b14626bc93044d49d46834"
+}

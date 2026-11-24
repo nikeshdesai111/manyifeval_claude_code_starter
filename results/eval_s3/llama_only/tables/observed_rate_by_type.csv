@@ -1,0 +1,16 @@
+type_id,viol_rate,n_pools,n_rows,generator
+change_case:capital_word_frequency,0.09915998472699504,6.0,5238.0,llama
+change_case:english_capital,0.15329324169530356,8.0,6984.0,llama
+change_case:english_lowercase,0.005698739977090492,6.0,5238.0,llama
+detectable_content:number_placeholders,0.19218785796105384,10.0,8730.0,llama
+detectable_format:number_bullet_lists,0.249146100177028,11.0,9603.0,llama
+detectable_format:title,0.020285327501822346,11.0,9603.0,llama
+keywords:existence,0.0825642284405171,7.0,6111.0,llama
+keywords:forbidden_words,0.03517130063521816,11.0,9603.0,llama
+keywords:frequency,0.11793384879725086,8.0,6984.0,llama
+keywords:letter_frequency,0.33563382970599465,12.0,10476.0,llama
+length_constraints:number_paragraphs,0.5246134020618557,8.0,6984.0,llama
+length_constraints:number_sentences,0.27166584846997216,7.0,6111.0,llama
+length_constraints:number_words,0.06437571592210767,6.0,5238.0,llama
+punctuation:no_comma,0.0723263563469749,11.0,9603.0,llama
+startend:quotation,0.14755441008018327,10.0,8730.0,llama

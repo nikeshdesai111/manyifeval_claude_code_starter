@@ -1,0 +1,31 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "chat_template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+  "context_gate_pass": true,
+  "expanded_manifest_sha256": "80895b63e8061e4aa298663feec68776e306195afa1ed1e6b34d980819dcdf92",
+  "fits_vllm_max_model_len_4096": true,
+  "hf_id": "Qwen/Qwen3-8B",
+  "input_tokens_quantiles": {
+    "0": 37.0,
+    "0.5": 107.0,
+    "0.9": 134.0,
+    "0.99": 160.0,
+    "1": 175.0
+  },
+  "max_input_plus_output": 2223,
+  "model_key": "qwen",
+  "n_new": 13860,
+  "n_new_prompts_with_straddling_rule_spans": 0,
+  "n_original_identical_to_frozen_tokenization": 16236,
+  "n_prompts": 30096,
+  "native_context": 32768,
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "tokenized_parquet_sha256": "a1587650eb985e78e7c9ecdbf022164740b25943afdf0195a370fc95465c45ff",
+  "tokenizer_class": "Qwen2Tokenizer",
+  "truncation": "none",
+  "usable_budget_with_margin": 26214.4,
+  "version": "expansion-s3-2026-11-23",
+  "vocab_size": 151669
+}

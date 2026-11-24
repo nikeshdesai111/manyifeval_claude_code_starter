@@ -1,0 +1,10 @@
+{
+  "model": "llama",
+  "n_responses": 277200,
+  "n_rule_checks": 950400,
+  "n_prompt_rule_labels": 47520,
+  "verifier_version": "manyifeval@5c1ba29+nltk-vendored+langdetect-seed0/v1",
+  "settings_hash": "bf9020d626e864ec",
+  "backend": "vllm",
+  "hit_max_tokens_share": 0.0009271284271284272
+}

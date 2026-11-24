@@ -1,0 +1,10 @@
+{
+  "model": "qwen",
+  "n_responses": 277200,
+  "n_rule_checks": 950400,
+  "n_prompt_rule_labels": 47520,
+  "verifier_version": "manyifeval@5c1ba29+nltk-vendored+langdetect-seed0/v1",
+  "settings_hash": "90f7b9ede9aa77ac",
+  "backend": "vllm",
+  "hit_max_tokens_share": 0.02159090909090909
+}
