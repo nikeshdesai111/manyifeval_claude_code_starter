@@ -165,10 +165,50 @@ def cv_table() -> None:
     (GEN / "selected_layers.json").write_text(json.dumps(out, indent=1) + "\n")
 
 
+def eval2_placeholder() -> None:
+    """Empty axes at the final size of main Figure 2 (Evaluation 2 observed effects). No data are drawn."""
+    names = [n for _, n in TYPES]
+    fixed = {"Title", "All uppercase", "All lowercase", "Quotation marks", "No commas"}
+    order = [n for n in names if n in fixed] + [n for n in names if n not in fixed]
+    fig = plt.figure(figsize=(5.5, 2.35))
+    gs = fig.add_gridspec(1, 4, width_ratios=[1, 1, 1, 0.95], wspace=0.12)
+    titles = ["(a) Position", "(b) Companion", "(c) Task"]
+    for i, t in enumerate(titles):
+        ax = fig.add_subplot(gs[0, i])
+        ax.set_ylim(-0.6, len(order) - 0.4)
+        ax.set_xlim(0, 1)
+        ax.set_yticks(range(len(order)))
+        ax.set_yticklabels(order if i == 0 else [], fontsize=5)
+        ax.invert_yaxis()
+        ax.axhline(4.5, color="0.6", lw=0.5, ls=":")
+        ax.set_xticks([0, 0.5, 1])
+        ax.set_xticklabels(["0", "", ""], fontsize=5)
+        ax.set_title(t + "\nnoise-adj. RMS (pp)", fontsize=5.5, pad=2)
+        ax.text(0.5, 7, "pending", ha="center", va="center", fontsize=6, color="#a33", rotation=90)
+        ax.tick_params(length=1.5, width=0.4, pad=1)
+        for sp in ax.spines.values():
+            sp.set_linewidth(0.4)
+    ax = fig.add_subplot(gs[0, 3])
+    ax.set_xlim(-0.5, 3.5)
+    ax.set_ylim(-1, 1)
+    ax.axhline(0, color="0.5", lw=0.5)
+    ax.set_xticks(range(4))
+    ax.set_xticklabels(["1\u21922", "2\u21923", "3\u21924", "4\u21925"], fontsize=5)
+    ax.set_yticks([])
+    ax.set_title("(d) Strict append\nretained-rule change (pp)", fontsize=5.5, pad=2)
+    ax.text(1.5, 0.5, "pending", ha="center", va="center", fontsize=6, color="#a33")
+    ax.tick_params(length=1.5, width=0.4, pad=1)
+    for sp in ax.spines.values():
+        sp.set_linewidth(0.4)
+    fig.savefig(FIG / "eval2_placeholder.pdf", bbox_inches="tight", pad_inches=0.01)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     FIG.mkdir(exist_ok=True)
     GEN.mkdir(exist_ok=True)
     pair_heatmap()
     type_table()
     cv_table()
+    eval2_placeholder()
     print("ok")
