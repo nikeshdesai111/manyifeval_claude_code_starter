@@ -15,11 +15,16 @@ Combinations the final run never drew are run now with seed 50 + their index in 
 of combinations (no earlier draw of the pair used those seeds). For every compatible pair the first
 successful version is rebuilt to store its witness text and to confirm the replay.
 
-Builder change after the final run (Nicky approved 2026-11-24): the thesis full stop stays inside
-</i> when words:last_first is present. The change is inside the thesis layout branch of
-witness.compose, so it can only alter texts for pools that contain format:thesis. Every pair with
-format:thesis is therefore rerun with the current builder (same versions, same seeds, same task
-texts); every other pair is replayed from the final run, whose builder differs only in that branch.
+Builder changes after the final run (all approved by Nicky on 2026-11-24): (1) the thesis full
+stop stays inside </i> when words:last_first is present; (2) two or more layout rules can be
+combined in one text; (3) ratio:overlap gets a second route that copies task-text runs inside the
+word search, and in-window overlap texts that break another rule no longer end the attempt.
+(1) and (2) live only in layout branches of make_plan/compose/finalize, so they can only alter
+texts for pools that contain a layout type (output_template, thesis, no_bullets_bullets,
+sub-bullets, list); single-layout output was checked byte-identical on 360 rule sets. (3) runs only
+when ratio:overlap is present. Every pair with a layout type or ratio:overlap is therefore rerun
+with the current builder (same versions, same seeds, same task texts); every other pair is
+replayed from the final run.
 
 Output: data/stage3/versions.jsonl (git-ignored, resumable).
 Usage: python scripts/stage3_versions.py [--workers 4]
@@ -42,7 +47,10 @@ import stage3_audit as A  # noqa: E402
 D = IFB / "data" / "stage3"
 ATTEMPTS = 24
 FINAL_SHA = "1ae17eb3ee01"   # witness.py of the final run
-RERUN_TYPES = {"format:thesis"}  # pairs whose texts the post-final builder change can alter
+# pairs whose texts the post-final builder changes can alter: the thesis fix and the combined layouts
+# (2026-11-24) live in layout branches of make_plan/compose/finalize; the overlap copy route
+# (2026-11-24) runs only when ratio:overlap is in the rule set
+RERUN_TYPES = set(witness.LAYOUT_TYPES) | {"ratio:overlap"}
 # Every value the released default generator can draw, for the types with fewer than 50 (checked
 # against 20,000 seeded draws in tests/test_stage3_versions.py).
 SMALL_VALUES = {

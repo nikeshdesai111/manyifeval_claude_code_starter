@@ -165,7 +165,7 @@ The alternative left open in the plan was that an LLM might **draft** candidate 
 
 The plan fixes everything about the text except which filler words are used. In order:
 
-1. **Layout.** At most one of `output_template`, `thesis`, `no_bullets_bullets`, `sub-bullets` and `list` (in that priority). Otherwise prose. Flags are also set for whole-text forms: one word per line, stairs, no whitespace.
+1. **Layout.** Every layout rule present among `output_template`, `thesis`, `no_bullets_bullets`, `sub-bullets` and `list`. With one, the text takes that layout; with two or more, the plan fixes a combined line order (Section 5.6); with none, prose. `no_bullets_bullets` with `sub-bullets` is a proven conflict and is rejected here. Flags are also set for whole-text forms: one word per line, stairs, no whitespace.
 2. **Required tokens.** Each is chosen to pass the word filters already known:
    - the five `count:keywords_multiple` keywords at exact counts 1, 2, 3, 5 and 7 (and banned as filler, so the counts stay exact);
    - N distinct person names;
@@ -201,7 +201,8 @@ The plan fixes everything about the text except which filler words are used. In 
    - list and sub-bullets: one sentence per line;
    - sentences-then-bullets: the first two sentences on one line, then bullet lines;
    - stairs and paragraph rules: one sentence per line;
-   - `words:vowel`: always one line.
+   - `words:vowel`: always one line;
+   - two or more layouts: one sentence per line in the combined order of Section 5.6, extra sentences joining the last plain line before any closing bullets.
 8. **Pins.** Fixed words at fixed slots:
    - the `keywords_specific_position` keyword at sentence n, word m. Layout words before it on the same line are subtracted: template labels count as 2 words, the thesis tag as 1, "SEPARATOR" as 1;
    - the `words_position` keyword at word 2 and at the second-to-last word;
@@ -247,6 +248,7 @@ The word stream becomes text in two parts.
   - template labels;
   - `<i>…</i>` around the first sentence, with its terminal mark after `</i>` (inside the tag when `words:last_first` is present);
   - list separator, `*` or `-`, or bullet `*`. These are attached with no space under shape rules or one-word-per-line (tight markers).
+  - With two or more layouts, each line carries the prefix of its kind in the combined order (Section 5.6).
 
 **`finalize`** applies the whole-text forms after `compose`:
 
@@ -270,10 +272,12 @@ Two objectives cannot be expressed as per-word filters, so a local search handle
   - The rule needs the share of the response's trigrams that also occur in the reference text (the task's own text) to be within ±2 points of the target.
   - Generated filler shares almost no trigrams with the task, so the repair inserts a span of the task text, ending with a full stop, as its own sentence.
   - It tries up to 3,000 spans at four positions: end, start, after the first line, and after the first sentence of a single line.
+  - Since 2026-11-24 a cheap screen comes first: from the trigram set of the base text and that of the span (plus two new trigrams for the junction), the overlap of the combined text is estimated, and spans whose estimate is more than 6 points from the target are skipped before any candidate text is rendered and measured exactly. The screen can only skip spans, never accept one: every accepted text is still measured exactly and verified. It cut the time per failing attempt on long tasks from tens of seconds to about a second. Without it the rerun did not finish 20 versions in 35 minutes.
   - It applies the whole-text forms after insertion, so one-word-per-line, stairs and no-whitespace stay valid.
-  - It accepts the first candidate whose overlap is in the window and which has at least 5 distinct trigrams.
+  - A candidate must have its overlap in the window and at least 5 distinct trigrams. Since 2026-11-24 it must also pass every other rule of the set: a candidate in the window that breaks another rule no longer ends the attempt; the search moves on, up to 40 such candidates per attempt. (Before, the first candidate in the window was returned and usually failed verification on a sentence or shape rule.)
   - For high targets (above 40%) the plan is "minimal": 2–3 short sentences, so the inserted span can dominate.
   - When overlap is the only structural rule, the span alone is also allowed.
+  - If no inserted span works, the attempt tries the copy route of Section 5.7.
 
 **Alternatives.** Folding equal length into the search would need lookahead on character counts across three sentences. Swapping words after the fact is simpler and converges within the budget for 3–5-word sentences. For overlap, writing paraphrases of the task would need a language model. Copying a real span of the task is exact and stays within the project's no-LLM decision.
 
@@ -288,6 +292,66 @@ The earlier steps are allowed to be approximate, because the builder's internal 
 - interactions between decorations.
 
 When verification fails, the failing rule and reason are counted, and the next attempt starts from a fresh plan.
+
+### 5.6 Two or more layouts in one text (added 2026-11-24)
+
+Until 2026-11-24 the builder wrote one layout per text, so the 8 pairs of two layout rules were "unsupported" even though a hand-written witness passed every check. Nicky approved extending the builder. The design follows from what each official verifier actually reads (IFBench `instructions.py` at the pinned commit):
+
+| layout | what the official verifier needs | what the plain check adds |
+|---|---|---|
+| `output_template` | the strings `My Answer:`, `My Conclusion:` and `Future Outlook:` somewhere in the text | the three labels in order, each slot with words |
+| `thesis` | a `<i>` (or `<em>`) … `</i>` with text inside and text after it | the response *begins* with the italic thesis of at least three words |
+| `list` | at least two lines starting with the separator | at least two items with text |
+| `sub-bullets` | every `*` is followed, before the next `*`, by a `-` | every bullet line has text and a `-` line with text after it; `*` appears only as a bullet marker |
+| `no_bullets_bullets` | at least two sentences before the first `*` line, and every line after it starts with `*`; at least two `*` lines | every bullet has text |
+
+From this the line order is fixed (`_composite_kinds`), one sentence per line:
+
+1. **The thesis first**, because the plain check needs the response to begin with it. Its line is `<i>…</i>` plus the full stop (inside the tag under `words:last_first`, fix 17).
+2. **The template's first label** (`My Answer: …`).
+3. **The list items** (two lines starting with the separator) and **the bullet and its sub-bullet** (`* …`, then `- …`). They sit inside the first template slot, so the template still reads as answer, conclusion, outlook, and the list or bullet is the content of the answer.
+4. **The other two labels** (`My Conclusion: …`, `Future Outlook: …`).
+5. **Plain sentence lines** only where `no_bullets_bullets` still needs its two sentences before the bullets.
+6. **The two `no_bullets_bullets` bullets last**, because after the first `*` line every line must be a bullet.
+
+Further sentences (when other rules need more) join the last line before the closing bullets, so every line kind above appears exactly once and the order never changes. Why each choice:
+
+- *Labels around the list and the bullet, not after them.* A label line that followed the closing bullets would break `no_bullets_bullets`; a label between the bullet and its sub-bullet would make the template slot look empty to a reader. Putting the list and the bullet pair inside the answer slot keeps every slot non-empty and every bullet line contiguous.
+- *Lines that are not bullets count as sentences for `no_bullets_bullets`.* The verifier splits every line before the first `*` with Punkt and counts the sentences, so the thesis, label and list lines already provide the two sentences it needs; plain lines are added only when there are fewer than two.
+- *`list` with separator `-` and `sub-bullets`.* The sub-bullet line `- …` also starts with the separator, which is harmless: the list needs *at least* two such lines.
+- *`list` with separator `*` does not occur* (the released separators are `-`, `...`, `!?!?` and `SEPARATOR`), so list items never look like bullets.
+- *`no_bullets_bullets` with `sub-bullets` stays excluded.* Every line after the first `*` must start with `*`, so no `-` line can follow a bullet; the pair is a proven conflict (basis "plain": a `-` glued inside a bullet passes the official check only).
+- *Template labels add words before a pinned position, and the thesis tag too.* `_lead_words` counts them per line kind (label 2, thesis 1, the separator `SEPARATOR` 1), exactly as in the single-layout case, so `words:keywords_specific_position` and `start_verb` pins still land correctly; `start_verb` is infeasible when the first line is not a plain sentence.
+- *Tight markers, one-word-per-line and stairs* apply to combined layouts unchanged: markers are attached without a space under shape rules or one word per line, and under one word per line every word after the first closing bullet carries its own `*` (fix 13).
+
+Three and four layouts in one text follow the same order (every subset of the five layouts except those containing both `no_bullets_bullets` and `sub-bullets`, for every list separator, builds a witness at seed 0; `tests/test_ifb_witness.py::test_combined_layouts_get_a_witness`). So a six-rule pool may contain up to four layouts.
+
+**Check that nothing else changed.** The change only touches code that runs when two or more layouts are present. On 360 rule sets with at most one layout, the new builder's output was byte-identical to the previous builder's. Every pair with a layout type was nevertheless rerun under the version rule (Section 7.1).
+
+Example (`format:list` with separator `-` + `format:thesis` + `format:output_template`, seed 0):
+
+```
+{{EXAMPLE3}}
+```
+
+### 5.7 `ratio:overlap`: copying task text inside the search (added 2026-11-24)
+
+**Why a second route was needed.** Before this change, overlap pairs passed on only {{OV_BEFORE}} of their versions, and pools with overlap almost never completed a six-rule witness (1 of 63 in the pilot). The inserted-span route has two weaknesses. Its span is a sentence of its own that the other rules know nothing about, so any rule over sentences (counts, ratios, increments, last-word = first-word, emoji per sentence) or over word shapes breaks. And its base text is generated filler, so every one of its trigrams counts against the target, which caps the reachable share.
+
+**The idea.** Let the word search itself copy the task. The verifier compares the sets of token trigrams of the response and of the task (`nltk.word_tokenize`, case-sensitive). If the search places, word by word, a run of words that appears consecutively in the task, every trigram inside that run is shared. Because the words go through the search, they pass every word filter and neighbour relation of the other rules, and the sentence plan (counts, terminals, lengths) stays intact.
+
+**How it works** (`_Copy`, `_Search._copy_order`, `_copy_route`):
+
+1. **The task as the search sees it.** The task text is tokenised once; its trigrams are indexed by their first two tokens. The search works on lower-case words, so a helper gives the form each word takes in the rendered text: capitalised at a sentence start (or everywhere under title case), `I` for `i`, otherwise unchanged. Only that form is matched, so a capital at the start of a task sentence can be copied at the start of a response sentence, and a run can continue through a full stop when the task has the same boundary.
+2. **A quota of shared trigrams.** The target is a share, so the search is given a quota: about pct% of the planned trigrams. While fewer distinct shared trigrams have been placed than the quota, the words that continue the task (first those that complete a task trigram, then those that only follow the previous token) are tried before the usual candidates. Once the quota is met, words that would add a *new* shared trigram are tried last. Repeated trigrams are neutral (the verifier counts distinct trigrams), so they are not counted.
+3. **Which task words may be copied.** Any lower-case alphabetic task word, except the classes other rules count exactly: stop words under a stop-word cap, pronouns under `count:pronouns`, conjunctions under `count:conjunctions`, and the exact keywords of `count:keywords_multiple`. The word filters (shape rules, vowels, repeats) still apply through the usual checks.
+4. **Sentence lengths sized from the task.** A response much longer than the task's copyable material needs new trigrams beyond the target share. For targets above 40% the plan therefore uses sentence lengths of about M / (pct/100) / 2 words, where M is the number of task trigrams made of words (and terminal marks), and fewer sentences; for targets up to 40% ordinary lengths (4–9 words).
+5. **Correction.** The text is rendered and its real overlap measured (decorations, emoji and markers add trigrams the search does not see). The quota is corrected by the measured error times the number of trigrams and the search rerun; a fresh plan is drawn every third round, six rounds in all. If the text is still below the window at the last round of a plan, the inserted-span route is tried on it as well, with up to 500 spans. A text is accepted only if it passes every rule.
+
+**Order.** Each attempt first runs the inserted-span route as before (same random numbers, same spans in the same order; the only difference is that it keeps looking past an in-window candidate that breaks another rule), and runs the copy route only if that fails. So every version that had a witness before still has one ({{NOREGRESS}}).
+
+**What it cannot do.** A share above about 80% needs almost every trigram of the response to occur in the task. Task texts are short (median 42 tokens, a quarter under 20), and many of their trigrams contain digits, punctuation or capitals that a rule-satisfying word stream cannot reproduce. So high targets remain feasible only for long tasks with few interfering rules. This is a real, task-dependent limit, not a builder bug: Stage 5 handles it with per-task checks and redraws (the approved sampler treats "builder found no witness" like a clash, Section 8), and the paper reports overlap acceptance by target range.
+
 
 ---
 

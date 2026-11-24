@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import math
 import random
+from functools import lru_cache
 import sys
 from collections import Counter
 from dataclasses import dataclass, field
@@ -45,6 +46,9 @@ LAYOUT_TYPES = ["format:output_template", "format:thesis", "format:no_bullets_bu
                 "format:list"]
 TEMPLATE = ["My Answer:", "My Conclusion:", "Future Outlook:"]
 DFS_BUDGET = 40000
+ACCEPT_CAP = 40        # in-window overlap texts fully verified per attempt before giving up
+COPY_ROUNDS = 6        # copy-mode searches per attempt (two plans, three quota corrections each)
+COPY_SPANS = 500       # task spans tried when the copy route falls back to inserting one
 
 
 class Infeasible(Exception):
@@ -88,6 +92,14 @@ class Plan:
     emoji_attach: bool = False
     tight: bool = False
     interro: bool = False
+    layouts: tuple = ()                                # every layout rule present, in LAYOUT_TYPES order
+    kinds: list = field(default_factory=list)          # per line, when two or more layouts combine
+    nb_first: int = 1                                  # index of the first '*' line of no_bullets_bullets
+    types: frozenset = frozenset()                     # the rule types of the set
+
+    @property
+    def composite(self) -> bool:
+        return len(self.layouts) >= 2
 
 
 @dataclass
@@ -125,10 +137,16 @@ def _layout_of(types) -> str:
     return "prose"
 
 
-def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
+def make_plan(rules: dict, rng: random.Random, task_text: str | None, copy_len: tuple | None = None) -> Plan:
+    """``copy_len`` (overlap copy route only): the default sentence-length range, and fewer sentences,
+    so that copied task-text runs are long relative to the sentence boundaries they cannot cross."""
     T = rules
     layout = _layout_of(T)
     plan = Plan(n=0, lengths=[], terms=[], layout=layout)
+    plan.layouts = tuple(t.split(":")[1] for t in LAYOUT_TYPES if t in T)
+    plan.types = frozenset(T)
+    if plan.composite and {"no_bullets_bullets", "sub-bullets"} <= set(plan.layouts):
+        raise Infeasible("no_bullets_bullets and sub-bullets cannot share a text (proven conflict)")
     plan.sep = T.get("format:list", {}).get("sep")
     plan.prime = "words:prime_lengths" in T
     plan.cluster = "words:consonants" in T
@@ -158,7 +176,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
     stop_cap = T["ratio:stop_words"]["percentage"] if "ratio:stop_words" in T else None
     plan.stop_fill = stop_cap is None
     overlap = T.get("ratio:overlap")
-    plan.minimal = bool(overlap and overlap["percentage"] > 40)
+    plan.minimal = bool(overlap and overlap["percentage"] > 40) and copy_len is None
 
     # ---- required tokens (global), chosen to pass the static filters ----
     required: list[str] = []
@@ -225,7 +243,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         for key in ("words:keywords_specific_position", "words:words_position"):
             if key in T:
                 need |= set(lx.feat(T[key]["keyword"].lower()).vowels)
-        if plan.layout == "output_template":
+        if "output_template" in plan.layouts:
             need |= set("aeiou") & set("my answer conclusion future outlook")
         if len(need) > 3:
             raise Infeasible("required words use more than three vowels")
@@ -240,7 +258,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
             raise Infeasible(f"required word '{w}' fails the word filters")
 
     # ---- number of sentences ----
-    lo_n = 2 if plan.minimal else rng.randint(3, 5)
+    lo_n = 2 if plan.minimal else rng.randint(1, 3) if copy_len else rng.randint(3, 5)
     fixed_n = None
     if kw_sentence:
         lo_n = max(lo_n, kw_sentence[0] + 1)
@@ -258,10 +276,13 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         lo_n = max(lo_n, 2)
     if plan.last_first or "sentence:increment" in T:
         lo_n = max(lo_n, 2)
-    lo_n = max(lo_n, {"list": 2, "sub-bullets": 2, "no_bullets_bullets": 4, "output_template": 3, "thesis": 2}.get(layout, 1))
+    if plan.composite:
+        lo_n = max(lo_n, len(_composite_kinds(plan.layouts, 0)))
+    else:
+        lo_n = max(lo_n, {"list": 2, "sub-bullets": 2, "no_bullets_bullets": 4, "output_template": 3, "thesis": 2}.get(layout, 1))
     if plan.indent or plan.punct:
         lo_n = max(lo_n, 3)
-    if layout == "sub-bullets" and lo_n % 2:
+    if layout == "sub-bullets" and not plan.composite and lo_n % 2:
         lo_n += 1
     n = fixed_n or lo_n
     if fixed_n and fixed_n < lo_n:
@@ -270,12 +291,12 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         n += 1
     if fixed_n and n != fixed_n:
         raise Infeasible("three sentences cannot satisfy the sentence-type ratio")
-    if layout == "sub-bullets" and n % 2:
+    if layout == "sub-bullets" and not plan.composite and n % 2:
         n += 1
 
     # ---- sentence lengths ----
     inc = T.get("sentence:increment", {}).get("small_n")
-    base_lo, base_hi = (3, 4) if plan.minimal else (5, 9)
+    base_lo, base_hi = (3, 4) if plan.minimal else copy_len or (5, 9)
     if plan.equal_chars:
         base_lo, base_hi = 3, 5
     if plan.parens or plan.quotes:
@@ -325,7 +346,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
     # ---- demands on the total ----
     stop_req = sum(1 for w in required if w in lx.stopwords())
     stop_req += 1 if (kw_sentence and kw_sentence[1] in lx.stopwords()) else 0
-    stop_req += 2 if layout == "output_template" else 0
+    stop_req += 2 if "output_template" in plan.layouts else 0
     need_total = len(required) + n
     if "count:unique_word_count" in T:
         need_total = max(need_total, T["count:unique_word_count"]["N"] + 3 + len(required) - len(set(required)))
@@ -335,7 +356,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         same = Counter(w[0] for w in required).most_common(1)[0][1]
         need_total = max(need_total, 26 * (same + 1))
     wc = T.get("count:word_count_range")
-    extra = {"output_template": 5, "thesis": 2}.get(layout, 0) + (n if plan.sep == "SEPARATOR" else 0)
+    extra = sum({"output_template": 5, "thesis": 2}.get(x, 0) for x in plan.layouts) + (n if plan.sep == "SEPARATOR" else 0)
 
     def grow(lengths, total):
         if inc:
@@ -376,8 +397,9 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
                 plan.allit = [0] + [i + 1 for i in range(1, n)]
         else:
             if not fixed_n:
-                step = mult * (2 if layout == "sub-bullets" and mult % 2 else 1) if layout == "sub-bullets" else mult
-                if layout == "sub-bullets" and step % 2:
+                single_sb = layout == "sub-bullets" and not plan.composite
+                step = mult * (2 if single_sb and mult % 2 else 1) if single_sb else mult
+                if single_sb and step % 2:
                     step *= 2
                 while target / n > 18:
                     for _ in range(step):
@@ -448,7 +470,21 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
     n = plan.n
 
     # ---- line grouping ----
-    if layout == "no_bullets_bullets":
+    if plan.composite:
+        plan.kinds = _composite_kinds(plan.layouts, n)
+        # one sentence per line; the sentences beyond the structure's minimum join the last line
+        # before the closing bullets. Indices stay in reading order (the search fills them in order).
+        last = len(plan.kinds) - 1 - (2 if "no_bullets_bullets" in plan.layouts else 0)
+        extra = n - len(plan.kinds)
+        plan.lines, k = [], 0
+        for li in range(len(plan.kinds)):
+            size = 1 + (extra if li == last else 0)
+            plan.lines.append(list(range(k, k + size)))
+            k += size
+        assert k == n
+        if "no_bullets_bullets" in plan.layouts:
+            plan.nb_first = plan.kinds.index("nbullet")
+    elif layout == "no_bullets_bullets":
         plan.lines = [[0, 1]] + [[i] for i in range(2, n)]
     elif layout == "output_template":
         plan.lines = [[0], [1], list(range(2, n))]
@@ -481,7 +517,7 @@ def make_plan(rules: dict, rng: random.Random, task_text: str | None) -> Plan:
         if (n - 1, plan.lengths[n - 1] - 2) not in pins:
             pins[(n - 1, -2)] = kwd
     if "words:start_verb" in T:
-        if layout in ("output_template", "thesis") or plan.sep:
+        if layout in ("output_template", "thesis") or plan.sep or (plan.kinds and plan.kinds[0] != "text"):
             raise Infeasible("layout puts a non-verb first")
         verbs = [v for v in lx.VERBS if _static_ok(plan, v)]
         if not verbs:
@@ -538,8 +574,46 @@ def _static_ok_pre(T, w):
     return True
 
 
+def _composite_kinds(layouts, n: int) -> list:
+    """Line kinds for two or more layouts, in reading order (one sentence per line before extras).
+
+    thesis line first (the thesis must open the response), then the template's first label, the
+    list items and the bullet/sub-bullet pair inside the first slot, the other two labels, any plain
+    sentence line no_bullets_bullets still needs (two sentences before its bullets), and the two
+    closing '*' bullets last (after the first bullet every line must be a bullet).
+    """
+    L = set(layouts)
+    kinds = []
+    if "thesis" in L:
+        kinds.append("thesis")
+    if "output_template" in L:
+        kinds.append("label0")
+    if "list" in L:
+        kinds += ["item", "item"]
+    if "sub-bullets" in L:
+        kinds += ["bullet", "sub"]
+    if "output_template" in L:
+        kinds += ["label1", "label2"]
+    if "no_bullets_bullets" in L:
+        kinds += ["text"] * max(0, 2 - len(kinds))
+        kinds += ["nbullet", "nbullet"]
+    return kinds
+
+
 def _lead_words(plan: Plan, s: int) -> int:
     """Alphanumeric layout words that precede sentence s on its line (they count as words)."""
+    if plan.kinds:
+        for li, grp in enumerate(plan.lines):
+            if grp and grp[0] == s:
+                kind = plan.kinds[li]
+                if kind.startswith("label"):
+                    return 2
+                if kind == "thesis":
+                    return 1
+                if kind == "item" and plan.sep == "SEPARATOR":
+                    return 1
+                return 0
+        return 0
     for li, grp in enumerate(plan.lines or [[s]]):
         if grp and grp[0] == s:
             if plan.layout == "output_template" and li < 3:
@@ -557,8 +631,9 @@ def _lead_words(plan: Plan, s: int) -> int:
 # ---------------------------------------------------------------------------------------------
 
 class _Search:
-    def __init__(self, plan: Plan, rng: random.Random):
+    def __init__(self, plan: Plan, rng: random.Random, copy: "_Copy | None" = None, quota: int | None = None):
         self.p, self.rng = plan, rng
+        self.copy, self.quota, self.matched, self.used = copy, quota, 0, Counter()
         vocab = [w for w in lx.vocabulary() if w not in plan.forbid and _static_ok(plan, w)]
         if len(vocab) < 40 and plan.stop_fill:
             vocab += [w for w in lx.stop_vocabulary() if w not in plan.forbid and _static_ok(plan, w)]
@@ -581,6 +656,72 @@ class _Search:
         self.greq = Counter(plan.greq)
         self.free = [sum(1 for j in range(L) if (s, j) not in plan.pins and (s, j - L) not in plan.pins)
                      for s, L in enumerate(plan.lengths)]
+        if copy is not None:
+            # task words the search may copy: any lower-case alphabetic word except the classes that
+            # other rules count exactly (stop words under a stop-word cap, pronouns, conjunctions,
+            # exact keywords); the word filters still apply through seq_ok
+            bad = set(plan.forbid)
+            if not plan.stop_fill:
+                bad |= lx.stopwords()
+            if "count:pronouns" in plan.types:
+                bad |= set(lx.PRONOUNS)
+            if "count:conjunctions" in plan.types:
+                bad |= set(lx.CONJUNCTIONS)
+            self.copy_ok = {t.lower() for t in copy.starts if t.lower() not in bad}
+
+    def _out(self, i, w):
+        p = self.p
+        if w == "i":
+            return "I"
+        return w.capitalize() if p.title or (i == 0 and not p.newline) else w
+
+    def _before(self, s, i):
+        """The two rendered tokens before slot (s, i); a sentence's terminal mark is one token."""
+        def tok(s2, i2):
+            if i2 >= 0:
+                return self._out(i2, self.stream[s2][i2])
+            return self.p.terms[s2] if s2 >= 0 else None
+        if i >= 2:
+            return tok(s, i - 2), tok(s, i - 1)
+        if s == 0:
+            return (None, tok(s, 0)) if i == 1 else (None, None)
+        last = self.p.lengths[s - 1] - 1
+        return (self.p.terms[s - 1], tok(s, 0)) if i == 1 else (tok(s - 1, last), self.p.terms[s - 1])
+
+    def _grams(self, s, i, w):
+        """Task trigrams completed by placing w at (s, i), including the one closed by the terminal."""
+        b1, b2 = self._before(s, i)
+        o = self._out(i, w)
+        out = [(b1, b2, o)]
+        if i == self.p.lengths[s] - 1:
+            out.append((b2, o, self.p.terms[s]))
+        return [g for g in out if g in self.copy.tri]
+
+    def _hits(self, s, i, w):
+        """New (not yet used) task trigrams w would add. The overlap verifier counts distinct trigrams,
+        so a repeated one changes nothing."""
+        return sum(1 for g in self._grams(s, i, w) if not self.used[g])
+
+    def _copy_order(self, s, i, cands):
+        """Overlap control: below the quota, words that continue the task text come first (those that
+        complete a task trigram before those that only follow the previous token), so runs of the task
+        are copied; at the quota, words that would complete a task trigram go last."""
+        c = self.copy
+        if self.matched < self.quota:
+            b1, b2 = self._before(s, i)
+            toks = list(c.nxt.get((b1, b2), ())) + list(c.nxt1.get(b2, ()))
+            if not toks:
+                toks = self.rng.sample(c.starts, min(6, len(c.starts)))
+            seen, nxt = set(), []
+            for t in toks:
+                w = t.lower()
+                if w in seen or not t.isalpha() or self._out(i, w) != t or w not in self.copy_ok:
+                    continue
+                seen.add(w)
+                nxt.append(w)
+            nxt.sort(key=lambda w: -self._hits(s, i, w))
+            return nxt + cands
+        return sorted(cands, key=lambda w: self._hits(s, i, w) > 0)
 
     def prev(self, s, i):
         if i > 0:
@@ -702,6 +843,8 @@ class _Search:
                     cands = local + glob + self.filler(s, i)
                 else:
                     cands = self.filler(s, i) + local + glob
+                if self.copy is not None:
+                    cands = self._copy_order(s, i, cands)
         tried = set()
         for w in cands:
             if w in tried:
@@ -717,6 +860,10 @@ class _Search:
                     src = self.greq
             if src is None and not pinned and w in p.forbid:
                 continue
+            grams = self._grams(s, i, w) if self.copy is not None else []
+            for g in grams:
+                self.used[g] += 1
+                self.matched += self.used[g] == 1
             self.stream[s][i] = w
             self.counts[w] += 1
             if src is not None:
@@ -724,6 +871,9 @@ class _Search:
             if self._dfs(s, i + 1):
                 return True
             self.counts[w] -= 1
+            for g in grams:
+                self.matched -= self.used[g] == 1
+                self.used[g] -= 1
             if src is not None:
                 src[w] += 1
             self.stream[s][i] = None
@@ -790,8 +940,25 @@ def compose(plan: Plan, stream: list[list[str]], rng: random.Random) -> list[str
         bodies.append(body)
         sents.append(body + plan.terms[s])
     lines = []
+    sp = "" if plan.tight else " "
     for li, grp in enumerate(plan.lines):
         text = " ".join(sents[i] for i in grp)
+        if plan.kinds:
+            kind = plan.kinds[li]
+            if kind == "thesis":
+                rest = "" if len(grp) == 1 else " " + " ".join(sents[i] for i in grp[1:])
+                text = ("<i>" + sents[grp[0]] + "</i>" + rest if plan.last_first
+                        else "<i>" + bodies[grp[0]] + "</i>" + plan.terms[grp[0]] + rest)
+            elif kind.startswith("label"):
+                text = TEMPLATE[int(kind[-1])] + " " + text
+            elif kind == "item":
+                text = plan.sep + sp + text
+            elif kind in ("bullet", "nbullet"):
+                text = "*" + sp + text
+            elif kind == "sub":
+                text = "-" + sp + text
+            lines.append(text)
+            continue
         if plan.layout == "output_template":
             text = TEMPLATE[li] + " " + text
         elif plan.layout == "thesis" and li == 0:
@@ -819,7 +986,7 @@ def finalize(plan: Plan, lines: list[str]) -> str:
         for li, ln in enumerate(lines):
             for j, t in enumerate(ln.split()):
                 # after the first bullet every line must be a bullet line, so each word carries the marker
-                if plan.layout == "no_bullets_bullets" and li > 0 and j > 0:
+                if "no_bullets_bullets" in plan.layouts and li >= plan.nb_first and j > 0:
                     t = "*" + t
                 toks.append(t)
         lines = toks
@@ -885,16 +1052,48 @@ def _equalize(plan: Plan, srch: _Search, rng: random.Random, budget: int = 4000)
     return False
 
 
+@lru_cache(maxsize=64)
+def _ref_trigrams(ref: str) -> frozenset:
+    import nltk
+
+    return frozenset(nltk.ngrams(nltk.word_tokenize(ref), 3))
+
+
 def _overlap_value(text: str, ref: str) -> float:
     import nltk
 
     g = set(nltk.ngrams(nltk.word_tokenize(text), 3))
-    r = set(nltk.ngrams(nltk.word_tokenize(ref), 3))
-    return 100.0 * len(g & r) / len(g) if g else 0.0
+    return 100.0 * len(g & _ref_trigrams(ref)) / len(g) if g else 0.0
+
+
+@dataclass
+class _Copy:
+    """The task text as the word search sees it: its token trigrams, indexed by their first two
+    tokens, and the tokens that can open a run. The search works on lower-case words; ``out`` gives
+    the form a word takes in the rendered text (capitalised at a sentence start or under title case),
+    and only that form is matched, because the overlap verifier compares tokens exactly."""
+    tri: set
+    nxt: dict      # (t1, t2) -> sorted third tokens
+    nxt1: dict     # t1 -> sorted second tokens
+    starts: list
+
+    @classmethod
+    def of(cls, ref: str) -> "_Copy":
+        import nltk
+
+        toks = nltk.word_tokenize(ref)
+        tri = set(nltk.ngrams(toks, 3))
+        nxt, nxt1 = {}, {}
+        for a, b, c in tri:
+            nxt.setdefault((a, b), set()).add(c)
+        for a, b in nltk.ngrams(toks, 2):
+            nxt1.setdefault(a, set()).add(b)
+        starts = sorted({t for t in toks if t.isalpha()})
+        return cls(tri, {k: sorted(v) for k, v in nxt.items()}, {k: sorted(v) for k, v in nxt1.items()}, starts)
 
 
 def _fit_overlap(plan: Plan, lines: list[str], ref: str, pct: int, rng: random.Random,
-                 alone_ok: bool = False) -> str | None:
+                 alone_ok: bool = False, accept=None, max_spans: int = 3000) -> str | None:
     """Insert a span of the task text (as its own sentence) so the trigram overlap is within pct +/- 2.
 
     The span may go at the start, the end, or after the first line; whole-text layouts are applied
@@ -903,12 +1102,26 @@ def _fit_overlap(plan: Plan, lines: list[str], ref: str, pct: int, rng: random.R
     base = finalize(plan, lines)
     if abs(_overlap_value(base, ref) - pct) <= 2:
         return base
+    import nltk
+
+    tested = 0
+    R = _ref_trigrams(ref)
+    gb = set(nltk.ngrams(nltk.word_tokenize(base), 3))
     words = ref.split()
     spans = [(a, b) for a in range(len(words)) for b in range(a + 3, len(words) + 1)]
     rng.shuffle(spans)
-    for a, b in spans[:3000]:
+    for a, b in spans[:max_spans]:
         raw = " ".join(words[a:b])
         span = raw.rstrip(".?!,;:") + "."
+        # cheap screen (2026-11-24): the overlap of base + span, from the two trigram sets with two
+        # new trigrams for the junction, must be within 6 points of the target before any candidate
+        # text is rendered and measured exactly; spans far off cannot land in the window
+        st = set(nltk.ngrams(nltk.word_tokenize(span), 3))
+        u = gb | st
+        est = 100.0 * len(u & R) / (len(u) + 2)
+        alone = 100.0 * len(st & R) / len(st) if st else 0.0
+        if abs(est - pct) > 6 and not (alone_ok and abs(alone - pct) <= 6):
+            continue
         cands = [lines[:-1] + [lines[-1] + " " + span], [span + " " + lines[0]] + lines[1:]]
         if len(lines) > 1:
             cands.append([lines[0] + " " + span] + lines[1:])
@@ -922,7 +1135,64 @@ def _fit_overlap(plan: Plan, lines: list[str], ref: str, pct: int, rng: random.R
             texts += [raw, span]
         for cand in texts:
             if abs(_overlap_value(cand, ref) - pct) <= 2 and pm.check("ratio:overlap", cand, {}, ref)[0]:
-                return cand
+                if accept is None:
+                    return cand
+                # keep looking past a text in the window that breaks another rule (up to a cap)
+                if accept(cand):
+                    return cand
+                tested += 1
+                if tested >= ACCEPT_CAP:
+                    return None
+    return None
+
+
+def _copy_route(rules, ref, pct, seed, alone_ok, accept) -> str | None:
+    """Overlap by copying: the word search prefers task-text continuations until a quota of copied
+    trigrams is reached, then avoids completing new task trigrams. The quota starts at pct% of the
+    planned trigrams and is corrected from the measured overlap of the rendered text. If the text is
+    still below the window, a task span is inserted as in the first route.
+
+    Sentence lengths are sized from the task: only trigrams made of words (no punctuation, digits or
+    mid-sentence capitals) can be copied, so a text much longer than M / (pct/100) words, where M is
+    the number of such trigrams, would need new trigrams beyond the target share. Low targets use
+    ordinary lengths."""
+    import nltk
+
+    rng = random.Random(seed ^ 0x5EED)
+    copy = _Copy.of(ref)
+    usable = sum(1 for g in copy.tri if all(t.isalpha() or t in ".?!" for t in g))
+    if not usable:
+        return None
+    if pct <= 40:
+        span = (4, 9)
+    else:
+        per = max(4, round(usable / (pct / 100) / 2))   # about two sentences of copied text
+        span = (max(3, per - 3), per + 3)
+    plan = None
+    for r in range(COPY_ROUNDS):
+        if r % 3 == 0:   # a fresh plan every third round
+            plan = make_plan(rules, rng, ref, copy_len=span)
+            quota = round(pct / 100 * (sum(plan.lengths) + plan.n))
+        srch = _Search(plan, rng, copy=copy, quota=quota)
+        try:
+            if not srch.run():
+                continue
+        except Infeasible:
+            continue
+        if plan.equal_chars and not _equalize(plan, srch, rng):
+            continue
+        lines = compose(plan, srch.stream, rng)
+        text = finalize(plan, lines)
+        got = _overlap_value(text, ref)
+        if abs(got - pct) <= 2 and pm.check("ratio:overlap", text, {}, ref)[0] and accept(text):
+            return text
+        if got < pct - 2 and r % 3 == 2:   # last round of a plan: try a span insertion (fewer spans, for time)
+            t = _fit_overlap(plan, lines, ref, pct, rng, alone_ok=alone_ok, accept=accept, max_spans=COPY_SPANS)
+            if t is not None:
+                return t
+        n_tri = max(1, len(set(nltk.ngrams(nltk.word_tokenize(text), 3))))
+        step = round((pct - got) / 100 * n_tri) or (1 if got < pct else -1)
+        quota = max(0, quota + step)
     return None
 
 
@@ -943,6 +1213,9 @@ def build_witness(rules, task_text: str | None = None, seed: int = 0, attempts: 
     if "ratio:overlap" in rules and not task_text:
         raise ValueError("ratio:overlap needs the task text")
     res = Result(ok=False)
+    overlap = "ratio:overlap" in rules
+    alone_ok = set(rules) <= {"ratio:overlap", "count:word_count_range", "words:repeats", "ratio:stop_words"}
+    accept = (lambda t: not verify(rules, t, task_text)) if overlap else None
     for a in range(attempts):
         rng = random.Random(seed * 1000003 + a)
         try:
@@ -954,9 +1227,12 @@ def build_witness(rules, task_text: str | None = None, seed: int = 0, attempts: 
                 raise Infeasible("could not equalize sentence lengths")
             lines = compose(plan, srch.stream, rng)
             text = finalize(plan, lines)
-            if "ratio:overlap" in rules:
-                text = _fit_overlap(plan, lines, task_text, rules["ratio:overlap"]["percentage"], rng,
-                                    alone_ok=set(rules) <= {"ratio:overlap", "count:word_count_range", "words:repeats", "ratio:stop_words"})
+            if overlap:
+                pct = rules["ratio:overlap"]["percentage"]
+                text = _fit_overlap(plan, lines, task_text, pct, rng, alone_ok=alone_ok, accept=accept)
+                if text is None:
+                    # second route: copy runs of the task text inside the word search itself
+                    text = _copy_route(rules, task_text, pct, seed * 1000003 + a, alone_ok, accept)
                 if text is None:
                     raise Infeasible("no task-text span puts the overlap in the window")
             bad = verify(rules, text, task_text)
