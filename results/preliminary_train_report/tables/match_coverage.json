@@ -1,0 +1,39 @@
+{
+ "prompts": 36900,
+ "prompt_rules": 153900,
+ "position_contexts": 12600,
+ "position_pairs": 76500,
+ "position_pairs_by_k": {
+  "2": 1800,
+  "3": 8100,
+  "4": 21600,
+  "5": 45000
+ },
+ "append_prompt_pairs_by_transition": {
+  "1->2": 1800,
+  "2->3": 3600,
+  "3->4": 5400,
+  "4->5": 3600
+ },
+ "append_targets_by_transition": {
+  "1->2": 1800,
+  "2->3": 7200,
+  "3->4": 16200,
+  "4->5": 14400
+ },
+ "append_prompt_pairs": 14400,
+ "append_targets": 39600,
+ "companion_prompt_pairs_by_k": {
+  "2": 1800,
+  "3": 5400,
+  "5": 18000
+ },
+ "companion_targets_by_k": {
+  "2": 1800,
+  "3": 10800,
+  "5": 72000
+ },
+ "companion_targets": 84600,
+ "task_prompt_pairs": 36900,
+ "task_targets": 153900
+}
