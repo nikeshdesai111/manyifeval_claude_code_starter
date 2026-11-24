@@ -16,12 +16,12 @@ from .paths import EVAL_DIR
 T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "paper"
 ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
-CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#4": r"4: H2 \cto{} RCAP",
+CL = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} A2", "#4": r"4: H2 \cto{} A2",
       "#5": r"5: B1 \cto{} B1+H", "#6": r"6: B2 \cto{} B2+H", "#7": r"7: B2 \cto{} B2+A"}
 GL = {"llama": "Llama", "qwen": "Qwen"}
-PL = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "RCAP", "B1+H1": "B1+H", "B2+H1": "B2+H",
+PL = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "A2", "B1+H1": "B1+H", "B2+H1": "B2+H",
       "B2+A1": "B2+A", "REF_structure": "Structure only", "REF_trainmean": "Training-fold mean",
-      "AVG1_H2": r"Mean of Obj.~1 H2", "AVG1_B2": r"Mean of Obj.~1 B2", "AVG1_RCAP": r"Mean of Obj.~1 RCAP"}
+      "AVG1_H2": r"Mean of Obj.~1 H2", "AVG1_B2": r"Mean of Obj.~1 B2", "AVG1_RCAP": r"Mean of Obj.~1 A2"}
 
 
 def r(n):

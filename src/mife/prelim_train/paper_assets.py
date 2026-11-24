@@ -26,7 +26,7 @@ NAMES = {
     "detectable_format:title": "Title", "change_case:english_capital": "All uppercase",
     "change_case:english_lowercase": "All lowercase", "change_case:capital_word_frequency": "Uppercase-word count",
     "startend:quotation": "Quotation marks", "punctuation:no_comma": "No commas"}
-SHORT = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} RCAP", "#4": r"4: H2 \cto{} RCAP",
+SHORT = {"#1": r"1: B1 \cto{} H1", "#2": r"2: B2 \cto{} H2", "#3": r"3: B2 \cto{} A2", "#4": r"4: H2 \cto{} A2",
          "#5": r"5: B1 \cto{} B1+H", "#6": r"6: B2 \cto{} B2+H", "#7": r"7: B2 \cto{} B2+A"}
 
 
@@ -137,7 +137,7 @@ def tab_app():
     """Appendix: raw Objective 1/2 scores, secondary-comparison Delta-MSE, Objective 2 matched changes."""
     a1 = r("eval1_a1_metrics")
     s2 = r("obj2_eval1_scores")
-    lab = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "RCAP", "B1+H1": "B1+H", "B2+H1": "B2+H",
+    lab = {"B1": "B1", "B2": "B2", "H1": "H1+S", "H2": "H2+S", "RCAP": "A2", "B1+H1": "B1+H", "B2+H1": "B2+H",
            "B2+A1": "B2+A", "REF_structure": "Structure only", "REF_trainmean": "Training mean"}
     L = []
     for p in ["REF_structure", "REF_trainmean", "B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1"]:

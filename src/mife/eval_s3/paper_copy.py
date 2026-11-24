@@ -54,7 +54,7 @@ beats B2, which already embeds the exact rule, by 0.0433 [0.0134, 0.0774] nats p
 and the hidden state beats it by 0.0209 [0.0003, 0.0422] (comparison~2); both also raise AUROC (by 2.0 and 1.6 points) and
 lower NLL on 13 and 12 of the 15 rule types. Against the prompt-only baseline B1, the hidden state (comparison~1) raises
 AUROC by 4.6 [0.9, 7.7] points, but its NLL reduction, 0.0312 [$-0.0105$, 0.0708], has an interval that includes zero.
-Attention and hidden state cannot be separated (comparison~4, H2 \cto{} RCAP: 0.0224 [$-0.0035$, 0.0523]); attention has the lowest NLL of
+Attention and hidden state cannot be separated (comparison~4, H2 \cto{} A2: 0.0224 [$-0.0035$, 0.0523]); attention has the lowest NLL of
 all predictors (0.345, against 0.388 for B2 and 0.367 for H2). These comparisons test predictive accuracy, not
 mechanism.
 
@@ -146,7 +146,7 @@ E2_SKILL_PROSE = r"""
 Table~\ref{tab:eval2} asks whether the predictors forecast these matched changes. The clearest held-out result is
 negative for attention: the rule-attention probe forecasts position, append and companion changes worse than B2
 (comparison~3: $-40.3$, $-22.8$ and $-30.5$, all intervals below zero), and it also forecasts them worse than H2
-(comparison~4, H2 \cto{} RCAP: $-45.6$, $-24.5$ and $-34.2$). The hidden state gives a small, consistent gain for position changes, alone (comparison~2: 5.2 [1.9,
+(comparison~4, H2 \cto{} A2: $-45.6$, $-24.5$ and $-34.2$). The hidden state gives a small, consistent gain for position changes, alone (comparison~2: 5.2 [1.9,
 8.8]) and on top of B2 (comparison~6: 7.3 [3.9, 11.1]), where it also improves companion forecasts (14.1 [1.2, 26.8]).
 No comparison is clearly better or worse for task changes, which are the noisiest (zero-change MSE 762). Better
 absolute accuracy therefore does not imply better forecasts of how a rule's risk moves with its context: rule attention

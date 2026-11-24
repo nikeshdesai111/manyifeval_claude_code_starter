@@ -18,11 +18,11 @@ from .paths import EVAL_DIR
 T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "PRELIMINARY_RESULTS_FOLLOWING_PLAN.md"
 GEN = {"llama": "Llama-3.1-8B-Instruct", "qwen": "Qwen3-8B (non-thinking)"}
-CL = {"#1": "#1 B1 → H1 + structure", "#2": "#2 B2 → H2 + structure", "#3": "#3 B2 → rule-conditioned attention",
-      "#4": "#4 H2 + structure → attention", "#5": "#5 B1 → B1 + H", "#6": "#6 B2 → B2 + H", "#7": "#7 B2 → B2 + A"}
+CL = {"#1": "#1 B1 → H1 + structure", "#2": "#2 B2 → H2 + structure", "#3": "#3 B2 → A2 (rule-conditioned attention)",
+      "#4": "#4 H2 → A2", "#5": "#5 B1 → B1 + H", "#6": "#6 B2 → B2 + H", "#7": "#7 B2 → B2 + A"}
 ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7"]
 PRIM = {"#1", "#2", "#3", "#4"}
-PL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "Rule-cond. attention",
+PL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure", "RCAP": "A2: rule-cond. attention",
       "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A", "REF_structure": "Structure only (ref.)",
       "REF_trainmean": "Training-fold mean (ref.)"}
 
@@ -234,7 +234,7 @@ def main():
                          ci(x.pearson_gain, x.pearson_gain_lo, x.pearson_gain_hi, 100)])
     w(table(["Generator", "Comparison", "MAE reduction (pp)", "MSE reduction ×10⁴", "Pearson gain ×100"], rows))
     w("")
-    w("### Appendix A6 — Fraction calibration (Objective 2; key predictors B2, H2, RCAP)\n")
+    w("### Appendix A6 — Fraction calibration (Objective 2; key predictors B2, H2, A2)\n")
     rows = []
     for gen in ("llama", "qwen"):
         for p in ["B2", "H2", "RCAP"]:
@@ -247,7 +247,7 @@ def main():
     rows = []
     for gen in ("llama", "qwen"):
         for p, lab in [("REF_trainmean", "Training-fold mean (constant within fold)"), ("AVG1_H2", "Mean of Objective 1 H2 p̂"),
-                       ("AVG1_B2", "Mean of Objective 1 B2 p̂"), ("AVG1_RCAP", "Mean of Objective 1 RCAP p̂"), ("H2", "Objective 2 H2 head")]:
+                       ("AVG1_B2", "Mean of Objective 1 B2 p̂"), ("AVG1_RCAP", "Mean of Objective 1 A2 p̂"), ("H2", "Objective 2 H2 head")]:
             x = s2[(s2.generator == gen) & (s2.predictor == p)].iloc[0]
             sp = "undefined within fold (constant)" if p == "REF_trainmean" else f(x.spearman * 100)
             rows.append([gen, lab, f(x.rmse * 100, 2), sp])

@@ -12,7 +12,7 @@ and 7.7 [4.2, 11.6] points, and lowers NLL on 10 and 11 of 15 rule types. The ga
 parameterised types (Llama 0.100 vs 0.007 nats for the fixed-wording types; Qwen 0.085 vs 0.008). Against B2, which also embeds the
 exact rule, the hidden state (comparison 2) gives 0.0079 [−0.0022, 0.0182] for Llama and 0.0186 [0.0038, 0.0346] for Qwen, with AUROC
 gains of 1.3 [0.5, 2.1] and 4.0 [2.1, 6.0]; rule attention (comparison 3) gives 0.0116 [−0.0039, 0.0275] and
-0.0186 [0.0012, 0.0384]. Hidden state and attention are indistinguishable (comparison 4, H2→RCAP: 0.0037 [−0.0104, 0.0199] and
+0.0186 [0.0012, 0.0384]. Hidden state and attention are indistinguishable (comparison 4, H2→A2: 0.0037 [−0.0104, 0.0199] and
 0.0000 [−0.0129, 0.0130]). Added to B2, the hidden state (comparison 6: 0.0163 [0.0078, 0.0254]; 0.0186 [0.0039, 0.0344]) and attention
 (comparison 7: 0.0192 [0.0083, 0.0314]; 0.0192 [0.0018, 0.0392]) help both generators.
 
@@ -36,7 +36,7 @@ Llama −0.5 [−1.7, 0.6], 0.0 [−0.7, 0.6], 0.4 [−0.2, 1.1], 0.7 [0.2, 1.3]
 
 *Predictive (Δ-MSE ×10⁴, positive favours candidate).* Generator- and factor-specific. Llama: hidden-state probes
 forecast task-induced changes better than both text baselines (comparison 1: 161.8 [81.0, 247.8]; comparison 2:
-127.1 [48.7, 206.7]); the attention probe forecasts worse than H2 on all four factors (comparison 4, H2→RCAP: −43.4, −25.1, −27.6, −69.8, all
+127.1 [48.7, 206.7]); the attention probe forecasts worse than H2 on all four factors (comparison 4, H2→A2: −43.4, −25.1, −27.6, −69.8, all
 intervals below zero). Qwen: H2 is worse than B2 on task (−30.6 [−53.6, −8.1]) and position (−5.3 [−10.7, −1.8]).
 Both generators: the attention probe is worse than B2 on position and append changes, and H1 is worse than B1 on append
 and companion changes.

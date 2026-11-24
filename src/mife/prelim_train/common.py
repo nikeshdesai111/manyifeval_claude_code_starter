@@ -12,15 +12,15 @@ GEN_LABEL = {"llama": "Llama-3.1-8B-Instruct", "qwen": "Qwen3-8B (non-thinking)"
 COMPS = [
     ("#1", "B1", "H1", "#1 B1 → H1 + structure", True),
     ("#2", "B2", "H2", "#2 B2 → H2 + structure", True),
-    ("#3", "B2", "RCAP", "#3 B2 → rule-conditioned attention", True),
-    ("#4", "H2", "RCAP", "#4 H2 + structure → attention", True),
+    ("#3", "B2", "RCAP", "#3 B2 → A2 (rule-conditioned attention)", True),
+    ("#4", "H2", "RCAP", "#4 H2 → A2", True),
     ("#5", "B1", "B1+H1", "#5 B1 → B1 + H", False),
     ("#6", "B2", "B2+H1", "#6 B2 → B2 + H", False),
     ("#7", "B2", "B2+A1", "#7 B2 → B2 + A", False),
 ]
 PREDS = ["B1", "B2", "H1", "H2", "RCAP", "B1+H1", "B2+H1", "B2+A1"]
 PRED_LABEL = {"B1": "B1 (S+P)", "B2": "B2 (S+P+R)", "H1": "H1 + structure", "H2": "H2 + structure",
-              "RCAP": "Rule-cond. attention (S+R+A)", "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A",
+              "RCAP": "A2: rule-cond. attention (S+R+A)", "B1+H1": "B1 + H", "B2+H1": "B2 + H", "B2+A1": "B2 + A",
               "REF_structure": "Structure only (ref.)"}
 OOF_DIR = ROOT / "results" / "v2_s3" / "predictions"
 
