@@ -15,7 +15,7 @@ from .paths import EVAL_DIR
 
 T = EVAL_DIR / "tables"
 OUT = EVAL_DIR / "paper"
-FIGDIR = "figures/test_" + "_".join(GENS)
+FIGDIR = "figures/test" if len(GENS) > 1 else "figures/test_" + "_".join(GENS)
 ORDER = ["#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8"]
 MAIN = ORDER[:4]   # prespecified primary comparisons (main text)
 INC = ORDER[4:]    # does a block add information? (appendix)
@@ -406,7 +406,6 @@ def incremental():
     """Appendix section: comparisons 5-8 (Objective 1 on test; Objective 2 preliminary training-group results)."""
     from ..config import ROOT
     con, sk = r("eval1_contrasts"), {x: r(f"eval2_{x}_skill") for x in ("position", "append", "companion", "task")}
-    c2 = pd.read_csv(ROOT / "results" / "preliminary_train_report" / "tables" / "obj2_eval1_contrasts.csv")
     out = []
     w = out.append
     w(r"\section{Does a feature block add information? Comparisons 5--8}")
@@ -416,8 +415,14 @@ def incremental():
       "baseline keeps its cross-validated settings and only the added block's penalty is tuned on the training folds, "
       "on the same grid with ``off'' allowed (then the gain is zero by construction). Comparison 8 was added after the "
       "evaluation plan was written, at the project owner's request, and was fitted with this same recipe on the 50 "
-      "training groups before any test scoring. Objective~1 numbers are held-out test results (22 groups); Objective~2 "
-      "numbers are preliminary out-of-fold results on the training groups.\n")
+      "training groups before any test scoring. All numbers are held-out test results on the 22 test groups.\n")
+    w("Attention adds information in every setting: added to B2 (comparison 7) it lowers NLL by 0.0372 [0.0174, 0.0596] "
+      "nats per outcome for Llama and 0.0236 [0.0084, 0.0420] for Qwen, and added to B2+H (comparison 8) by 0.0171 "
+      "[0.0029, 0.0342] and 0.0128 [0.0033, 0.0228], so attention carries risk information that the hidden state does "
+      "not. The hidden state added to B2 (comparison 6) helps for Llama (0.0236 [0.0075, 0.0416]) but not clearly for "
+      "Qwen (0.0099 [$-0.0059$, 0.0276]); added to B1 (comparison 5) it raises AUROC for both generators. For matched "
+      "changes (Table~\\ref{tab:inc_e2}), adding attention makes forecasts of position changes worse (comparison 7: "
+      "$-18.2$ and $-22.5$; comparison 8: $-17.0$ and $-9.6$), mirroring comparisons 3 and 4 in the main text.\n")
     rows, mids = [], []
     for gi, g in enumerate(GENS):
         if gi:
@@ -426,16 +431,11 @@ def incremental():
             x = con[(con.generator == g) & (con.comparison == cid)].iloc[0]
             row = [GL[g] if cid == INC[0] else "", CL[cid], ci(x.nll_reduction, x.nll_reduction_lo, x.nll_reduction_hi, 1, 4),
                    ci(x.auroc_gain, x.auroc_gain_lo, x.auroc_gain_hi, 100), f"{int(x.types_improved)}/15"]
-            y = c2[(c2.generator == g) & (c2.comparison == cid)]
-            row += ([ci(y.rmse_reduction.iloc[0], y.rmse_reduction_lo.iloc[0], y.rmse_reduction_hi.iloc[0], 100, 2),
-                     ci(y.spearman_gain.iloc[0], y.spearman_gain_lo.iloc[0], y.spearman_gain_hi.iloc[0], 100)]
-                    if len(y) else ["--", "--"])
             rows.append(row)
-    w(tab(r"Evaluation~1, comparisons 5--8. Objective~1 on the 22 test groups: NLL reduction (nats per outcome), AUROC "
-          r"gain ($\times100$), rule types with lower NLL. Objective~2 (preliminary, training out-of-fold): RMSE reduction "
-          r"(points) and Spearman gain ($\times100$). Positive favours the candidate; paired 95\% pool-bootstrap intervals.",
-          "tab:inc_e1", ["", "Comparison", "NLL red.", "AUROC gain", "Types", "Obj.~2 RMSE red.", "Obj.~2 Spearman"], rows,
-          align="llccccc", mid=mids))
+    w(tab(r"Evaluation~1 on the 22 test groups, comparisons 5--8: NLL reduction (nats per outcome), AUROC gain "
+          r"($\times100$) and rule types with lower NLL. Positive favours the candidate; paired 95\% pool-bootstrap "
+          r"intervals.", "tab:inc_e1", ["", "Comparison", "NLL red.", "AUROC gain", "Types"], rows,
+          align="llccc", mid=mids, resize=False))
     rows, mids = [], []
     for gi, g in enumerate(GENS):
         if gi:

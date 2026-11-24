@@ -1,0 +1,50 @@
+\section{Does a feature block add information? Comparisons 5--8}
+\label{app:incremental}
+Comparisons 5--7 add the hidden-state block H or the attention block A to a frozen text predictor (B1 or B2); comparison 8 adds A to B2+H and asks whether rule attention adds information beyond the hidden state. Each baseline keeps its cross-validated settings and only the added block's penalty is tuned on the training folds, on the same grid with ``off'' allowed (then the gain is zero by construction). Comparison 8 was added after the evaluation plan was written, at the project owner's request, and was fitted with this same recipe on the 50 training groups before any test scoring. All numbers are held-out test results on the 22 test groups.
+
+Attention adds information in every setting: added to B2 (comparison 7) it lowers NLL by 0.0372 [0.0174, 0.0596] nats per outcome for Llama and 0.0236 [0.0084, 0.0420] for Qwen, and added to B2+H (comparison 8) by 0.0171 [0.0029, 0.0342] and 0.0128 [0.0033, 0.0228], so attention carries risk information that the hidden state does not. The hidden state added to B2 (comparison 6) helps for Llama (0.0236 [0.0075, 0.0416]) but not clearly for Qwen (0.0099 [$-0.0059$, 0.0276]); added to B1 (comparison 5) it raises AUROC for both generators. For matched changes (Table~\ref{tab:inc_e2}), adding attention makes forecasts of position changes worse (comparison 7: $-18.2$ and $-22.5$; comparison 8: $-17.0$ and $-9.6$), mirroring comparisons 3 and 4 in the main text.
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Evaluation~1 on the 22 test groups, comparisons 5--8: NLL reduction (nats per outcome), AUROC gain ($\times100$) and rule types with lower NLL. Positive favours the candidate; paired 95\% pool-bootstrap intervals.}
+\label{tab:inc_e1}
+\begin{tabular}{llccc}
+\toprule
+ & Comparison & NLL red. & AUROC gain & Types \\
+\midrule
+Llama & 5: B1 \cto{} B1+H & 0.0131 [$-$0.0327, 0.0562] & 4.7 [1.1, 7.7] & 11/15 \\
+ & 6: B2 \cto{} B2+H & 0.0236 [0.0075, 0.0416] & 1.9 [1.0, 2.8] & 12/15 \\
+ & 7: B2 \cto{} B2+A & 0.0372 [0.0174, 0.0596] & 2.1 [1.2, 3.0] & 12/15 \\
+ & 8: B2+H \cto{} B2+H+A & 0.0171 [0.0029, 0.0342] & 0.8 [0.0, 1.6] & 10/15 \\
+\midrule
+Qwen & 5: B1 \cto{} B1+H & 0.0286 [0.0053, 0.0545] & 4.3 [2.5, 6.1] & 11/15 \\
+ & 6: B2 \cto{} B2+H & 0.0099 [$-$0.0059, 0.0276] & 1.6 [0.2, 3.2] & 9/15 \\
+ & 7: B2 \cto{} B2+A & 0.0236 [0.0084, 0.0420] & 3.0 [1.7, 4.6] & 11/15 \\
+ & 8: B2+H \cto{} B2+H+A & 0.0128 [0.0033, 0.0228] & 1.7 [0.6, 2.8] & 9/15 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Evaluation~2 on the 22 test groups, comparisons 5--8: paired $\Delta$-MSE reduction ($\times10^{4}$) [95\% interval], same matches and weights as Table~\ref{tab:eval2}.}
+\label{tab:inc_e2}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{llcccc}
+\toprule
+ & Comparison & Position & Strict append & Companion & Task \\
+\midrule
+Llama & 5: B1 \cto{} B1+H & $-$1.5 [$-$7.8, 4.9] & $-$5.7 [$-$17.6, 6.6] & $-$6.8 [$-$27.8, 17.1] & $-$7.9 [$-$169.8, 130.9] \\
+ & 6: B2 \cto{} B2+H & 7.3 [3.9, 11.1] & 6.0 [$-$1.9, 13.6] & 14.1 [1.2, 26.8] & 20.5 [$-$73.4, 110.5] \\
+ & 7: B2 \cto{} B2+A & $-$18.2 [$-$32.4, $-$4.6] & $-$2.4 [$-$11.9, 7.9] & 0.1 [$-$11.5, 12.5] & 46.3 [$-$19.3, 120.1] \\
+ & 8: B2+H \cto{} B2+H+A & $-$17.0 [$-$29.0, $-$5.6] & $-$2.3 [$-$11.3, 7.1] & $-$4.6 [$-$14.2, 5.6] & 7.9 [$-$38.4, 58.3] \\
+\midrule
+Qwen & 5: B1 \cto{} B1+H & $-$4.0 [$-$8.0, 0.0] & $-$2.2 [$-$9.0, 4.4] & $-$8.0 [$-$28.7, 12.0] & $-$21.8 [$-$83.6, 35.0] \\
+ & 6: B2 \cto{} B2+H & $-$4.2 [$-$8.3, $-$0.2] & $-$4.4 [$-$10.6, 2.0] & $-$8.1 [$-$25.7, 10.4] & $-$84.1 [$-$151.4, $-$24.7] \\
+ & 7: B2 \cto{} B2+A & $-$22.5 [$-$36.4, $-$10.2] & $-$16.5 [$-$29.6, $-$4.8] & $-$3.9 [$-$23.4, 14.2] & $-$48.6 [$-$110.2, 5.8] \\
+ & 8: B2+H \cto{} B2+H+A & $-$9.6 [$-$17.9, $-$2.7] & $-$6.0 [$-$14.5, 2.7] & 10.6 [$-$8.4, 33.2] & 8.1 [$-$27.7, 48.5] \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+

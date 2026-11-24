@@ -12,4 +12,5 @@ qwen,NLL/AUROC RCAP recomputed directly,True,nll 0.274445 vs 0.274445; auc 0.831
 qwen,NLL/AUROC B1+H1 recomputed directly,True,nll 0.302404 vs 0.302404; auc 0.801170 vs 0.801170
 qwen,NLL/AUROC B2+H1 recomputed directly,True,nll 0.288669 vs 0.288669; auc 0.816893 vs 0.816893
 qwen,NLL/AUROC B2+A1 recomputed directly,True,nll 0.274972 vs 0.274972; auc 0.830156 vs 0.830156
+qwen,NLL/AUROC B2+H1+A1 recomputed directly,True,nll 0.275845 vs 0.275845; auc 0.833557 vs 0.833557
 qwen,Position Δ-MSE #2 equals explicit-weight sum,True,-4.446e-04 vs -4.446e-04; weights sum 1.000000

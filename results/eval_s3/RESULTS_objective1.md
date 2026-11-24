@@ -5,6 +5,21 @@ Scope: **Objective 1 only** (Evaluation 1 and Evaluation 2), following the agree
 `manyifeval_s3_complete_evaluation_analysis_and_reporting_plan.md` (revised reporting draft, 2026-11-23). Objective 2 is
 not analysed here.
 
+## Key findings (both generators, 22 held-out test groups)
+
+- **Absolute risk (Evaluation 1).** Rule attention (A2) beats the exact-rule text predictor B2 for both generators
+  (#3: Llama 0.0433 [0.0134, 0.0774], Qwen 0.0242 [0.0090, 0.0424] nats per outcome). The hidden state beats B2 for
+  Llama (#2: 0.0209 [0.0003, 0.0422]) but not clearly for Qwen (0.0104 [−0.0059, 0.0284]). Attention beats the hidden
+  state for Qwen (#4 H2 → A2: 0.0138 [0.0018, 0.0263]) and cannot be separated from it for Llama (0.0224 [−0.0035,
+  0.0523]). A2 has the lowest NLL of all predictors for both generators.
+- **Does a block add information (#5–#8).** Attention helps on top of B2 (#7) and on top of B2+H (#8: Llama 0.0171
+  [0.0029, 0.0342], Qwen 0.0128 [0.0033, 0.0228]).
+- **Observed effects (Evaluation 2).** Task text moves rule risk the most (median noise-adjusted RMS 23.5 / 16.9 pp),
+  then companion identity (13.2 / 14.7 pp) and position (8.2 / 7.6 pp). Appending a rule raises retained-rule risk
+  for Qwen at every transition (+1.0 to +1.7 pp); for Llama the effect is small and changes sign.
+- **Forecasting changes (Table 4).** Attention forecasts position and append changes worse than B2 and H2 for both
+  generators (#3, #4 intervals below zero); the hidden state helps only for Llama's position changes (#2: 5.2 pp²).
+  Better absolute accuracy does not imply better forecasts of within-context changes.
 
 
 ## 0. What was evaluated, and how
@@ -15,7 +30,7 @@ not analysed here.
 - **Predictors:** the frozen V2 refits on the 50 S3 TRAIN pools (`results/v2_s3/models/`), applied once to TEST. No
   model, layer, penalty, calibration edge or weight was chosen on TEST. Hidden row: Llama layer 12, Qwen layer 18.
 - **Comparisons (positive always favours the candidate, right of the arrow):** primary #1 B1 → H1, #2 B2 → H2,
-  #3 B2 → A2 (rule-conditioned attention, S+R+A), #4 H2 → A2; secondary #5 B1 → B1+H, #6 B2 → B2+H, #7 B2 → B2+A.
+  #3 B2 → A2 (rule-conditioned attention, S+R+A), #4 H2 → A2; secondary (does a block add information?) #5 B1 → B1+H, #6 B2 → B2+H, #7 B2 → B2+A, and #8 B2+H → B2+H+A (added at the owner's request on 2026-11-24, fitted on the training groups with the same incremental recipe before test scoring).
 - **Uncertainty:** paired cluster bootstrap over the 22 TEST pools (B = 10,000, seed 20261203), percentile 95%
   intervals, pointwise and unadjusted for multiplicity. All predictors and contrasts use identical pool draws.
 - **Evaluation 2 weighting:** the plan's *proposed* recipe (§§5.1, 6.3), which was not separately signed off before
@@ -66,6 +81,7 @@ significance tests). Paired pointwise 95% CIs over the 22 TEST pools. Primary co
 | #5 B1 → B1 + H | +0.0131 [-0.0327, +0.0562] | +0.047 [+0.011, +0.077] | 11/15 |
 | #6 B2 → B2 + H | +0.0236 [+0.0075, +0.0416] | +0.019 [+0.010, +0.028] | 12/15 |
 | #7 B2 → B2 + A | +0.0372 [+0.0174, +0.0596] | +0.021 [+0.012, +0.030] | 12/15 |
+| #8 B2 + H → B2 + H + A | +0.0171 [+0.0029, +0.0342] | +0.008 [+0.000, +0.016] | 10/15 |
 
 **Panel B: Qwen3-8B (non-thinking)**
 
@@ -78,6 +94,7 @@ significance tests). Paired pointwise 95% CIs over the 22 TEST pools. Primary co
 | #5 B1 → B1 + H | +0.0286 [+0.0053, +0.0545] | +0.043 [+0.025, +0.061] | 11/15 |
 | #6 B2 → B2 + H | +0.0099 [-0.0059, +0.0276] | +0.016 [+0.002, +0.032] | 9/15 |
 | #7 B2 → B2 + A | +0.0236 [+0.0084, +0.0420] | +0.030 [+0.017, +0.046] | 11/15 |
+| #8 B2 + H → B2 + H + A | +0.0128 [+0.0033, +0.0228] | +0.017 [+0.006, +0.028] | 9/15 |
 
 ### Appendix A1. Compact overall metrics
 
@@ -93,6 +110,7 @@ significance tests). Paired pointwise 95% CIs over the 22 TEST pools. Primary co
 | B1 + H | 0.3892 [0.3406, 0.4340] | 0.1145 [0.0993, 0.1289] | 0.813 [0.776, 0.847] | 0.0558 [0.0405, 0.0727] |
 | B2 + H | 0.3644 [0.3082, 0.4252] | 0.1083 [0.0911, 0.1260] | 0.832 [0.785, 0.875] | 0.0397 [0.0233, 0.0619] |
 | B2 + A | 0.3508 [0.2976, 0.4113] | 0.1046 [0.0878, 0.1226] | 0.834 [0.783, 0.878] | 0.0349 [0.0201, 0.0585] |
+| B2 + H + A | 0.3473 [0.2974, 0.4027] | 0.1033 [0.0879, 0.1194] | 0.840 [0.793, 0.881] | 0.0371 [0.0236, 0.0570] |
 | Structure only (ref.) | 0.4077 [0.3636, 0.4534] | 0.1266 [0.1107, 0.1424] | 0.747 [0.695, 0.794] | 0.0502 [0.0302, 0.0726] |
 
 **Llama-3.1-8B-Instruct: all seven contrasts with raw scores**
@@ -106,6 +124,7 @@ significance tests). Paired pointwise 95% CIs over the 22 TEST pools. Primary co
 | #5 B1 → B1 + H | 0.4023 | 0.3892 | +0.0131 [-0.0327, +0.0562] | +0.0100 [-0.0042, +0.0239] | +0.047 [+0.011, +0.077] |
 | #6 B2 → B2 + H | 0.3880 | 0.3644 | +0.0236 [+0.0075, +0.0416] | +0.0081 [+0.0023, +0.0141] | +0.019 [+0.010, +0.028] |
 | #7 B2 → B2 + A | 0.3880 | 0.3508 | +0.0372 [+0.0174, +0.0596] | +0.0118 [+0.0055, +0.0188] | +0.021 [+0.012, +0.030] |
+| #8 B2 + H → B2 + H + A | 0.3644 | 0.3473 | +0.0171 [+0.0029, +0.0342] | +0.0051 [+0.0008, +0.0104] | +0.008 [+0.000, +0.016] |
 
 **Qwen3-8B (non-thinking): raw pooled metrics** (unit: one response × included-rule outcome)
 
@@ -119,6 +138,7 @@ significance tests). Paired pointwise 95% CIs over the 22 TEST pools. Primary co
 | B1 + H | 0.3024 [0.2447, 0.3678] | 0.0833 [0.0664, 0.1021] | 0.801 [0.735, 0.858] | 0.0460 [0.0277, 0.0684] |
 | B2 + H | 0.2887 [0.2329, 0.3529] | 0.0803 [0.0634, 0.0993] | 0.817 [0.751, 0.872] | 0.0391 [0.0211, 0.0621] |
 | B2 + A | 0.2750 [0.2174, 0.3421] | 0.0744 [0.0581, 0.0931] | 0.830 [0.762, 0.886] | 0.0387 [0.0204, 0.0619] |
+| B2 + H + A | 0.2758 [0.2190, 0.3425] | 0.0752 [0.0593, 0.0936] | 0.834 [0.768, 0.887] | 0.0384 [0.0214, 0.0597] |
 | Structure only (ref.) | 0.3197 [0.2642, 0.3812] | 0.0886 [0.0722, 0.1066] | 0.761 [0.691, 0.824] | 0.0500 [0.0296, 0.0765] |
 
 **Qwen3-8B (non-thinking): all seven contrasts with raw scores**
@@ -132,6 +152,7 @@ significance tests). Paired pointwise 95% CIs over the 22 TEST pools. Primary co
 | #5 B1 → B1 + H | 0.3310 | 0.3024 | +0.0286 [+0.0053, +0.0545] | +0.0081 [-0.0003, +0.0174] | +0.043 [+0.025, +0.061] |
 | #6 B2 → B2 + H | 0.2986 | 0.2887 | +0.0099 [-0.0059, +0.0276] | +0.0033 [-0.0031, +0.0108] | +0.016 [+0.002, +0.032] |
 | #7 B2 → B2 + A | 0.2986 | 0.2750 | +0.0236 [+0.0084, +0.0420] | +0.0093 [+0.0025, +0.0170] | +0.030 [+0.017, +0.046] |
+| #8 B2 + H → B2 + H + A | 0.2887 | 0.2758 | +0.0128 [+0.0033, +0.0228] | +0.0051 [+0.0019, +0.0084] | +0.017 [+0.006, +0.028] |
 
 ### Appendix A2. Calibration (reliability curves)
 
@@ -167,6 +188,7 @@ exploratory.*
 | #5 B1 → B1 + H | +0.0151 [-0.0005, +0.0348] | +0.0120 [-0.0581, +0.0770] | +0.0031 [-0.0647, +0.0753] | +0.0159 / +0.0131 |
 | #6 B2 → B2 + H | +0.0142 [+0.0044, +0.0268] | +0.0286 [+0.0027, +0.0580] | -0.0144 [-0.0480, +0.0175] | +0.0144 / +0.0236 |
 | #7 B2 → B2 + A | +0.0120 [+0.0040, +0.0216] | +0.0507 [+0.0202, +0.0858] | -0.0388 [-0.0762, -0.0055] | +0.0122 / +0.0372 |
+| #8 B2 + H → B2 + H + A | +0.0033 [-0.0007, +0.0076] | +0.0245 [+0.0030, +0.0508] | -0.0211 [-0.0481, +0.0005] | +0.0035 / +0.0163 |
 
 **Panel B: Qwen3-8B (non-thinking).** Observed violation rate: fixed 3.1% (803,160 response×rule outcomes, 22 pools); parameterized 13.9% (1,501,560 outcomes, 22 pools).
 
@@ -179,11 +201,12 @@ exploratory.*
 | #5 B1 → B1 + H | +0.0026 [-0.0013, +0.0069] | +0.0426 [+0.0062, +0.0831] | -0.0400 [-0.0810, -0.0023] | +0.0024 / +0.0401 |
 | #6 B2 → B2 + H | +0.0039 [-0.0020, +0.0106] | +0.0132 [-0.0115, +0.0411] | -0.0093 [-0.0386, +0.0177] | +0.0038 / +0.0126 |
 | #7 B2 → B2 + A | +0.0048 [+0.0003, +0.0101] | +0.0337 [+0.0107, +0.0632] | -0.0288 [-0.0587, -0.0048] | +0.0048 / +0.0248 |
+| #8 B2 + H → B2 + H + A | +0.0013 [-0.0002, +0.0031] | +0.0190 [+0.0043, +0.0355] | -0.0177 [-0.0348, -0.0028] | +0.0012 / +0.0121 |
 
 ### Appendix A4. Technical uncertainty and QC
 
 - llama: 115,236 prompt–rule rows, 2,304,720 response×rule outcomes (374,220 violations), 30,096 prompts, 22 pools, 66 tasks; rows clipped at 1e-6: 28.
-- qwen: 115,236 prompt–rule rows, 2,304,720 response×rule outcomes (234,085 violations), 30,096 prompts, 22 pools, 66 tasks; rows clipped at 1e-6: 1547.
+- qwen: 115,236 prompt–rule rows, 2,304,720 response×rule outcomes (234,085 violations), 30,096 prompts, 22 pools, 66 tasks; rows clipped at 1e-6: 1605.
 - Probabilities clipped to [1e-6, 1 − 1e-6] before the log. Paired cluster bootstrap over the 22 TEST pools, B = 10,000, seed 20261203, percentile intervals (pointwise, unadjusted). No sparse-type fallback head fired in the S3 refits (every type has its own ridge-logistic head).
 - Rule types with fewer than 8 contributing TEST pools (per-type estimates less stable): llama/english_lowercase (6 pools), llama/capital_word_frequency (6 pools), llama/existence (7 pools), llama/number_sentences (7 pools), llama/number_words (6 pools), qwen/english_lowercase (6 pools), qwen/capital_word_frequency (6 pools), qwen/existence (7 pools), qwen/number_sentences (7 pools), qwen/number_words (6 pools).
 
@@ -198,6 +221,7 @@ Sensitivity of the Table 2 NLL reductions to the interval method:
 | llama | #5 | +0.0131 | [-0.0327, +0.0562] | [-0.0346, +0.0608] | [+0.0056, +0.0265] |
 | llama | #6 | +0.0236 | [+0.0075, +0.0416] | [+0.0052, +0.0419] | [+0.0177, +0.0278] |
 | llama | #7 | +0.0372 | [+0.0174, +0.0596] | [+0.0141, +0.0603] | [+0.0309, +0.0398] |
+| llama | #8 | +0.0171 | [+0.0029, +0.0342] | [-0.0001, +0.0344] | [+0.0118, +0.0190] |
 | qwen | #1 | +0.0351 | [+0.0064, +0.0654] | [+0.0036, +0.0667] | [+0.0267, +0.0413] |
 | qwen | #2 | +0.0104 | [-0.0059, +0.0284] | [-0.0079, +0.0287] | [+0.0058, +0.0147] |
 | qwen | #3 | +0.0242 | [+0.0090, +0.0424] | [+0.0063, +0.0420] | [+0.0187, +0.0271] |
@@ -205,6 +229,7 @@ Sensitivity of the Table 2 NLL reductions to the interval method:
 | qwen | #5 | +0.0286 | [+0.0053, +0.0545] | [+0.0020, +0.0553] | [+0.0204, +0.0332] |
 | qwen | #6 | +0.0099 | [-0.0059, +0.0276] | [-0.0081, +0.0279] | [+0.0054, +0.0139] |
 | qwen | #7 | +0.0236 | [+0.0084, +0.0420] | [+0.0055, +0.0418] | [+0.0179, +0.0264] |
+| qwen | #8 | +0.0128 | [+0.0033, +0.0228] | [+0.0022, +0.0234] | [+0.0106, +0.0153] |
 
 ---
 
@@ -286,6 +311,7 @@ task-pair contrasts, equal-k macro (k = 1–5). Paired 95% pool-cluster CIs.
 | #5 B1 → B1 + H | -1.53 [-7.76, +4.94] | -5.66 [-17.58, +6.62] | -6.83 [-27.82, +17.07] | -7.90 [-169.79, +130.94] |
 | #6 B2 → B2 + H | +7.34 [+3.94, +11.11] | +6.05 [-1.90, +13.62] | +14.09 [+1.17, +26.80] | +20.48 [-73.37, +110.53] |
 | #7 B2 → B2 + A | -18.25 [-32.44, -4.57] | -2.41 [-11.88, +7.89] | +0.09 [-11.52, +12.48] | +46.34 [-19.35, +120.05] |
+| #8 B2 + H → B2 + H + A | -17.00 [-28.99, -5.59] | -2.32 [-11.33, +7.14] | -4.57 [-14.16, +5.63] | +7.92 [-38.39, +58.27] |
 
 **Panel B: Qwen3-8B (non-thinking)**
 
@@ -298,6 +324,7 @@ task-pair contrasts, equal-k macro (k = 1–5). Paired 95% pool-cluster CIs.
 | #5 B1 → B1 + H | -4.01 [-8.01, +0.04] | -2.17 [-8.96, +4.44] | -7.99 [-28.68, +12.05] | -21.85 [-83.61, +34.98] |
 | #6 B2 → B2 + H | -4.18 [-8.28, -0.23] | -4.35 [-10.55, +2.00] | -8.05 [-25.67, +10.41] | -84.05 [-151.37, -24.67] |
 | #7 B2 → B2 + A | -22.54 [-36.38, -10.17] | -16.55 [-29.57, -4.78] | -3.89 [-23.41, +14.23] | -48.58 [-110.18, +5.83] |
+| #8 B2 + H → B2 + H + A | -9.56 [-17.88, -2.73] | -6.01 [-14.54, +2.67] | +10.62 [-8.44, +33.16] | +8.05 [-27.71, +48.46] |
 
 ---
 
@@ -343,6 +370,7 @@ Observed target violation risk at every slot (COA-balanced, 95% pool CIs) with t
 | #5 B1 → B1 + H | -4.92 [-19.27, +9.30] | -2.91 [-11.20, +5.32] | -1.30 [-6.55, +3.94] | +3.01 [-3.59, +9.69] | -1.53 [-7.76, +4.94] |
 | #6 B2 → B2 + H | +15.15 [+6.99, +24.73] | +7.43 [+3.37, +11.68] | +3.49 [+1.28, +5.84] | +3.28 [+0.46, +6.34] | +7.34 [+3.94, +11.11] |
 | #7 B2 → B2 + A | -45.04 [-77.31, -17.11] | -19.05 [-35.70, -2.20] | -10.16 [-19.53, -0.19] | +1.26 [-8.40, +12.46] | -18.25 [-32.44, -4.57] |
+| #8 B2 + H → B2 + H + A | -43.72 [-72.62, -19.05] | -17.63 [-31.98, -3.70] | -8.31 [-15.82, -0.36] | +1.64 [-6.17, +10.56] | -17.00 [-28.99, -5.59] |
 
 | Comparison | Δ-MAE reduction, macro (pp) [95% CI] |
 |---|---:|
@@ -353,6 +381,7 @@ Observed target violation risk at every slot (COA-balanced, 95% pool CIs) with t
 | #5 B1 → B1 + H | -0.300 [-0.495, -0.136] |
 | #6 B2 → B2 + H | +0.024 [-0.047, +0.096] |
 | #7 B2 → B2 + A | -0.810 [-1.060, -0.572] |
+| #8 B2 + H → B2 + H + A | -0.582 [-0.791, -0.385] |
 
 Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-8B-Instruct):
 
@@ -367,6 +396,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | B1 + H | 186.0 | 125.7 | 108.2 | 103.2 | 130.8 |
 | B2 + H | 164.4 | 114.4 | 103.0 | 103.0 | 121.2 |
 | B2 + A | 224.6 | 140.9 | 116.7 | 105.0 | 146.8 |
+| B2 + H + A | 208.1 | 132.0 | 111.3 | 101.4 | 138.2 |
 
 **Qwen3-8B (non-thinking): Δ-MSE reduction (pp²) [95% CI]**
 
@@ -379,6 +409,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | #5 B1 → B1 + H | -13.07 [-21.69, -4.48] | -3.45 [-7.52, +0.53] | -0.97 [-3.66, +1.73] | +1.43 [-1.23, +4.38] | -4.01 [-8.01, +0.04] |
 | #6 B2 → B2 + H | -12.52 [-20.50, -4.93] | -2.74 [-6.84, +1.43] | -1.60 [-4.95, +1.56] | +0.14 [-2.72, +3.23] | -4.18 [-8.28, -0.23] |
 | #7 B2 → B2 + A | -34.55 [-55.79, -16.37] | -22.14 [-38.42, -7.64] | -19.81 [-33.77, -8.07] | -13.67 [-26.39, -2.99] | -22.54 [-36.38, -10.17] |
+| #8 B2 + H → B2 + H + A | -10.26 [-23.87, +1.58] | -9.72 [-18.70, -1.93] | -10.66 [-18.91, -4.08] | -7.59 [-15.38, -1.32] | -9.56 [-17.88, -2.73] |
 
 | Comparison | Δ-MAE reduction, macro (pp) [95% CI] |
 |---|---:|
@@ -389,6 +420,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | #5 B1 → B1 + H | -0.316 [-0.449, -0.187] |
 | #6 B2 → B2 + H | -0.386 [-0.515, -0.259] |
 | #7 B2 → B2 + A | -1.071 [-1.453, -0.741] |
+| #8 B2 + H → B2 + H + A | -0.431 [-0.669, -0.235] |
 
 Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Qwen3-8B (non-thinking)):
 
@@ -403,6 +435,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Qwen3-8B (
 | B1 + H | 124.3 | 107.9 | 97.4 | 80.0 | 102.4 |
 | B2 + H | 122.2 | 105.5 | 95.6 | 78.2 | 100.4 |
 | B2 + A | 144.3 | 124.9 | 113.8 | 92.0 | 118.7 |
+| B2 + H + A | 132.5 | 115.2 | 106.2 | 85.8 | 109.9 |
 
 ## Appendix Pos-C. Numerical type-level position effects
 
@@ -475,6 +508,7 @@ Signed last − first effect (pp) [95% CI] (supporting pools), by target type an
 | #5 B1 → B1 + H | -10.77 [-33.94, +12.41] | -12.88 [-27.06, +1.23] | -0.72 [-11.32, +10.11] | +1.71 [-9.48, +13.20] | -5.66 [-17.58, +6.62] |
 | #6 B2 → B2 + H | +3.08 [-11.56, +17.60] | +9.90 [+1.19, +18.53] | +8.15 [+1.39, +14.87] | +3.07 [-3.53, +9.55] | +6.05 [-1.90, +13.62] |
 | #7 B2 → B2 + A | +0.66 [-19.29, +23.18] | -0.57 [-12.04, +11.15] | -0.86 [-8.85, +7.38] | -8.88 [-16.42, -0.86] | -2.41 [-11.88, +7.89] |
+| #8 B2 + H → B2 + H + A | +3.73 [-18.22, +27.19] | -4.84 [-13.75, +4.25] | -3.28 [-8.87, +2.38] | -4.87 [-10.45, +0.95] | -2.32 [-11.33, +7.14] |
 
 | Comparison | Δ-MAE reduction, macro (pp) [95% CI] |
 |---|---:|
@@ -485,6 +519,7 @@ Signed last − first effect (pp) [95% CI] (supporting pools), by target type an
 | #5 B1 → B1 + H | -0.049 [-0.250, +0.150] |
 | #6 B2 → B2 + H | +0.064 [-0.085, +0.215] |
 | #7 B2 → B2 + A | -0.188 [-0.378, +0.013] |
+| #8 B2 + H → B2 + H + A | -0.104 [-0.281, +0.083] |
 
 Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-8B-Instruct):
 
@@ -499,6 +534,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | B1 + H | 289.9 | 236.7 | 212.9 | 201.5 | 235.2 |
 | B2 + H | 265.6 | 209.1 | 196.6 | 189.8 | 215.3 |
 | B2 + A | 268.1 | 219.6 | 205.6 | 201.7 | 223.7 |
+| B2 + H + A | 261.9 | 214.0 | 199.9 | 194.6 | 217.6 |
 
 **Qwen3-8B (non-thinking): Δ-MSE reduction (pp²) [95% CI]**
 
@@ -511,6 +547,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | #5 B1 → B1 + H | -2.00 [-10.44, +6.63] | -5.27 [-13.44, +2.39] | -1.72 [-9.26, +6.02] | +0.30 [-7.90, +8.92] | -2.17 [-8.96, +4.44] |
 | #6 B2 → B2 + H | -6.20 [-13.83, +1.22] | -5.61 [-12.75, +1.26] | -2.69 [-9.03, +4.35] | -2.89 [-11.23, +5.10] | -4.35 [-10.55, +2.00] |
 | #7 B2 → B2 + A | -19.18 [-40.42, -1.09] | -17.29 [-31.81, -3.00] | -11.43 [-22.81, -1.06] | -18.28 [-31.21, -6.29] | -16.55 [-29.57, -4.78] |
+| #8 B2 + H → B2 + H + A | -5.69 [-21.15, +8.67] | -6.53 [-15.97, +4.42] | -3.81 [-11.22, +3.61] | -8.02 [-15.62, -0.75] | -6.01 [-14.54, +2.67] |
 
 | Comparison | Δ-MAE reduction, macro (pp) [95% CI] |
 |---|---:|
@@ -521,6 +558,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | #5 B1 → B1 + H | -0.064 [-0.267, +0.141] |
 | #6 B2 → B2 + H | -0.103 [-0.298, +0.088] |
 | #7 B2 → B2 + A | -0.273 [-0.577, -0.006] |
+| #8 B2 + H → B2 + H + A | -0.011 [-0.166, +0.138] |
 
 Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Qwen3-8B (non-thinking)):
 
@@ -535,6 +573,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Qwen3-8B (
 | B1 + H | 145.0 | 214.8 | 232.5 | 235.7 | 207.0 |
 | B2 + H | 143.4 | 210.2 | 228.9 | 234.0 | 204.1 |
 | B2 + A | 156.3 | 221.9 | 237.7 | 249.4 | 216.3 |
+| B2 + H + A | 149.1 | 216.7 | 232.7 | 242.0 | 210.1 |
 
 Coverage: expected and realized strict prefix pairs are equal for every transition (1,980 / 7,920 / 11,880 / 3,960
 prompt pairs; 1,980 / 15,840 / 35,640 / 15,840 retained targets per generator). Weights: retained targets equal within a
@@ -597,6 +636,7 @@ Directed signed matrix (Panel B): full numbers in `tables/eval2_companion_signed
 | #5 B1 → B1 + H | -12.22 [-42.96, +21.14] | -10.49 [-31.34, +12.48] | -10.79 [-30.57, +9.85] | +6.20 [-19.04, +32.32] | -6.83 [-27.82, +17.07] |
 | #6 B2 → B2 + H | +27.34 [+7.13, +48.06] | +16.06 [+3.25, +28.46] | +8.81 [-3.11, +20.27] | +4.15 [-9.27, +16.65] | +14.09 [+1.17, +26.80] |
 | #7 B2 → B2 + A | +4.22 [-15.16, +22.89] | +1.13 [-12.20, +15.17] | -3.68 [-16.61, +10.04] | -1.31 [-14.93, +12.69] | +0.09 [-11.52, +12.48] |
+| #8 B2 + H → B2 + H + A | -10.41 [-24.69, +4.13] | -5.10 [-15.33, +5.75] | -4.15 [-13.87, +6.12] | +1.37 [-8.78, +11.66] | -4.57 [-14.16, +5.63] |
 
 | Comparison | Δ-MAE reduction, macro (pp) [95% CI] |
 |---|---:|
@@ -607,6 +647,7 @@ Directed signed matrix (Panel B): full numbers in `tables/eval2_companion_signed
 | #5 B1 → B1 + H | +0.011 [-0.332, +0.359] |
 | #6 B2 → B2 + H | +0.211 [+0.016, +0.399] |
 | #7 B2 → B2 + A | -0.046 [-0.270, +0.191] |
+| #8 B2 + H → B2 + H + A | -0.077 [-0.260, +0.126] |
 
 Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-8B-Instruct):
 
@@ -621,6 +662,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | B1 + H | 371.9 | 335.6 | 320.3 | 330.4 | 339.6 |
 | B2 + H | 318.5 | 294.2 | 285.1 | 307.2 | 301.3 |
 | B2 + A | 341.6 | 309.2 | 297.6 | 312.7 | 315.3 |
+| B2 + H + A | 328.9 | 299.3 | 289.3 | 305.8 | 305.8 |
 
 **Qwen3-8B (non-thinking): Δ-MSE reduction (pp²) [95% CI]**
 
@@ -633,6 +675,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | #5 B1 → B1 + H | -29.65 [-63.45, -1.10] | -9.34 [-31.99, +13.12] | +2.42 [-15.09, +20.92] | +4.63 [-17.62, +25.65] | -7.99 [-28.68, +12.05] |
 | #6 B2 → B2 + H | -25.89 [-52.31, -2.25] | -11.04 [-31.87, +9.72] | +1.14 [-15.38, +19.00] | +3.57 [-14.52, +23.04] | -8.05 [-25.67, +10.41] |
 | #7 B2 → B2 + A | -0.37 [-29.98, +28.57] | -8.45 [-27.83, +8.68] | -7.02 [-28.73, +13.32] | +0.28 [-21.32, +23.75] | -3.89 [-23.41, +14.23] |
+| #8 B2 + H → B2 + H + A | +24.73 [-9.48, +65.31] | +7.43 [-10.00, +27.07] | +2.74 [-14.89, +19.90] | +7.57 [-9.32, +26.75] | +10.62 [-8.44, +33.16] |
 
 | Comparison | Δ-MAE reduction, macro (pp) [95% CI] |
 |---|---:|
@@ -643,6 +686,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | #5 B1 → B1 + H | -0.173 [-0.516, +0.158] |
 | #6 B2 → B2 + H | -0.075 [-0.323, +0.191] |
 | #7 B2 → B2 + A | +0.057 [-0.280, +0.379] |
+| #8 B2 + H → B2 + H + A | +0.237 [-0.018, +0.505] |
 
 Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Qwen3-8B (non-thinking)):
 
@@ -657,6 +701,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Qwen3-8B (
 | B1 + H | 297.6 | 354.5 | 383.9 | 382.4 | 354.6 |
 | B2 + H | 285.2 | 344.7 | 378.2 | 378.5 | 346.6 |
 | B2 + A | 259.6 | 342.1 | 386.3 | 381.8 | 342.5 |
+| B2 + H + A | 260.4 | 337.2 | 375.4 | 370.9 | 336.0 |
 
 ## Appendix C-C. Companion implementation checks
 
@@ -737,6 +782,7 @@ the pair:
 | #5 B1 → B1 + H | -96.01 [-373.84, +151.73] | -19.38 [-224.88, +143.20] | +25.34 [-130.19, +161.97] | +24.28 [-124.34, +156.16] | +26.27 [-113.45, +149.44] | -7.90 [-169.79, +130.94] |
 | #6 B2 → B2 + H | -19.27 [-216.14, +161.05] | +19.56 [-98.95, +132.53] | +33.04 [-49.94, +116.00] | +34.60 [-36.47, +106.56] | +34.47 [-26.41, +100.11] | +20.48 [-73.37, +110.53] |
 | #7 B2 → B2 + A | +38.58 [-140.97, +221.17] | +43.37 [-40.03, +134.35] | +48.00 [-14.14, +113.52] | +48.50 [-4.34, +105.48] | +53.26 [+9.82, +100.99] | +46.34 [-19.35, +120.05] |
+| #8 B2 + H → B2 + H + A | +28.56 [-98.79, +174.01] | -5.88 [-62.67, +53.76] | -3.12 [-40.16, +35.24] | +4.75 [-23.20, +34.23] | +15.29 [-6.85, +39.76] | +7.92 [-38.39, +58.27] |
 
 | Comparison | Δ-MAE reduction, macro (pp) [95% CI] |
 |---|---:|
@@ -747,6 +793,7 @@ the pair:
 | #5 B1 → B1 + H | +0.693 [-0.807, +2.032] |
 | #6 B2 → B2 + H | +0.243 [-0.695, +1.193] |
 | #7 B2 → B2 + A | +0.559 [-0.228, +1.440] |
+| #8 B2 + H → B2 + H + A | +0.190 [-0.300, +0.717] |
 
 Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-8B-Instruct):
 
@@ -761,6 +808,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | B1 + H | 1093.8 | 909.6 | 824.4 | 822.0 | 823.6 | 894.7 |
 | B2 + H | 896.7 | 725.2 | 660.1 | 653.6 | 663.6 | 719.8 |
 | B2 + A | 838.8 | 701.4 | 645.1 | 639.7 | 644.8 | 694.0 |
+| B2 + H + A | 868.1 | 731.1 | 663.2 | 648.9 | 648.3 | 711.9 |
 
 **Qwen3-8B (non-thinking): Δ-MSE reduction (pp²) [95% CI]**
 
@@ -773,6 +821,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | #5 B1 → B1 + H | -30.14 [-134.76, +68.62] | -11.03 [-77.93, +52.65] | -18.44 [-79.39, +36.03] | -24.96 [-77.31, +21.60] | -24.66 [-72.59, +23.78] | -21.85 [-83.61, +34.98] |
 | #6 B2 → B2 + H | -74.21 [-167.65, +9.38] | -75.01 [-152.98, -7.38] | -80.17 [-147.36, -21.58] | -92.21 [-154.29, -36.65] | -98.66 [-155.83, -45.86] | -84.05 [-151.37, -24.67] |
 | #7 B2 → B2 + A | -45.58 [-131.99, +43.59] | -68.08 [-146.85, +5.01] | -57.44 [-126.18, -1.08] | -45.58 [-99.02, -0.23] | -26.22 [-63.90, +6.81] | -48.58 [-110.18, +5.83] |
+| #8 B2 + H → B2 + H + A | +9.33 [-33.00, +54.54] | -3.91 [-60.86, +60.98] | +0.95 [-41.11, +46.23] | +9.87 [-21.43, +43.18] | +24.02 [+4.82, +45.12] | +8.05 [-27.71, +48.46] |
 
 | Comparison | Δ-MAE reduction, macro (pp) [95% CI] |
 |---|---:|
@@ -783,6 +832,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Llama-3.1-
 | #5 B1 → B1 + H | -0.053 [-0.667, +0.527] |
 | #6 B2 → B2 + H | -1.420 [-2.182, -0.697] |
 | #7 B2 → B2 + A | -0.966 [-1.781, -0.209] |
+| #8 B2 + H → B2 + H + A | +0.238 [-0.148, +0.628] |
 
 Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Qwen3-8B (non-thinking)):
 
@@ -797,6 +847,7 @@ Raw Δ-MSE (pp²) of each predictor and of the zero-change reference (Qwen3-8B (
 | B1 + H | 338.7 | 440.5 | 485.8 | 525.9 | 579.9 | 474.2 |
 | B2 + H | 319.6 | 424.8 | 470.1 | 510.4 | 561.0 | 457.2 |
 | B2 + A | 291.0 | 417.8 | 447.4 | 463.7 | 488.5 | 421.7 |
+| B2 + H + A | 310.3 | 428.7 | 469.2 | 500.5 | 537.0 | 449.1 |
 
 ## Appendix D-D. Task matching and families
 

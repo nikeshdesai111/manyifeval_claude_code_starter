@@ -1,0 +1,75 @@
+{
+  "baseline": "B2+H1",
+  "baseline_setting": "X=100000",
+  "blocks": [
+    [
+      "EP",
+      "F_P"
+    ],
+    [
+      "ER",
+      "F_R"
+    ],
+    [
+      "S",
+      "S"
+    ],
+    [
+      "H12",
+      "F_X"
+    ],
+    [
+      "A1",
+      "X"
+    ]
+  ],
+  "cv_loss": 0.37373629674483827,
+  "fixed": {
+    "F_P": 100000.0,
+    "F_R": 100000.0,
+    "F_X": 100000.0
+  },
+  "fold_losses": [
+    0.3175398007069397,
+    0.33778913854888176,
+    0.40218288721071754,
+    0.34368225850796497,
+    0.4674873987496876
+  ],
+  "grid": [
+    {
+      "cv_loss": 0.4385420926790437,
+      "setting": "X=100"
+    },
+    {
+      "cv_loss": 0.393774674550248,
+      "setting": "X=1000"
+    },
+    {
+      "cv_loss": 0.37373629674483827,
+      "setting": "X=10000"
+    },
+    {
+      "cv_loss": 0.37777298229171136,
+      "setting": "X=100000"
+    },
+    {
+      "cv_loss": 0.3830432958617102,
+      "setting": "X=1e+06"
+    },
+    {
+      "cv_loss": 0.38469107122212093,
+      "setting": "X=1e+07"
+    },
+    {
+      "cv_loss": 0.3849446655688371,
+      "setting": null
+    }
+  ],
+  "label": "B2+H+A",
+  "predictor": "B2+H1+A1",
+  "requested": "project owner, 2026-11-24 (added after the evaluation plan; not part of the original seven)",
+  "setting": "X=10000",
+  "split": "split-s3-2026-11-23",
+  "version": "v2-2026-11-20"
+}

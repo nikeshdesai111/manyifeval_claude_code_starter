@@ -1,0 +1,79 @@
+{
+  "baseline": "B2+H1",
+  "baseline_setting": "X=10000",
+  "blocks": [
+    [
+      "EP",
+      "F_P"
+    ],
+    [
+      "ERmean",
+      "F_R"
+    ],
+    [
+      "S",
+      "S"
+    ],
+    [
+      "H12",
+      "F_X"
+    ],
+    [
+      "A1mean",
+      "X"
+    ]
+  ],
+  "cv_loss": 0.01558165142633687,
+  "fixed": {
+    "F_P": 100000.0,
+    "F_R": 10000.0,
+    "F_X": 10000.0
+  },
+  "fold_losses": [
+    0.012785202019069224,
+    0.013775667233425054,
+    0.012932031752110435,
+    0.01483482717086854,
+    0.023580528956211103
+  ],
+  "grid": [
+    {
+      "cv_loss": 0.018227380462226394,
+      "setting": "X=1"
+    },
+    {
+      "cv_loss": 0.017801471400513,
+      "setting": "X=10"
+    },
+    {
+      "cv_loss": 0.016611752350677113,
+      "setting": "X=100"
+    },
+    {
+      "cv_loss": 0.01558165142633687,
+      "setting": "X=1000"
+    },
+    {
+      "cv_loss": 0.01559395441231777,
+      "setting": "X=10000"
+    },
+    {
+      "cv_loss": 0.016024231161962003,
+      "setting": "X=100000"
+    },
+    {
+      "cv_loss": 0.016180443153609742,
+      "setting": "X=1e+06"
+    },
+    {
+      "cv_loss": 0.01620328028261602,
+      "setting": null
+    }
+  ],
+  "label": "B2+H+A",
+  "predictor": "B2+H1+A1",
+  "requested": "project owner, 2026-11-24 (added after the evaluation plan; not part of the original seven)",
+  "setting": "X=1000",
+  "split": "split-s3-2026-11-23",
+  "version": "v2-2026-11-20"
+}

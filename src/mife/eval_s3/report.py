@@ -351,7 +351,7 @@ not analysed here.
 - **Predictors:** the frozen V2 refits on the 50 S3 TRAIN pools (`results/v2_s3/models/`), applied once to TEST. No
   model, layer, penalty, calibration edge or weight was chosen on TEST. Hidden row: Llama layer 12, Qwen layer 18.
 - **Comparisons (positive always favours the candidate, right of the arrow):** primary #1 B1 → H1, #2 B2 → H2,
-  #3 B2 → A2 (rule-conditioned attention, S+R+A), #4 H2 → A2; secondary #5 B1 → B1+H, #6 B2 → B2+H, #7 B2 → B2+A.
+  #3 B2 → A2 (rule-conditioned attention, S+R+A), #4 H2 → A2; secondary (does a block add information?) #5 B1 → B1+H, #6 B2 → B2+H, #7 B2 → B2+A, and #8 B2+H → B2+H+A (added at the owner's request on 2026-11-24, fitted on the training groups with the same incremental recipe before test scoring).
 - **Uncertainty:** paired cluster bootstrap over the 22 TEST pools (B = 10,000, seed 20261203), percentile 95%
   intervals, pointwise and unadjusted for multiplicity. All predictors and contrasts use identical pool draws.
 - **Evaluation 2 weighting:** the plan's *proposed* recipe (§§5.1, 6.3), which was not separately signed off before

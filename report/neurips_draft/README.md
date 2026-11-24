@@ -6,20 +6,32 @@ official paper checklist is not included). Final report due Mon 7 Dec 2026.
 
 | File | What it is |
 |---|---|
-| `paper.tex` | Main source. Main text = pages 1–8; references and appendices A–K follow. |
+| `paper.tex` | Main source (generated; see below). Main text, then references and appendices. |
 | `refs.bib` | Bibliography (63 entries; see the verification logs below). |
 | `CRITIQUE_2026-11-24.md` | Critique of the 23 Nov draft that drove the 24 Nov revision, with the NEED.pdf points not adopted. |
 | `neurips_2026.sty` | Official NeurIPS 2026 style file (`\ProvidesPackage{neurips_2026}[2026-01-29 ...]`, the version shared by most public copies). |
 | `make_assets.py` | Builds `figures/pair_coverage_s3.pdf` and `generated/*.tex` from design metadata and committed TRAIN-CV tables. |
 | `paper.pdf` | Compiled draft. |
 
-## Preliminary TRAIN results (24 Nov 2026)
+## Held-out test results, Objective 1 only (24 Nov 2026)
 
-Tables 3-4, Figure 1 (`figures/eval2_prelim_train.pdf`) and Appendix H now hold **preliminary grouped-CV out-of-fold
-results on the 50 S3 training groups**, with the disclosure in Section 6.1. They are built by
-`mife.prelim_train.paper_assets` from `results/preliminary_train_report/tables/` and inlined between
-`% BEGIN generated` / `% END generated` markers; appendix PNGs are in `figures/prelim/`. Provenance, deviations and
-commands: `results/preliminary_train_report/README.md`. The 22-group test evaluation will replace them.
+`paper.tex` is the single paper. It reports held-out results on the 22 S3 test groups for both generators, for the
+rule-level target (Objective 1) only; the prompt-level target (Objective 2) is left out for now at the project owner's
+request (its code and preliminary results stay in the repository). The main text covers the four prespecified primary
+comparisons (1–4); comparisons 5–8, which add a block to a fixed predictor, are in an appendix.
+
+`paper.tex` is **generated**: edit the prose in `src/mife/eval_s3/paper_copy.py` and the exhibits in
+`src/mife/eval_s3/paper_test.py`, then rebuild:
+
+```bash
+PYTHONPATH=src .venv/bin/python -m mife.eval_s3.paper_test   # LaTeX exhibits from results/eval_s3/tables/
+PYTHONPATH=src .venv/bin/python -m mife.eval_s3.paper_copy   # paper.tex from the archived source + exhibits
+cd report/neurips_draft && tectonic -X compile paper.tex
+```
+
+The builder starts from the archived preliminary-results source,
+`results/preliminary_train_report/paper/paper_preliminary_train.tex` (with its PDF), kept as a record of the retired
+training-results paper.
 
 ## Build
 

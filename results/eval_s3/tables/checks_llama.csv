@@ -12,4 +12,5 @@ llama,NLL/AUROC RCAP recomputed directly,True,nll 0.344725 vs 0.344725; auc 0.83
 llama,NLL/AUROC B1+H1 recomputed directly,True,nll 0.389199 vs 0.389199; auc 0.812980 vs 0.812980
 llama,NLL/AUROC B2+H1 recomputed directly,True,nll 0.364439 vs 0.364439; auc 0.832311 vs 0.832311
 llama,NLL/AUROC B2+A1 recomputed directly,True,nll 0.350799 vs 0.350799; auc 0.833966 vs 0.833966
+llama,NLL/AUROC B2+H1+A1 recomputed directly,True,nll 0.347328 vs 0.347328; auc 0.840115 vs 0.840115
 llama,Position Δ-MSE #2 equals explicit-weight sum,True,5.236e-04 vs 5.236e-04; weights sum 1.000000
