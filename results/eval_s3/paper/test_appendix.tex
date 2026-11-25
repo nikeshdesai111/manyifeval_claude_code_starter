@@ -138,6 +138,10 @@ $k$ & Slots & Llama & Qwen & Contexts \\
 \end{tabular}
 \end{table}
 
+\subsection*{Pos-A2 --- Position profiles for fixed and parameterised rule types}
+Added on 25 November 2026 at the project owner's request, after the test results above were written; it was not in the evaluation plan. It is descriptive and uses observed outcomes only: Pos-A split by the target's rule class (the five fixed-wording types and the ten parameterised types, as in A3b), with the same matched contexts, weights and 22-pool bootstrap, so the all-type curves equal Pos-A. Moving the target also changes which rule is last and the target's distance to the end of the prompt, so the curves describe list position, not distance alone. There is no middle-slot dip of the lost-in-the-middle kind: the all-type and parameterised curves rise towards the last slot for both generators; Qwen's fixed-type curve is flat, with middle slots at most 0.22 points above both ends, well inside the intervals. Values: \texttt{tables/eval2\_position\_slot\_risk\_by\_class.csv}.
+\begin{figure}[h]\centering\includegraphics[width=\linewidth]{figures/test/e2_posA2_slot_curves_by_class.png}\caption{Pos-A2. Observed target violation risk at every slot by $k$, separately for parameterised (10) and fixed-wording (5) target types (dashed: all 15, as in Pos-A; 95\% pool intervals), with each class's paired last $-$ first difference. Observed outcomes only.}\end{figure}
+
 \subsection*{Pos-B --- Predicting position changes by $k$}
 \begin{table}[h]
 \centering\scriptsize

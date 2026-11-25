@@ -243,6 +243,20 @@ def appendix():
         rows.append(row)
     w(tab("Pos-A. Signed change (later slot $-$ earlier slot, points) for all 20 position-pair strata, 22 test pools.",
           "tab:posA", ["$k$", "Slots"] + by_gen_cols() + ["Contexts"], rows, align="cc" + "c" * NG + "c", resize=False))
+    if (T / "eval2_position_slot_risk_by_class.csv").exists():
+        w(r"\subsection*{Pos-A2 --- Position profiles for fixed and parameterised rule types}")
+        w(r"Added on 25 November 2026 at the project owner's request, after the test results above were written; it was "
+          r"not in the evaluation plan. It is descriptive and uses observed outcomes only: Pos-A split by the "
+          r"target's rule class (the five fixed-wording types and the ten parameterised types, as in A3b), with the "
+          r"same matched contexts, weights and 22-pool bootstrap, so the all-type curves equal Pos-A. Moving the target "
+          r"also changes which rule is last and the target's distance to the end of the prompt, so the curves describe "
+          r"list position, not distance alone. There is no middle-slot dip of the lost-in-the-middle kind: the all-type and "
+          r"parameterised curves rise towards the last slot for both generators; Qwen's fixed-type curve is flat, with "
+          r"middle slots at most 0.22 points above both ends, well inside the intervals. "
+          r"Values: \texttt{tables/eval2\_position\_slot\_risk\_by\_class.csv}.")
+        w(fig("e2_posA2_slot_curves_by_class.png", r"Pos-A2. Observed target violation risk at every slot by $k$, separately "
+              r"for parameterised (10) and fixed-wording (5) target types (dashed: all 15, as in Pos-A; 95\% pool "
+              r"intervals), with each class's paired last $-$ first difference. Observed outcomes only."))
     for fac, name, lab in (("position", "Pos-B", "$k$"), ("append", "K-B", "transition"), ("companion", "C-B", "$k$"),
                            ("task", "D-C", "$k$")):
         s = sk[fac]
