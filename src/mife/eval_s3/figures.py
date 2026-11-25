@@ -173,6 +173,43 @@ def e2_pos_curves():
     return _save(fig, "e2_posA_slot_curves")
 
 
+def e2_pos_curves_by_class():
+    """Pos-A2: slot curves split into fixed (5) and parameterised (10) target types (pos_by_class.py table)."""
+    s = r("eval2_position_slot_risk_by_class")
+    cls_col = {"parameterized": "#6250d6", "fixed": "#1baf7a"}
+    fig, axes = plt.subplots(len(GENS), 4, figsize=(14, 3.4 * len(GENS)), constrained_layout=True, sharey="row",
+                             squeeze=False)
+    for i, gen in enumerate(GENS):
+        for j, k in enumerate([2, 3, 4, 5]):
+            ax = axes[i, j]
+            g = s[(s.generator == gen) & (s.k == k)]
+            a = g[(g.rule_class == "all") & (g.slot != "last-first")].assign(slot=lambda x: x.slot.astype(int))
+            a = a.sort_values("slot")
+            ax.plot(a.slot, a.risk_pct, ls="--", color=MUTED, lw=1.2, label="all 15 types", zorder=1)
+            txt = []
+            for cls, off in (("parameterized", -0.06), ("fixed", 0.06)):
+                x = g[(g.rule_class == cls) & (g.slot != "last-first")].assign(slot=lambda x: x.slot.astype(int))
+                x = x.sort_values("slot")
+                ax.errorbar(x.slot + off, x.risk_pct, yerr=[x.risk_pct - x.lo, x.hi - x.risk_pct], fmt="-o",
+                            color=cls_col[cls], ms=4, lw=2, elinewidth=1,
+                            label={"parameterized": "parameterised types (10)", "fixed": "fixed types (5)"}[cls])
+                e = g[(g.rule_class == cls) & (g.slot == "last-first")].iloc[0]
+                txt.append(f"{cls[:5]}. last − first: {e.risk_pct:+.1f} pp [{e.lo:+.1f}, {e.hi:+.1f}]")
+            ax.text(0.03, 0.97, "\n".join(txt), transform=ax.transAxes, va="top", fontsize=7.5, color=INK2)
+            ax.set_xticks(range(1, k + 1))
+            ax.set_xlim(0.6, k + 0.4)
+            ax.set_ylim(0, 31 if gen == "llama" else 27)
+            ax.grid(axis="y", color=GRID, lw=0.6)
+            ax.set_title(f"{GEN_LABEL[gen].split(' ')[0]} · k={k}", loc="left")
+            if j == 0:
+                ax.set_ylabel("target violation risk (%)")
+            if i == len(GENS) - 1:
+                ax.set_xlabel("target slot (1 = first listed)")
+    h, lab = axes[0, 0].get_legend_handles_labels()
+    fig.legend(h, lab, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.05))
+    return _save(fig, "e2_posA2_slot_curves_by_class")
+
+
 def e2_append():
     d = r("eval2_append_by_transition")
     trs = ["1->2", "2->3", "3->4", "4->5"]
@@ -264,4 +301,5 @@ def e2_task_family_heat():
 
 def all_figures() -> dict:
     return {"e1_heat": e1_heatmap(), "e1_cal": e1_calibration(), "pos": e2_pos(), "pos_curves": e2_pos_curves(),
+            "pos_curves_by_class": e2_pos_curves_by_class(),
             "append": e2_append(), "companion": e2_companion(), "task": e2_task(), "task_heat": e2_task_family_heat()}
