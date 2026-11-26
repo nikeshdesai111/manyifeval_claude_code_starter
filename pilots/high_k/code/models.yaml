@@ -1,0 +1,23 @@
+# K10 generators (pilots/high_k/PRESPEC.md). Run order: gemma2b, llama, gemma9b.
+# Revisions: llama is the frozen main checkpoint (configs/experiment.yaml). Gemma revisions are resolved once at
+# tokenize time on the Mac (HfApi.model_info) and recorded in data/inputs/build_summary.json; Betty uses that snapshot.
+# All three are gated: Betty has no HF token, so weights are copied from the Mac (stage.sh push-weights MODEL).
+gemma2b:
+  hf_id: google/gemma-2-2b-it
+  revision: null
+  chat_template_kwargs: {}
+  native_context: 8192
+  # Gemma has no official sampling defaults; same as Llama (approved by Nicky 2026-11-26).
+  decoding: {temperature: 0.6, top_p: 0.9, top_k: 0, min_p: 0.0, max_new_tokens: 2048}
+llama:
+  hf_id: meta-llama/Llama-3.1-8B-Instruct
+  revision: 0e9e39f249a16976918f6564b8830bc894c89659
+  chat_template_kwargs: {}
+  native_context: 131072
+  decoding: {temperature: 0.6, top_p: 0.9, top_k: 0, min_p: 0.0, max_new_tokens: 2048}
+gemma9b:
+  hf_id: google/gemma-2-9b-it
+  revision: null
+  chat_template_kwargs: {}
+  native_context: 8192
+  decoding: {temperature: 0.6, top_p: 0.9, top_k: 0, min_p: 0.0, max_new_tokens: 2048}
