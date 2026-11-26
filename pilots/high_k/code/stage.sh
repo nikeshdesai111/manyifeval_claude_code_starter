@@ -36,5 +36,27 @@ fetch)
   ssh "$B" "cd $R/$D/data/generations/$M && md5sum *" > "/tmp/highk_${M}_md5.txt"
   (cd "$D/data/generations/$M" && md5 -r * | awk '{print $1"  "$2}') | diff - "/tmp/highk_${M}_md5.txt" && echo "fetch $M: all files identical"
   ;;
-*) echo "usage: $0 [push | push-weights MODEL | fetch MODEL]"; exit 2 ;;
+sync)
+  # Copy finished generation and feature shards back, verify md5 on both sides, and only then delete the heavy files
+  # on Betty (shard_*, hidden_*, attn_*). Ledgers (done_*, index_*) and run summaries stay on Betty for resumption.
+  # Only files older than 2 minutes are touched, so shards still being written are left alone.
+  M="${2:?model}"
+  for K in generations features; do
+    L="$D/data/$K/$M"; mkdir -p "$L"
+    ssh "$B" "mkdir -p $R/$L && cd $R/$L && find . -maxdepth 1 -type f -mmin +2 \( -name 'shard_*' -o -name 'hidden_*' -o -name 'attn_*' -o -name 'done_*' -o -name 'index_*' -o -name '*.json' \) -printf '%f\n'" > "/tmp/hk_${M}_${K}_list.txt"
+    [[ -s "/tmp/hk_${M}_${K}_list.txt" ]] || continue
+    rsync -a --files-from="/tmp/hk_${M}_${K}_list.txt" "$B:$R/$L/" "$L/"
+    ssh "$B" "cd $R/$L && xargs md5sum" < "/tmp/hk_${M}_${K}_list.txt" | sort -k2 > "/tmp/hk_${M}_${K}_remote.md5"
+    (cd "$L" && xargs md5 -r < "/tmp/hk_${M}_${K}_list.txt" | awk '{print $1"  "$2}' | sort -k2) > "/tmp/hk_${M}_${K}_local.md5"
+    if diff -q "/tmp/hk_${M}_${K}_local.md5" "/tmp/hk_${M}_${K}_remote.md5" >/dev/null; then
+      grep -E '^(shard_|hidden_|attn_)' "/tmp/hk_${M}_${K}_list.txt" > "/tmp/hk_${M}_${K}_del.txt" || true
+      [[ -s "/tmp/hk_${M}_${K}_del.txt" ]] && ssh "$B" "cd $R/$L && xargs rm -f" < "/tmp/hk_${M}_${K}_del.txt"
+      echo "sync $M $K: $(wc -l < /tmp/hk_${M}_${K}_list.txt) files verified, $(wc -l < /tmp/hk_${M}_${K}_del.txt 2>/dev/null || echo 0) removed on Betty"
+    else
+      echo "sync $M $K: CHECKSUM MISMATCH, nothing deleted"; diff "/tmp/hk_${M}_${K}_local.md5" "/tmp/hk_${M}_${K}_remote.md5" | head; exit 1
+    fi
+  done
+  ssh "$B" "du -sh $R/$D/data 2>/dev/null"
+  ;;
+*) echo "usage: $0 [push | push-weights MODEL | fetch MODEL | sync MODEL]"; exit 2 ;;
 esac

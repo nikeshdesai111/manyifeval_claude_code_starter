@@ -94,11 +94,29 @@ def load(model_key: str):
 
 
 def done(out_dir: Path, shash: str) -> set[tuple[str, int]]:
+    """Completed (prompt, sample) keys. Read from the small done_*.parquet ledgers written next to every shard, so a
+    shard that was copied back to the Mac and then deleted on Betty is not regenerated."""
     have = set()
-    for f in out_dir.glob("shard_*.parquet"):
-        d = pd.read_parquet(f, columns=["prompt_id", "sample_index", "settings_hash"])
+    for f in out_dir.glob("done_*.parquet"):
+        d = pd.read_parquet(f)
         have |= {(p, int(i)) for p, i, h in zip(d.prompt_id, d.sample_index, d.settings_hash) if h == shash}
     return have
+
+
+def space_guard(limit_gb: float | None = None, wait_s: int = 1200) -> None:
+    """Betty home has only a few GB free: wait (up to wait_s) until data/generations + data/features hold less than HK_MAX_GB
+    (default 4 GB), i.e. until the Mac has copied finished shards back and removed them. Exits non-zero otherwise."""
+    limit = float(limit_gb or os.environ.get("HK_MAX_GB", 4)) * 1e9
+    root = PILOT / "data"
+    t0 = time.time()
+    while True:
+        used = sum(f.stat().st_size for k in ("generations", "features") for f in (root / k).rglob("*") if f.is_file())
+        if used < limit:
+            return
+        if time.time() - t0 > wait_s:
+            raise SystemExit(f"space guard: {used / 1e9:.1f} GB in {root} >= limit after {wait_s}s; resubmit later")
+        print(f"space guard: {used / 1e9:.1f} GB in use, waiting for copy-back", flush=True)
+        time.sleep(60)
 
 
 def load_llm(model_key: str, max_model_len: int, gpu_mem: float, max_num_seqs: int, seed: int):
@@ -138,6 +156,7 @@ def generate(model_key: str, chunk: int, prompts_per_shard: int = 500, gpu_mem: 
     wsha = weights(model_key)["safetensors_sha256"]
     engine_seed = derive_seed(load_config()["seeds"]["generation"], "vllm", model_key, RUN_NAME, f"c{chunk:02d}") % (1 << 31)
     tag = f"c{chunk:02d}_j{os.environ.get('SLURM_JOB_ID', 'local')}"
+    space_guard()
     t0 = time.time()
     llm, info = load_llm(model_key, max_model_len, gpu_mem, max_num_seqs, engine_seed)
     load_s = time.time() - t0
@@ -177,6 +196,8 @@ def generate(model_key: str, chunk: int, prompts_per_shard: int = 500, gpu_mem: 
             total += n_out
             idx = len(list(out_dir.glob(f"shard_{tag}_[0-9]*.parquet")))
             pd.DataFrame(rows).to_parquet(out_dir / f"shard_{tag}_{idx:05d}.parquet")
+            pd.DataFrame(rows)[["prompt_id", "sample_index", "settings_hash"]].to_parquet(
+                out_dir / f"done_{tag}_{idx:05d}.parquet")  # ledger, written after the shard; kept on Betty
             log.append({"shard": f"shard_{tag}_{idx:05d}", "n_records": len(rows), "output_tokens": n_out,
                         "generate_s": el, "peak_gpu_memory_used_gb": mem.peak})
             print(f"[{model_key}/highk c{chunk:02d}] {len(rows)} records, {n_out} tok in {el:.0f}s "
