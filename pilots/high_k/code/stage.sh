@@ -45,8 +45,16 @@ sync)
     L="$D/data/$K/$M"; mkdir -p "$L"
     ssh "$B" "mkdir -p $R/$L && cd $R/$L && find . -maxdepth 1 -type f -mmin +2 \( -name 'shard_*' -o -name 'hidden_*' -o -name 'attn_*' -o -name 'done_*' -o -name 'index_*' -o -name '*.json' \) -printf '%f\n'" > "/tmp/hk_${M}_${K}_list.txt"
     [[ -s "/tmp/hk_${M}_${K}_list.txt" ]] || continue
-    rsync -a --files-from="/tmp/hk_${M}_${K}_list.txt" "$B:$R/$L/" "$L/"
     ssh "$B" "cd $R/$L && xargs md5sum" < "/tmp/hk_${M}_${K}_list.txt" | sort -k2 > "/tmp/hk_${M}_${K}_remote.md5"
+    # Never overwrite a Mac copy with different content: any listed file that already exists here must match Betty.
+    while read -r F; do [[ -f "$L/$F" ]] && echo "$F"; done < "/tmp/hk_${M}_${K}_list.txt" > "/tmp/hk_${M}_${K}_exist.txt"
+    if [[ -s "/tmp/hk_${M}_${K}_exist.txt" ]]; then
+      (cd "$L" && xargs md5 -r < "/tmp/hk_${M}_${K}_exist.txt" | awk '{print $1"  "$2}' | sort -k2) > "/tmp/hk_${M}_${K}_exist.md5"
+      if ! join -1 2 -2 2 "/tmp/hk_${M}_${K}_exist.md5" "/tmp/hk_${M}_${K}_remote.md5" | awk '$2!=$3{print; bad=1} END{exit bad}'; then
+        echo "sync $M $K: OVERWRITE REFUSED - Mac copies above differ from Betty; CHECKSUM MISMATCH, nothing copied or deleted"; exit 1
+      fi
+    fi
+    rsync -a --files-from="/tmp/hk_${M}_${K}_list.txt" "$B:$R/$L/" "$L/"
     (cd "$L" && xargs md5 -r < "/tmp/hk_${M}_${K}_list.txt" | awk '{print $1"  "$2}' | sort -k2) > "/tmp/hk_${M}_${K}_local.md5"
     if diff -q "/tmp/hk_${M}_${K}_local.md5" "/tmp/hk_${M}_${K}_remote.md5" >/dev/null; then
       grep -E '^(shard_|hidden_|attn_)' "/tmp/hk_${M}_${K}_list.txt" > "/tmp/hk_${M}_${K}_del.txt" || true
