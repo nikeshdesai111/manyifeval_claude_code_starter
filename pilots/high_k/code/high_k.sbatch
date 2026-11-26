@@ -30,6 +30,10 @@ else
   LOCAL="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}/mife_k10_${SLURM_JOB_ID:-$$}"
   mkdir -p "$LOCAL/hub"; trap 'rm -rf "$LOCAL"' EXIT
   export HF_HUB_CACHE="$LOCAL/hub" HF_XET_CACHE="$LOCAL/xet" HF_HUB_DISABLE_XET=1   # nothing may land in home
+  for T in "${HF_HOME:+$HF_HOME/token}" "$HOME/mife/hf/token" "$HOME/.cache/huggingface/token"; do
+    [[ -n "$T" && -s "$T" ]] && { export HF_TOKEN_PATH="$T"; break; }
+  done
+  [[ -n "${HF_TOKEN_PATH:-}" ]] || { echo "no HF token file on Betty (gated weights)"; exit 3; }
   python - "$M" <<'P'
 import json, sys
 from huggingface_hub import snapshot_download
