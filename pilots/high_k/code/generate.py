@@ -103,19 +103,53 @@ def done(out_dir: Path, shash: str) -> set[tuple[str, int]]:
     return have
 
 
-def space_guard(limit_gb: float | None = None, wait_s: int = 1200) -> None:
-    """Betty home has only a few GB free: wait (up to wait_s) until data/generations + data/features hold less than HK_MAX_GB
-    (default 4 GB), i.e. until the Mac has copied finished shards back and removed them. Exits non-zero otherwise."""
-    limit = float(limit_gb or os.environ.get("HK_MAX_GB", 4)) * 1e9
+def max_gb(default: float = 4.0) -> float:
+    """In-flight output cap in GB. pilots/high_k/data/env/max_gb (re-read on every check, so the cap can be changed
+    for running and queued tasks) wins over HK_MAX_GB, which wins over the default."""
+    f = PILOT / "data" / "env" / "max_gb"
+    try:
+        return float(f.read_text().strip())
+    except (OSError, ValueError):
+        return float(os.environ.get("HK_MAX_GB", default))
+
+
+def job_seconds_left() -> float | None:
+    """Seconds until this Slurm job's time limit (SLURM_JOB_END_TIME, else squeue %L), or None outside Slurm."""
+    end = os.environ.get("SLURM_JOB_END_TIME")
+    if end and end.isdigit():
+        return int(end) - time.time()
+    jid = os.environ.get("SLURM_JOB_ID")
+    if not jid:
+        return None
+    import subprocess
+    try:
+        left = subprocess.run(["squeue", "-h", "-j", jid, "-o", "%L"], capture_output=True, text=True, timeout=30).stdout.strip()
+        d, _, hms = left.rpartition("-")
+        parts = [int(x) for x in hms.split(":")]
+        while len(parts) < 3:
+            parts.insert(0, 0)
+        return (int(d) if d else 0) * 86400 + parts[0] * 3600 + parts[1] * 60 + parts[2]
+    except Exception:
+        return None
+
+
+def space_guard(limit_gb: float | None = None, wait_s: float | None = None, reserve_s: float = 900) -> None:
+    """Betty home has only a few GB free: wait until data/generations + data/features hold less than the cap (max_gb()),
+    i.e. until the Mac has copied finished shards back and removed them. Waits up to wait_s, by default the job's
+    remaining time limit minus reserve_s (so work can still finish), and at least 20 min. Exits non-zero otherwise."""
     root = PILOT / "data"
     t0 = time.time()
+    if wait_s is None:
+        left = job_seconds_left()
+        wait_s = max(1200.0, left - reserve_s) if left is not None else 1200.0
     while True:
+        limit = float(limit_gb or max_gb()) * 1e9
         used = sum(f.stat().st_size for k in ("generations", "features") for f in (root / k).rglob("*") if f.is_file())
         if used < limit:
             return
         if time.time() - t0 > wait_s:
-            raise SystemExit(f"space guard: {used / 1e9:.1f} GB in {root} >= limit after {wait_s}s; resubmit later")
-        print(f"space guard: {used / 1e9:.1f} GB in use, waiting for copy-back", flush=True)
+            raise SystemExit(f"space guard: {used / 1e9:.1f} GB in {root} >= {limit / 1e9:.1f} GB after {wait_s:.0f}s; resubmit later")
+        print(f"space guard: {used / 1e9:.1f} GB in use (cap {limit / 1e9:.1f} GB), waiting for copy-back", flush=True)
         time.sleep(60)
 
 
