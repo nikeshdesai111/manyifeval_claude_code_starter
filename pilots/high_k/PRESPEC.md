@@ -87,7 +87,7 @@ ManyIFEval's own maximum and the size of every task's `not_conflict_rules_list`.
 | Decoding | per-model settings (Llama: temperature 0.6, top-p 0.9) | Llama unchanged. Gemma has no official sampling defaults, so the proposal is temperature 0.6, top-p 0.9 | **DEVIATION** for Gemma (needs a decision) |
 | Completions per prompt | 20 | 5 | **DEVIATION** (cost) |
 | Labels | per-rule binary verifier outcome. Objective 1 uses (violated, compliant) counts; Objective 2 uses the soft all-rules-followed fraction | same definitions; counts out of 5 | same, with coarser soft labels |
-| Feature pass | one pre-generation pass, HF eager BF16, Apple MPS, all layers stored | the same pass on **Betty CUDA** (the Mac would take about a day per model). Only the 5 candidate rows and max attention are stored | **DEVIATION** (backend and storage) |
+| Feature pass | one pre-generation pass, HF eager BF16, Apple MPS, all layers stored | the same pass on **Betty CUDA** (the Mac would take about 1 to 3 days per model at 1.15 M prompts). Only the 5 candidate rows (the original's tuned depths; Nicky 2026-11-26 19:57: evenly spread depths, not every layer) and max attention are stored: about 27 / 47 / 41 GB of hidden states for Gemma-2B / Llama / Gemma-9B, plus about 45 GB of attention in all | **DEVIATION** (backend and storage) |
 | Hidden rows | Llama 8/12/16/24/33 (depths 0.25/0.375/0.5/0.75 and 1.0 pre-norm) | Llama the same; Gemma-2B 7/10/13/20/27; Gemma-9B 11/16/21/32/43 (same depths, rounded) | same rule |
 | A1 / RCAP attention | per layer × head, the max over each rule span, from the final token | same, up to 10 slots | same |
 | B1 / B2 baselines | B1 = S + P, B2 = S + P + R, frozen BGE-M3 | same | same |
@@ -118,7 +118,7 @@ Gemma-9B (assumed) and ~65k for Gemma-2B (assumed). Features ~0.02 s per prompt.
 Rule checks per model: 7.27 M rule rows × 5 = 36.4 M.
 
 Add ~3 GPU-h of start-up. With 8 concurrent array tasks, Gemma 2B takes about 2 hours wall-clock and all three models
-about 12 hours. Storage: about 6 GB of generations and about 65 GB of features per model, which needs project (non-home) storage on Betty. Verification is CPU-only.
+about 12 hours. Storage: about 4 to 6 GB of generations per model and about 160 GB of features in all, which needs project (non-home) storage on Betty or shards streamed back to the Mac. Verification is CPU-only.
 
 ## Open items before submission
 
