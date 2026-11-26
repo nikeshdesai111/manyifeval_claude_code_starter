@@ -228,7 +228,11 @@ def generate(model_key: str, chunk: int, prompts_per_shard: int = 500, gpu_mem: 
                     "pilot_version": VERSION, "worklist_sha256": wmeta["worklist_sha256"]})
             n_out = sum(r["n_output_tokens"] for r in rows)
             total += n_out
-            idx = len(list(out_dir.glob(f"shard_{tag}_[0-9]*.parquet")))
+            # Shard number from the batch position, never from files on disk: stage.sh sync deletes copied shards on
+            # Betty, so counting them restarted the numbering and overwrote earlier shards and their done ledgers.
+            idx = b0 // prompts_per_shard
+            if (out_dir / f"done_{tag}_{idx:05d}.parquet").exists():
+                raise RuntimeError(f"refusing to overwrite done_{tag}_{idx:05d}.parquet")
             pd.DataFrame(rows).to_parquet(out_dir / f"shard_{tag}_{idx:05d}.parquet")
             pd.DataFrame(rows)[["prompt_id", "sample_index", "settings_hash"]].to_parquet(
                 out_dir / f"done_{tag}_{idx:05d}.parquet")  # ledger, written after the shard; kept on Betty
