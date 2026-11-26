@@ -29,7 +29,7 @@ else
   # user's own HF read token on Betty (huggingface-cli login) for the gated models; nothing lands in home.
   LOCAL="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}/mife_k10_${SLURM_JOB_ID:-$$}"
   mkdir -p "$LOCAL/hub"; trap 'rm -rf "$LOCAL"' EXIT
-  export HF_HUB_CACHE="$LOCAL/hub"
+  export HF_HUB_CACHE="$LOCAL/hub" HF_XET_CACHE="$LOCAL/xet" HF_HUB_DISABLE_XET=1   # nothing may land in home
   python - "$M" <<'P'
 import json, sys
 from huggingface_hub import snapshot_download
@@ -38,7 +38,7 @@ print(snapshot_download(s["hf_id"], revision=s["revision"],
                         allow_patterns=["*.json", "*.safetensors", "tokenizer*", "LICENSE*", "USE_POLICY.md"]), flush=True)
 P
 fi
-export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HK_MAX_GB="${HK_MAX_GB:-1.5}"   # Betty home has ~3.7 GB free
 python $G weights "$M"
 C="${SLURM_ARRAY_TASK_ID:?submit as an array}"
 echo "model=$M chunk=$C job=${SLURM_ARRAY_JOB_ID}/${C} host=$(hostname)"
