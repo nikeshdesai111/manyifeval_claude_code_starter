@@ -6,8 +6,8 @@ whose point cache is complete passes through; a spec whose units have all come b
 its `todo` settings (the same list and order evaluate would fit) are written as a fit request and planning stops.
 
     python -m mife.k10paper.unitfit plan   <model>                       -> results/k10_paper/v2/unitfit/<model>/next.json
-    python -m mife.k10paper.unitfit export <model> <request.json> <pack_dir> [--types i,j,...]
-    python -m mife.k10paper.unitfit fit    <pack_dir> <units_dir> [--types i,j,...] [--folds 0,1,...]   (Betty)
+    python -m mife.k10paper.unitfit export <model> <block,block,...> <pack_dir> [--types i,j,...]
+    python -m mife.k10paper.unitfit fit    <pack_dir> <units_dir> <request.json> [--types i,j,...] [--folds 0,1,...]   (Betty)
     python -m mife.k10paper.unitfit merge  <model> <request.json> <units_dir>
 
 A pack holds only TRAIN rows of the requested types (rule-row blocks sliced to those rows, prompt blocks to the
@@ -142,10 +142,10 @@ def plan(model: str) -> dict:
     return {"status": "done"}
 
 
-def export(model: str, req: dict, pack_dir: Path, types: list[int] | None = None) -> dict:
-    """Write a fitting pack for the request's spec, restricted to `types` (indices into TYPES)."""
+def export(model: str, blocks: list[str], pack_dir: Path, types: list[int] | None = None) -> dict:
+    """Write a data pack holding `blocks` (cv.Data block names) for the TRAIN rows of `types` (indices into TYPES).
+    A pack is request-independent: any request whose spec uses a subset of its blocks and types can be fitted on it."""
     E_D = cv.Data(model, 1)
-    sp = _spec_from(req["spec"])
     types = list(range(len(TYPES))) if types is None else types
     tnames = [TYPES[i] for i in types]
     R = np.nonzero(np.isin(E_D.types, tnames))[0]
@@ -158,7 +158,7 @@ def export(model: str, req: dict, pack_dir: Path, types: list[int] | None = None
               "pix_local": ploc[E_D.pix[R]]}
     for k, a in arrays.items():
         np.save(pack_dir / f"_{k}.npy", a)
-    for b, _ in sp.blocks:
+    for b in blocks:
         a = E_D._prompt_block(b)
         if b in ("S", "A1"):
             x = np.asarray(a[R])
@@ -167,7 +167,8 @@ def export(model: str, req: dict, pack_dir: Path, types: list[int] | None = None
         else:
             x = np.asarray(a[P])
         np.save(pack_dir / f"B_{b}.npy", x)
-    meta = {**req, "types": types, "n_rows": int(len(R)), "n_prompts": int(len(P))}
+    meta = {"model": model, "blocks": list(blocks), "types": types, "n_rows": int(len(R)), "n_prompts": int(len(P)),
+            "rule_index_size": int(E_D.rix.max()) + 1, "created": time.time()}
     (pack_dir / "pack.json").write_text(json.dumps(meta, indent=1))
     md5 = {}
     for f in sorted(pack_dir.glob("*.npy")) + [pack_dir / "pack.json"]:
@@ -210,8 +211,13 @@ class _PackEngine:
         self.D, self.R = D, {"structure_lambda": structure_lambda}
 
 
-def fit(pack_dir: Path, units_dir: Path, types: list[int] | None = None, folds: list[int] | None = None) -> dict:
-    meta = json.loads((pack_dir / "pack.json").read_text())
+def fit(pack_dir: Path, units_dir: Path, request: dict, types: list[int] | None = None,
+        folds: list[int] | None = None) -> dict:
+    pk = json.loads((pack_dir / "pack.json").read_text())
+    meta = request
+    assert pk["model"] == meta["model"], (pk["model"], meta["model"])
+    missing = [b for b, _ in meta["spec"]["blocks"] if b not in pk["blocks"]]
+    assert not missing, f"pack lacks blocks {missing}"
     D = _PackData(pack_dir)
     E = _PackEngine(D, meta["structure_lambda"])
     sp = _spec_from(meta["spec"])
@@ -223,7 +229,8 @@ def fit(pack_dir: Path, units_dir: Path, types: list[int] | None = None, folds: 
     assert widths == meta["widths"], (widths, meta["widths"])
     fb = {tuple(x) for x in meta["fallback_units"]}
     units_dir.mkdir(parents=True, exist_ok=True)
-    types = meta["types"] if types is None else types
+    types = pk["types"] if types is None else types
+    assert set(types) <= set(pk["types"]), "pack lacks some requested types"
     folds = list(range(5)) if folds is None else folds
     done, t_all = [], time.time()
     for f in folds:
@@ -232,6 +239,14 @@ def fit(pack_dir: Path, units_dir: Path, types: list[int] | None = None, folds: 
                 continue
             out = units_dir / f"unit_f{f}_t{ti:02d}.npz"
             if out.exists():
+                continue
+            lock = units_dir / f"unit_f{f}_t{ti:02d}.lock"
+            try:  # one fitter per unit, even if twin GPU/CPU tasks overlap; the stager clears locks of dead jobs
+                fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                os.write(fd, f"{os.environ.get('SLURM_JOB_ID', 'local')} {time.time()}".encode())
+                os.close(fd)
+            except FileExistsError:
+                print(json.dumps({"unit": [f, ti], "skipped": "locked by another task"}), flush=True)
                 continue
             t0 = time.time()
             sel = D.type_ix == ti
@@ -250,12 +265,56 @@ def fit(pack_dir: Path, units_dir: Path, types: list[int] | None = None, folds: 
             np.savez(tmp, held_global=D.rows_global[held], preds=np.array(preds), settings=np.array(keys),
                      diag=np.array(json.dumps(diag)))
             os.replace(tmp, out)
+            lock.unlink(missing_ok=True)
             dt = time.time() - t0
             done.append({"fold": f, "type": ti, "rows_fit": int(len(fit_)), "d": int(Xf.shape[1]), "s": round(dt, 1),
                          "s_per_fit": round(dt / len(order), 2)})
             print(json.dumps({"unit": [f, ti], **done[-1], "dev": os.environ.get("MIFE_V2_HESS", "cpu")}), flush=True)
             del Xf, Xh, gram
     return {"units": len(done), "wall_s": round(time.time() - t_all, 1)}
+
+
+def fit_local(model: str, request: dict, units_dir: Path, types: list[int]) -> dict:
+    """Same units as `fit`, but on the Mac with the full cv.Engine (memmapped feature blocks; no pack)."""
+    E = cv.Engine(model, 1)
+    sp = _spec_from(request["spec"])
+    order, keys = request["todo"], request["settings_keys"]
+    assert [cv.setting_key(s) for s in order] == keys == [cv.setting_key(s) for s in _order(order)]
+    blocks = [b for b, _ in sp.blocks]
+    widths = E.D.widths(blocks)
+    assert widths == request["widths"], (widths, request["widths"])
+    units_dir.mkdir(parents=True, exist_ok=True)
+    done, t_all = 0, time.time()
+    for f in range(5):
+        for ti in types:
+            t = TYPES[ti]
+            if E.fallback[(f, t)][0]:
+                continue
+            out = units_dir / f"unit_f{f}_t{ti:02d}.npz"
+            if out.exists():
+                continue
+            t0 = time.time()
+            fit_, held = E.rows(f, t)
+            Xf, Xh, mu, sd, weff, _ = E.prepare(blocks, widths, fit_, held, (f, t))
+            gram = ridge.Gram(Xf)
+            init, preds, diag = None, [], []
+            for s, k in zip(order, keys):
+                h = ridge.fit(Xf, E.D.v[fit_], E.D.n[fit_], E.lam_vector(sp, s, weff), mu, sd, init, gram)
+                init = np.r_[h.w, h.b]
+                preds.append(ridge.expit(Xh @ h.w + h.b))
+                diag.append({"fold": f, "type_id": t, "setting": k, "n_iter": h.n_iter, "converged": h.converged,
+                             "hessian_jitter_steps": len(ridge.JITTER_EVENTS)})
+                ridge.JITTER_EVENTS.clear()
+            tmp = out.with_suffix(".tmp.npz")
+            np.savez(tmp, held_global=held, preds=np.array(preds), settings=np.array(keys), diag=np.array(json.dumps(diag)))
+            os.replace(tmp, out)
+            done += 1
+            dt = time.time() - t0
+            print(json.dumps({"spec": sp.name, "unit": [f, ti], "rows_fit": int(len(fit_)), "d": int(Xf.shape[1]),
+                              "s": round(dt, 1), "s_per_fit": round(dt / len(order), 2), "dev": os.environ.get("MIFE_V2_HESS", "cpu")}),
+                  flush=True)
+            del Xf, Xh, gram
+    return {"units": done, "wall_s": round(time.time() - t_all, 1)}
 
 
 def _ints(s: str | None):
@@ -265,17 +324,20 @@ def _ints(s: str | None):
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["plan", "export", "fit", "merge"])
+    ap.add_argument("cmd", choices=["plan", "export", "fit", "fitlocal", "merge"])
     ap.add_argument("args", nargs="*")
     ap.add_argument("--types")
     ap.add_argument("--folds")
     a = ap.parse_args()
     if a.cmd == "plan":
         print(json.dumps(plan(a.args[0])))
-    elif a.cmd == "export":
-        print(json.dumps(export(a.args[0], json.loads(Path(a.args[1]).read_text()), Path(a.args[2]), _ints(a.types))))
-    elif a.cmd == "fit":
-        print(json.dumps(fit(Path(a.args[0]), Path(a.args[1]), _ints(a.types), _ints(a.folds))))
+    elif a.cmd == "export":  # export <model> <block,block,...> <pack_dir> [--types]
+        print(json.dumps(export(a.args[0], a.args[1].split(","), Path(a.args[2]), _ints(a.types))))
+    elif a.cmd == "fit":  # fit <pack_dir> <units_dir> <request.json> [--types] [--folds]
+        print(json.dumps(fit(Path(a.args[0]), Path(a.args[1]), json.loads(Path(a.args[2]).read_text()),
+                             _ints(a.types), _ints(a.folds))))
+    elif a.cmd == "fitlocal":  # fitlocal <model> <request.json> <units_dir> --types i,j
+        print(json.dumps(fit_local(a.args[0], json.loads(Path(a.args[1]).read_text()), Path(a.args[2]), _ints(a.types))))
     elif a.cmd == "merge":
         req = json.loads(Path(a.args[1]).read_text())
         E = cv.Engine(a.args[0], 1)

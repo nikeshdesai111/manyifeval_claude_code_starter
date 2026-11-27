@@ -138,3 +138,23 @@ about 12 hours. Storage: about 4 to 6 GB of generations per model and about 160 
 - Analysis: `code/verify.py`, `code/analyze.py`.
 - Still to write after approval: the model registry for Gemma and the CUDA feature extractor. The TEST expansion
   is in `build.py` (`test_expansion`).
+
+## Generation issues (addendum, 2026-11-27, written after generation; the text above is unchanged)
+
+Recorded after the fact. Before this addendum the file's sha256 was
+`a656583068ca0870a0cdf23a5c53c2815b0730fcb2d7f6a87e9c0fa3cf016b99`; `prespec_sha256.txt` keeps the pre-generation hash.
+
+- **gemma9b end-of-turn token not used as a stop.** `generate.py` takes stop tokens from the model's `config.json`
+  and `generation_config.json` plus the tokenizer EOS. For `google/gemma-2-9b-it` at the pinned revision this gave
+  `[1]` (`<eos>`) only, while gemma2b got `[1, 107]`. So token 107 (`<end_of_turn>`) did not end sampling, and the
+  decoded text of almost every gemma9b response ends with the literal `<end_of_turn>`, followed by nothing or a
+  newline and then `<eos>`. Found on 2026-11-27 from the TRAIN step-1 check, where `startend:quotation` and
+  `change_case:english_capital` were violated about 100% of the time at every k.
+- **Fix (verification only, no regeneration).** For gemma9b, `code/verify.py` scores the text before the first
+  `<end_of_turn>` (`CLEAN_EOT`). Every token before it was sampled exactly as it would have been with 107 as a stop,
+  so this is the response that stopping at 107 would have produced. Raw shards are not modified, every verification
+  row records `eot_cut`, and `data/verification/gemma9b_train_eot_scan.json` counts the affected responses and any
+  text after the token. The uncleaned TRAIN outputs are kept with a `_raw` suffix.
+- **Scope.** The same cleaning applies to all gemma9b chunks, including the ones still generating and the TEST
+  responses when they are verified. gemma2b and llama are unaffected (0 responses contain the token) and are
+  verified unchanged. Pre-generation features (F3) do not depend on the stop tokens.

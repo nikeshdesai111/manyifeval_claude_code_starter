@@ -435,8 +435,8 @@ def run(model: str, o: int = 1, with_attention: bool = True, final: bool = False
         return best, res
 
     def stage(grids):
-        rows_ = R["hidden_rows"][model]
-        xrows = R["hidden_rows"][OTHER[model]]
+        rows_ = R["hidden_rows"].get(model) or HIDDEN_ROWS[model]          # gemma9b: not in the recorded recipe
+        xrows = R["hidden_rows"].get(OTHER[model]) or HIDDEN_ROWS[OTHER[model]]
         row, lres = layer_select(grids, "H1", rows_)
         xrow, xres = layer_select(grids, "XH1", xrows) if with_xh else (None, {})
         E.D.drop(keep={"S", "EP", "ER", f"H{row}", f"XH{xrow}"})
