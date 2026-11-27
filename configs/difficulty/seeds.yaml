@@ -1,0 +1,60 @@
+# Stage 1: seed selection for the difficulty-controlled dataset.
+version: seeds_v0
+wildchat:
+  repo: allenai/WildChat-1M
+  revision: 7d6490e462285cf85d91eabea0f9a954fbddcd1f   # HF main on 2026-11-27 (license odc-by, gated: false)
+  shards: 14
+dolly:
+  repo: databricks/databricks-dolly-15k
+  revision: bdd27f4d94b9c1f951818a7da7fd7aeea5dbff1a   # CC BY-SA 3.0 (share-alike for a released derivative)
+  categories: [open_qa, general_qa, brainstorming, classification]
+
+filters:
+  min_chars: 40
+  max_chars: 1500
+  max_detoxify_toxicity: 0.1
+  max_non_ascii_frac: 0.05
+
+embedding:
+  model: BAAI/bge-m3            # dense CLS embedding, L2-normalised, max 512 tokens
+  top_per_cell: 200              # candidates per cell sent to the classifier (plan: 300; 200 to fit the Mac budget)
+  near_duplicate_cosine: 0.85    # no two picked seeds at or above this cosine
+
+classifier:
+  backend: mlx
+  model: mlx-community/Qwen3-30B-A3B-Instruct-2507-4bit   # local, free; not one of the 3 study models
+  max_tokens: 60
+  batch_size: 16
+
+selection:
+  per_cell: 3                    # 1 seed + 2 spares
+  pilot_calibration: 8           # 1 per domain, task types rotated
+  pilot_confirmation: 8          # 1 per domain, different rotation; disjoint users from everything else
+  dolly_fill_below: 3            # a cell with fewer accepted WildChat candidates than this is topped up from Dolly
+  seed: 2026112701
+
+# Domains and task types agreed in the plan (2026-11-27). `example` is the plan's cell example (domain x task type).
+domains:
+  workplace: "work and office life: projects, colleagues, managers, meetings, vendors, handoffs"
+  personal_finance: "personal money: bank balances, bills, budgets, phone plans, savings, debts"
+  travel: "travel: flights, connections, itineraries, bookings, trips, hotels"
+  school: "school and university: grades, courses, exams, assignments, group projects"
+  home: "home life: utility bills, movers, moving day, repairs, landlords, household chores"
+  small_business: "running a small business: sales, suppliers, staffing, shipping orders, customers"
+  shopping_orders: "shopping and online orders: refunds, comparing products, gift budgets, deliveries, returns"
+  event_organizing: "organizing events: weddings, parties, venues, catering, run-of-show, event budgets"
+task_types:
+  explanation: "explain why something happened, from the facts of the situation"
+  comparison: "compare two options and pick the better one for the situation"
+  planning: "make a plan or schedule for something in the situation"
+  troubleshooting: "diagnose why something keeps going wrong and how to fix it"
+  prioritization: "decide which of several items to handle first and in what order"
+cell_examples:
+  workplace: {explanation: why a project slipped, comparison: two vendors, planning: a meeting week, troubleshooting: handoffs keep failing, prioritization: which requests first this week}
+  personal_finance: {explanation: why the balance dropped, comparison: two phone plans, planning: a monthly budget, troubleshooting: budget won't balance, prioritization: which bills to pay first}
+  travel: {explanation: why a connection was missed, comparison: two itineraries, planning: a 3-day trip, troubleshooting: booking conflict, prioritization: which bookings to fix first}
+  school: {explanation: why a grade fell, comparison: two courses, planning: an exam study plan, troubleshooting: group project stuck, prioritization: which assignments first}
+  home: {explanation: why the bill rose, comparison: two movers, planning: moving day, troubleshooting: repairs keep failing, prioritization: which repairs first}
+  small_business: {explanation: why sales dipped, comparison: two suppliers, planning: holiday staffing, troubleshooting: orders shipping late, prioritization: which customer issues first}
+  shopping_orders: {explanation: why a refund was smaller, comparison: two laptops, planning: holiday gift budget, troubleshooting: order never arrived, prioritization: which returns first before deadlines}
+  event_organizing: {explanation: why the event ran over budget, comparison: two venues, planning: run-of-show, troubleshooting: catering count keeps coming out wrong, prioritization: which tasks first with 2 weeks left}

@@ -41,3 +41,4 @@ venv/
 /results/predictions/
 /third_party/nltk_data/
 *.ipynb_checkpoints/
+.pydeps/

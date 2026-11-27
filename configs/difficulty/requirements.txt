@@ -1,0 +1,5 @@
+# Extra pinned dependency for the difficulty checkers, installed outside the shared .venv:
+#   .venv/bin/pip install --no-deps --target .pydeps -r configs/difficulty/requirements.txt
+# Everything else comes from requirements.lock (.venv): nltk 3.10.4 with punkt_tab data, pandas, pyarrow,
+# transformers, torch, mlx-lm.
+emoji==2.16.0

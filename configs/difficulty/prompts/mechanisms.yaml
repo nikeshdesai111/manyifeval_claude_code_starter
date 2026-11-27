@@ -1,0 +1,13 @@
+# Mechanism definitions shown to the writer (Prompt 2) and the task judge (Prompt 4).
+distractors: |
+  Distractor mechanism. Every fact needed for the answer is stated directly, so the answer needs no inference step beyond reading the facts (no calculation, no combining facts to derive a new one).
+  - easy: 0 distractors. Only the facts the answer needs, plus natural context.
+  - medium: exactly 2 distractors.
+  - hard: exactly 4 distractors: the same 2 as the medium version, word for word, plus 2 new ones.
+  A distractor is a specific, concrete fact that looks relevant to the request (same topic, plausible to weigh) but does not change the correct answer in any way. It must not add a constraint, remove an option, or require an inference. Background fluff that obviously does not matter does not count as a distractor.
+reasoning: |
+  Reasoning mechanism. The answer requires a fixed number of necessary inferences: steps where the reader must combine stated facts to derive a new fact that is not stated anywhere. Each inference depends on the one before it, and none can be skipped (the answer cannot be reached without each one).
+  - easy: exactly 1 necessary inference.
+  - medium: exactly 2 dependent inferences (the second uses the result of the first).
+  - hard: exactly 3 dependent inferences (a chain of three).
+  To raise the level, replace a directly stated fact with facts from which it must be derived; do not add new topics. There are no distractors: every added fact is part of the chain.

@@ -1,0 +1,34 @@
+# Keyword and closing-phrase lists for rule instantiation (difficulty dataset, rule_levels_v0).
+# Constraints (checked by tests/difficulty/test_catalog.py):
+#   every word <= 8 letters (no clash with the longest-word rule at any level), letters only, no digits,
+#   not "section", no two consecutive words of a phrase share a first letter, no repeated word inside a phrase,
+#   TRAIN and TEST lists are disjoint (no exact keyword or phrase in both; phrases share no content word with the
+#   other split's keywords). The two keyword rules of one pool always get different keywords.
+# Pilot seeds (calibration/confirmation) draw from the TRAIN lists.
+version: wordlists_v0
+keywords:
+  train: [window, garden, river, candle, ladder, pencil, ribbon, bridge, lantern, harbor, meadow, compass,
+          blanket, kettle, orchard, saddle, basket, marble, feather, button]
+  test: [anchor, valley, mirror, cactus, pillow, rocket, violin, tunnel, island, falcon, quilt, beacon,
+         walnut, puzzle, barrel, jacket, canyon, needle, parrot, glacier]
+closing_phrases:
+  train:
+    3: ["Hope this helps", "Good luck today", "Thanks for asking", "Let me know"]
+    8: ["I hope this plan helps you a lot",
+        "Please reach out if anything else comes up",
+        "Let me know what you decide to do",
+        "Good luck and enjoy the rest of it"]
+    15: ["I hope this gives you a clear path and may every coming week bring calm",
+         "Thanks for asking, so please write again if any new problem comes up this month",
+         "Remember that small regular changes often lead to good results over time, so take heart",
+         "With some patience and steady care you really can sort this out before very long"]
+  test:
+    3: ["Wishing you well", "Take care now", "All the best", "Best of luck"]
+    8: ["Thanks for reading, and best wishes to you",
+        "I wish you a calm and happy week",
+        "Write back if you have any other doubts",
+        "May the coming days bring you some peace"]
+    15: ["Wishing you good luck as each step falls into place over the coming weeks ahead",
+         "Feel ready to start now, and write again whenever a fresh new question comes up",
+         "Every choice may change later, so begin small, then refine it as you learn more",
+         "Thank you for your time, and I hope the next few weeks go very smoothly"]

@@ -1,0 +1,135 @@
+# Difficulty-controlled dataset: rule catalog, rule_levels_v0.
+# Starting values validated by Nicky on 2026-11-27 (plan "Difficulty-controlled K10 dataset plan", review sheet).
+# Conflict list (forbidden pairs) approved by Nicky on 2026-11-27.
+# Each type has ONE parameter whose easy/medium/hard values order difficulty; the checker is the same at every level.
+# `ladder` values are the candidate steps for calibration (not frozen until the pilot; not used by the sampler).
+version: rule_levels_v0
+validated_by: Nicky
+validated_on: "2026-11-27"
+categories: [counting, word, sentence, position, markup, decoration]
+max_per_category: 2
+pool_size: 10
+min_per_level: 3
+
+types:
+  unique_words:
+    category: counting
+    source: "IFBench count:unique_word_count (100-500)"
+    param: n
+    levels: {easy: 100, medium: 160, hard: 240}
+    ladder: [60, 100, 130, 160, 200, 240, 300]
+  numbers_exact:
+    category: counting
+    source: "IFBench count:numbers (1-6)"
+    param: n
+    levels: {easy: 2, medium: 4, hard: 6}
+    ladder: [1, 2, 3, 4, 5, 6, 8]
+  conjunctions:
+    category: counting
+    source: "IFBench count:conjunctions (2-6)"
+    param: n
+    levels: {easy: 2, medium: 4, hard: 6}
+    ladder: [2, 3, 4, 5, 6, 7]
+  word_repeats:
+    category: word
+    source: "IFBench words:repeats (1-5)"
+    param: n
+    levels: {easy: 20, medium: 10, hard: 5}
+    ladder: [30, 20, 15, 10, 8, 5, 4]
+  longest_word:
+    category: word
+    source: "new"
+    param: n
+    levels: {easy: 14, medium: 10, hard: 8}
+    ladder: [16, 14, 12, 10, 9, 8, 7]
+  no_consecutive_initial:
+    category: word
+    source: "IFBench words:no_consecutive (whole response)"
+    param: scope
+    levels: {easy: first_sentence, medium: first_paragraph, hard: whole}
+    ladder: [first_sentence, first_two_sentences, first_paragraph, first_two_paragraphs, whole]
+  longest_sentence:
+    category: sentence
+    source: "new"
+    param: n
+    levels: {easy: 35, medium: 22, hard: 14}
+    ladder: [40, 35, 28, 22, 18, 14, 12]
+  questions:
+    category: sentence
+    source: "new"
+    param: n
+    levels: {easy: 1, medium: 3, hard: 5}
+    ladder: [1, 2, 3, 4, 5, 6, 8]
+  title_case:
+    category: sentence
+    source: "IFBench format:title_case (whole response)"
+    param: scope
+    levels: {easy: first_sentence, medium: first_paragraph, hard: whole}
+    ladder: [first_sentence, first_two_sentences, first_paragraph, first_two_paragraphs, whole]
+  keyword_sentence:
+    category: position
+    source: "IFBench sentence:keyword (n 1-20)"
+    param: n
+    needs: keyword
+    levels: {easy: 2, medium: 5, hard: 10}
+    ladder: [1, 2, 3, 5, 7, 10, 12]
+  keyword_position:
+    category: position
+    source: "IFBench words:keywords_specific_position (n 20-30, m 30-40), scaled down"
+    param: n_m
+    needs: keyword
+    levels: {easy: [2, 3], medium: [4, 8], hard: [8, 15]}
+    ladder: [[1, 2], [2, 3], [3, 5], [4, 8], [6, 10], [8, 15], [10, 18]]
+  closing_phrase:
+    category: position
+    source: "IFEval startend:end_checker (one fixed phrase)"
+    param: length
+    needs: phrase
+    levels: {easy: 3, medium: 8, hard: 15}
+    ladder: [3, 5, 8, 12, 15]
+  sections:
+    category: markup
+    source: "IFEval detectable_format:multiple_sections (1-5)"
+    param: n
+    levels: {easy: 2, medium: 3, hard: 5}
+    ladder: [1, 2, 3, 4, 5, 6]
+  highlights:
+    category: markup
+    source: "IFEval detectable_format:number_highlighted_sections"
+    param: n
+    levels: {easy: 1, medium: 3, hard: 6}
+    ladder: [1, 2, 3, 4, 6, 8]
+  bracket_depth:
+    category: markup
+    source: "IFBench format:parentheses (5)"
+    param: n
+    levels: {easy: 2, medium: 3, hard: 5}
+    ladder: [1, 2, 3, 4, 5, 6]
+  emoji_ends:
+    category: decoration
+    source: "IFBench format:emoji (every sentence)"
+    param: scope
+    levels: {easy: last_sentence, medium: each_paragraph, hard: every_sentence}
+    ladder: [last_sentence, first_and_last_sentence, each_paragraph, every_sentence]
+  stair_indent:
+    category: decoration
+    source: "IFBench format:line_indent (every line)"
+    param: lines
+    levels: {easy: 3, medium: 6, hard: all}
+    ladder: [2, 3, 4, 6, 8, all]
+  hashtags:
+    category: decoration
+    source: "new"
+    param: n
+    levels: {easy: 1, medium: 3, hard: 6}
+    ladder: [1, 2, 3, 4, 6, 8]
+
+# Approved forbidden pairs (2 of 1,377 type-level pairs): never drawn together.
+forbidden_pairs:
+  - [{type: longest_sentence, level: hard}, {type: keyword_position, level: hard},
+     "sentence 8 needs at least 15 words but no sentence may exceed 14"]
+  - [{type: longest_sentence, level: hard}, {type: closing_phrase, level: hard},
+     "the 15-word closing phrase is one sentence of 15 words but no sentence may exceed 14"]
+
+# Dropped (decided 2026-11-27), reserve candidates: person names, stop-word share, sentence increment, P.S.,
+# quotes within quotes, divider lines.
