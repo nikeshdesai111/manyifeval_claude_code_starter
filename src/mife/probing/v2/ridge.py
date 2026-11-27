@@ -64,16 +64,16 @@ class Gram:
     def __init__(self, Xs: np.ndarray):
         import os
         self.dev = os.environ.get("MIFE_V2_HESS", "cpu")
-        if self.dev == "mps":
+        if self.dev in ("mps", "cuda"):  # cuda: same float32 assembly on an NVIDIA GPU; Cholesky stays float64 on CPU
             import torch
             self.t = torch
-            self.X = torch.from_numpy(np.ascontiguousarray(Xs, dtype=np.float32)).to("mps")
+            self.X = torch.from_numpy(np.ascontiguousarray(Xs, dtype=np.float32)).to(self.dev)
         else:
             self.X = Xs.astype(np.float32)
 
     def __call__(self, s: np.ndarray) -> np.ndarray:
-        if self.dev == "mps":
-            sq = self.t.from_numpy(np.sqrt(s).astype(np.float32)).to("mps")
+        if self.dev in ("mps", "cuda"):
+            sq = self.t.from_numpy(np.sqrt(s).astype(np.float32)).to(self.dev)
             Xw = self.X * sq[:, None]
             return (Xw.T @ Xw).cpu().numpy()
         Xw = self.X * np.sqrt(s).astype(np.float32)[:, None]
