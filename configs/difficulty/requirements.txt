@@ -3,3 +3,4 @@
 # Everything else comes from requirements.lock (.venv): nltk 3.10.4 with punkt_tab data, pandas, pyarrow,
 # transformers, torch, mlx-lm.
 emoji==2.16.0
+certifi==2025.11.12

@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import ssl
 import time
 import urllib.error
 import urllib.request
@@ -22,6 +23,14 @@ from .catalog import ROOT
 URL = "https://openrouter.ai/api/v1/chat/completions"
 CACHE = ROOT / "data" / "difficulty" / "openrouter_cache"
 LOG = ROOT / "data" / "difficulty" / "logs" / "openrouter_calls.jsonl"
+
+
+def _ssl_context() -> ssl.SSLContext:
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        return ssl.create_default_context()
 
 
 class OpenRouterError(RuntimeError):
@@ -64,7 +73,7 @@ def chat(model: str, messages: list[dict], *, provider: str | None = None, respo
             "X-Title": "difficulty-dataset"})
         t0 = time.time()
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as r:
+            with urllib.request.urlopen(req, timeout=timeout, context=_ssl_context()) as r:
                 resp = json.loads(r.read().decode())
             break
         except urllib.error.HTTPError as e:

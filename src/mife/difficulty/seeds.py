@@ -211,7 +211,7 @@ TYPE_HINT_RE = {
 }
 
 
-def step_expand(thin_below: int = 3, per_cell: int = 50) -> None:
+def step_expand(thin_below: int = 3, per_cell: int = 80) -> None:
     """Targeted retrieval for thin cells: rank by cell-specific similarity (cos to the cell minus the mean cos to all
     cells), keep texts matching the cell's task-type hint, skip rows already sent to the classifier."""
     base = pd.read_parquet(WORK / "filtered.parquet")

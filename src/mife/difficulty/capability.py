@@ -15,6 +15,7 @@ import argparse
 import json
 import random
 import time
+from pathlib import Path
 
 from . import catalog as K
 from . import checkers as C
@@ -90,7 +91,7 @@ def generate(models: list[str], samples: int, max_tokens: int) -> list[dict]:
     rows = []
     for key in models:
         hf, rev = MODELS[key]
-        path = snapshot_download(hf, revision=rev, local_files_only=True)
+        path = str(next((Path.home() / ".cache/huggingface/hub" / f"models--{hf.replace('/', '--')}" / "snapshots").glob(rev)))
         t0 = time.time()
         model, tok = load(path)
         load_s = time.time() - t0

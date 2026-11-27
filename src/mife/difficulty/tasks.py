@@ -254,8 +254,9 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", nargs="+", required=True)
     ap.add_argument("--sampler-seed", type=int, default=2026112701)
+    ap.add_argument("--seeds-file", default=str(K.ROOT / "data" / "difficulty" / "seeds.parquet"))
     a = ap.parse_args()
-    seeds = pd.read_parquet(K.ROOT / "data" / "difficulty" / "seeds.parquet").set_index("seed_id")
+    seeds = pd.read_parquet(a.seeds_file).set_index("seed_id")
     summary = []
     for sid in a.seeds:
         s = seeds.loc[sid].to_dict()
