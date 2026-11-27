@@ -1,13 +1,13 @@
-# Mechanism definitions shown to the writer (Prompt 2) and the task judge (Prompt 4).
-distractors: |
-  Distractor mechanism. Every fact needed for the answer is stated directly, so the answer needs no inference step beyond reading the facts (no calculation, no combining facts to derive a new one).
-  - easy: 0 distractors. Only the facts the answer needs, plus natural context.
-  - medium: exactly 2 distractors.
-  - hard: exactly 4 distractors: the same 2 as the medium version, word for word, plus 2 new ones.
-  A distractor is a specific, concrete fact that looks relevant to the request (same topic, plausible to weigh) but does not change the correct answer in any way. It must not add a constraint, remove an option, or require an inference. Background fluff that obviously does not matter does not count as a distractor.
+# Mechanism definitions shown to the writer (Prompt 2) and the independent judge (Prompt 4).
 reasoning: |
-  Reasoning mechanism. The answer requires a fixed number of necessary inferences: steps where the reader must combine stated facts to derive a new fact that is not stated anywhere. Each inference depends on the one before it, and none can be skipped (the answer cannot be reached without each one).
-  - easy: exactly 1 necessary inference.
-  - medium: exactly 2 dependent inferences (the second uses the result of the first).
-  - hard: exactly 3 dependent inferences (a chain of three).
-  To raise the level, replace a directly stated fact with facts from which it must be derived; do not add new topics. There are no distractors: every added fact is part of the chain.
+  Reasoning mechanism.
+  - easy: the answer needs 1 meaningful inference from the supplied information.
+  - medium: the answer needs 2 dependent operations; the second builds on the result of the first.
+  - hard: the answer needs 3 operations, each building on the previous one.
+  An operation can be causal, logical, an event dependency, or a decision derived from the supplied information. Each step must be necessary and not bypassable: no shorter path may lead to the answer. The reasoning stays implicit: never say how many steps there are, never give the chain, and never reveal the conclusion. Keep irrelevant information, domain familiarity and the expected response type roughly constant across the three versions (no distractors are added).
+distractors: |
+  Distractor mechanism.
+  - easy: 0 distractors.
+  - medium: 2 distractors; all of easy's relevant information is kept.
+  - hard: 4 distractors; all of medium's information and its 2 distractors are kept, word for word, and 2 more are added.
+  A distractor is a plausible, natural fact that is unnecessary for the answer and does not change the correct answer. The core instruction, the relevant facts, the reasoning and the expected answer stay unchanged across levels. The answer needs no inference beyond reading the relevant facts.

@@ -1,31 +1,33 @@
-You turn a real request that someone sent to a chatbot into a self-contained seed scenario for an evaluation dataset.
+You are constructing diverse natural-language tasks for research on whether large language models violate individual instructions. Each task will later be paired with separate answer-format rules, so the task itself must contain none.
 
-The dataset needs one scenario per cell of a grid. This seed's cell is:
-- Domain: {domain} ({domain_desc})
-- Task type: {task_type} ({task_type_desc})
-- Example of the kind of situation this cell covers: {cell_example}
+Your job at this stage: adapt the underlying objective of a real user request (the seed) into a realistic, self-contained scenario for the given domain and task family. Do not write any task variants yet.
 
-The original request (it only sets the topic and situation; you will rewrite it):
+Seed id: {seed_id}
+Domain: {domain} ({domain_desc})
+Task family: {task_type} ({task_type_desc})
+Example of a situation in this domain and family: {cell_example}
+
+Seed request (real user text; use its underlying objective and situation, do not copy it):
 <<<
 {raw_request}
 >>>
 
-Write a scenario that:
-1. Keeps the person's situation and topic from the request, adapted so that it fits the cell (domain and task type) above.
-2. Is written in the first person, as the person who needs help, in plain everyday English.
-3. Contains every fact needed to answer. The answer must follow from the stated facts alone, never from outside knowledge (no prices, laws, product specifications or general facts the reader would have to know).
-4. Has one clear correct answer (a cause, a choice, a plan, a diagnosis or an order) that a careful reader can defend from the facts.
-5. Has no names of real people, companies or products, no order or account numbers, and no contact details. Use roles and labels instead (my manager, Supplier A, the blue laptop, Venue 1).
-6. Contains no instructions about the answer's form: no length, format, structure, style, tone, wording or language requests. Do not use any of these words anywhere: word, sentence, paragraph, bullet, list, heading, bold, format, tone, emoji, hashtag, quote, P.S., begin, end with, include the word, at least, at most, no more than.
-7. Is about 80-150 words long, with 4-8 concrete facts (amounts, dates, times, deadlines, counts, durations) that later versions can build on.
-8. Can support two kinds of harder versions written later from the same facts and the same correct answer: (a) adding facts that look relevant but do not change the answer, and (b) making the answer require 1, 2 or 3 chained inferences from the facts.
-9. Ends with one direct request that matches the task type, for example "Why did this happen?", "Which option should I choose?", "What should my plan for the day be?", "What is going wrong, and how do I fix it?" or "Which should I handle first, and in what order?".
+Requirements:
+1. Realistic and self-contained. The scenario describes a concrete everyday situation in the given domain, written as the person who needs help, and states every fact a good answer needs. Avoid anything that needs specialised knowledge, tools or web access.
+2. A meaningful natural-language response. The objective must call for an explanation, comparison, plan, diagnosis or ordering in prose, not a single word or number.
+3. Suitable for progressively more demanding versions. Later versions will (a) add plausible but unnecessary facts that do not change the answer, and (b) require 1, 2 or 3 dependent inferences from the supplied information. Supply concrete facts (amounts, dates, times, deadlines, counts, durations, dependencies) that make both possible, and give the scenario one defensible correct answer.
+4. No explicit response constraints. Word counts, formatting, punctuation, mandatory keywords, writing style or any other enforceable rule about the answer are forbidden. Natural semantic requirements that are essential to the objective (for example "which bill should I pay first") are allowed. Avoid these words entirely: word, sentence, paragraph, bullet, list, heading, bold, format, tone, emoji, hashtag, quote, P.S., begin, end with, include the word, at least, at most, no more than.
+5. No personal data. No names of real people, companies or products, no order or account numbers, no contact details; use roles and labels (my manager, Supplier A, Venue 1).
+6. Provenance. Keep the seed id as the source reference. Do not invent sources or cite anything outside the seed.
 
 Return JSON with:
+- "scenario_id": the seed id.
+- "domain": the domain above.
 - "subtopic": 2-5 words naming the situation.
-- "scenario": the scenario text, ending with the request.
-- "core_objective": one sentence stating what the person needs to find out or decide.
-- "key_facts": the facts in the scenario that the answer depends on, one per item.
-- "correct_answer": the correct answer in one or two sentences, with the reason.
-- "supports_both_mechanisms": true if both kinds of harder versions in point 8 are possible without changing the answer.
-- "notes": anything you changed from the original request and why (one or two sentences).
+- "task_family": the task family above.
+- "scenario_description": the scenario in the person's voice, about 80-150 words, ending with their request.
+- "core_task_objective": one sentence stating what the person needs to find out or decide.
+- "potential_source_facts": the facts in the scenario that the answer depends on, one per item.
+- "correct_answer": the correct answer in one or two sentences, with its reason.
+- "supports_both_mechanisms": true if both kinds of harder versions in point 3 are possible without changing the answer.
+- "source_reference": "seed:" followed by the seed id.

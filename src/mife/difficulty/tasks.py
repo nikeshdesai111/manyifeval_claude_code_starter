@@ -57,11 +57,17 @@ def _obj(props: dict) -> dict:
 
 STR, BOOL = {"type": "string"}, {"type": "boolean"}
 STRS = {"type": "array", "items": STR}
-SCENARIO_SCHEMA = _obj({"subtopic": STR, "scenario": STR, "core_objective": STR, "key_facts": STRS,
-                        "correct_answer": STR, "supports_both_mechanisms": BOOL, "notes": STR})
-VARIANTS_SCHEMA = _obj({"tasks": {"type": "array", "items": _obj({
-    "level": {"type": "string", "enum": list(LEVELS)}, "task_text": STR, "distractors": STRS, "inferences": STRS,
-    "answer": STR})}})
+SCENARIO_SCHEMA = _obj({"scenario_id": STR, "domain": STR, "subtopic": STR, "task_family": STR,
+                        "scenario_description": STR, "core_task_objective": STR, "potential_source_facts": STRS,
+                        "correct_answer": STR, "supports_both_mechanisms": BOOL, "source_reference": STR})
+VARIANT = _obj({"task_id": STR, "task_text": STR, "designed_difficulty": {"type": "string", "enum": list(LEVELS)},
+                "relevant_facts": STRS, "irrelevant_facts": STRS, "required_reasoning_steps": {"type": "integer"},
+                "reasoning_dependencies": STRS, "expected_answer_or_content": STR, "task_completion_rubric": STR,
+                "difficulty_justification": STR})
+VARIANTS_SCHEMA = _obj({"scenario_id": STR, "domain": STR, "task_family": STR, "core_objective": STR,
+                        "evolution_mechanism": {"type": "string", "enum": ["distractors", "reasoning"]},
+                        "easy": VARIANT, "medium": VARIANT, "hard": VARIANT, "change_easy_to_medium": STR,
+                        "change_medium_to_hard": STR, "unsuitable_for_mechanism": BOOL, "unsuitable_reason": STR})
 CHECK = _obj({"pass": BOOL, "reason": STR})
 CHECK_NAMES = ["level_matches_definition", "count_correct", "same_concept_and_answer", "only_intended_mechanism",
                "distractors_do_not_change_answer", "steps_dependent_and_not_skippable", "no_rules_or_formatting"]
@@ -96,25 +102,33 @@ def _call_json(role: dict, prompt: str, schema: dict, name: str, tag: str, varia
 def write_scenario(seed: dict) -> tuple[dict, dict]:
     d, t = seed["domain"], seed["task_type"]
     prompt = (PROMPTS / "p1_scenario.md").read_text().format(
-        domain=d, domain_desc=SEEDS_CFG["domains"][d], task_type=t, task_type_desc=SEEDS_CFG["task_types"][t],
+        seed_id="{seed_id}", domain=d, domain_desc=SEEDS_CFG["domains"][d], task_type=t, task_type_desc=SEEDS_CFG["task_types"][t],
         cell_example=SEEDS_CFG["cell_examples"][d][t], raw_request=seed["text"])
-    return _call_json(WRITER, prompt, SCENARIO_SCHEMA, "seed_scenario", f"p1:{seed['seed_id']}")
+    prompt = prompt.replace("{seed_id}", seed["seed_id"])
+    d, meta = _call_json(WRITER, prompt, SCENARIO_SCHEMA, "seed_scenario", f"p1:{seed['seed_id']}")
+    d["scenario"], d["core_objective"] = d["scenario_description"], d["core_task_objective"]
+    return d, meta
 
 
 def write_variants(seed: dict, scen: dict, mechanism: str, attempt: int, feedback: str) -> tuple[list[dict], dict]:
     mech = yaml.safe_load((PROMPTS / "mechanisms.yaml").read_text())
     fb = f"\nA reviewer rejected your previous versions. Fix these problems:\n{feedback}\n" if feedback else ""
     prompt = (PROMPTS / "p2_variants.md").read_text().format(
-        domain=seed["domain"], task_type=seed["task_type"], scenario=scen["scenario"],
+        seed_id=seed["seed_id"], domain=seed["domain"], task_type=seed["task_type"], scenario=scen["scenario"],
         core_objective=scen["core_objective"], correct_answer=scen["correct_answer"], mechanism=mechanism,
         mechanism_definition=mech[mechanism], feedback=fb)
     d, meta = _call_json(WRITER, prompt, VARIANTS_SCHEMA, "task_variants", f"p2:{seed['seed_id']}:{mechanism}",
                          variant=attempt)
-    if len(d["tasks"]) != 3:
-        raise RuntimeError(f"writer returned {len(d['tasks'])} tasks")
-    tasks = sorted(d["tasks"], key=lambda x: LEVELS.index(x["level"]))
-    if [x["level"] for x in tasks] != list(LEVELS):
-        raise RuntimeError(f"writer returned levels {[x['level'] for x in tasks]}")
+    tasks = []
+    for lvl in LEVELS:
+        x = dict(d[lvl])
+        x["writer_task_id"] = x.pop("task_id")
+        x["level"] = lvl
+        x["distractors"] = x["irrelevant_facts"] if mechanism == "distractors" else []
+        x["inferences"] = x["reasoning_dependencies"] if mechanism == "reasoning" else []
+        x["change_easy_to_medium"], x["change_medium_to_hard"] = d["change_easy_to_medium"], d["change_medium_to_hard"]
+        x["unsuitable_for_mechanism"], x["unsuitable_reason"] = d["unsuitable_for_mechanism"], d["unsuitable_reason"]
+        tasks.append(x)
     for x in tasks:
         x["task_id"] = f"{seed['seed_id']}-{MECH_SHORT[mechanism]}-{LEVEL_SHORT[x['level']]}"
         x["mechanism"] = mechanism

@@ -199,6 +199,47 @@ def step_embed() -> None:
         print(name, "candidates", len(rows))
 
 
+TYPE_HINT_RE = {
+    "explanation": re.compile(r"\bwhy\b|\bexplain\b|\breason\b|\bhow come\b|\bcaused?\b", re.I),
+    "comparison": re.compile(r"\bvs\.?\b|\bversus\b|\bcompar|\bbetter\b|\bwhich (one|option|is)\b|\bor should\b|"
+                             r"\bchoose between\b|\bpros and cons\b|\btwo (options|offers|plans|choices)\b", re.I),
+    "planning": re.compile(r"\bplan\b|\bschedule\b|\bitinerary\b|\borgani[sz]e\b|\bprepare\b|\btimeline\b", re.I),
+    "troubleshooting": re.compile(r"\bnot working\b|\bproblem\b|\bissue\b|\bkeeps?\b|\bwrong\b|\bfix\b|\bwon'?t\b|"
+                                  r"\bfailed\b|\bnever arrived\b|\bstill\b", re.I),
+    "prioritization": re.compile(r"\bpriorit|\bfirst\b|\bmost important\b|\burgent\b|\bin what order\b|"
+                                 r"\bwhich should i\b|\btoo many\b|\boverwhelmed\b|\bdeadlines?\b", re.I),
+}
+
+
+def step_expand(thin_below: int = 3, per_cell: int = 50) -> None:
+    """Targeted retrieval for thin cells: rank by cell-specific similarity (cos to the cell minus the mean cos to all
+    cells), keep texts matching the cell's task-type hint, skip rows already sent to the classifier."""
+    base = pd.read_parquet(WORK / "filtered.parquet")
+    E, C = np.load(WORK / "emb_wildchat.npy"), np.load(WORK / "emb_cells.npy")
+    S = E @ C.T
+    spec = S - S.mean(axis=1, keepdims=True)
+    cand = pd.read_parquet(WORK / "candidates_wildchat.parquet")
+    have = set(cand.row)
+    acc = _accepted("wildchat")
+    counts = acc[acc.accepted].cell.value_counts().to_dict()
+    new_rows = []
+    for j, (d, t) in enumerate(CELLS):
+        if counts.get(f"{d}|{t}", 0) >= thin_below:
+            continue
+        hint = TYPE_HINT_RE[t]
+        k = 0
+        for i in np.argsort(-(spec[:, j] + 0.5 * S[:, j])):
+            if int(i) in have or not hint.search(base.text.iloc[i]):
+                continue
+            new_rows.append({"row": int(i), "retrieved_for": [f"{d}|{t}"], "best_retrieval_cos": float(S[i, j])})
+            have.add(int(i))
+            k += 1
+            if k >= per_cell:
+                break
+    print("expand: thin cells", sum(counts.get(f"{d}|{t}", 0) < thin_below for d, t in CELLS), "new rows", len(new_rows))
+    pd.concat([cand, pd.DataFrame(new_rows)], ignore_index=True).to_parquet(WORK / "candidates_wildchat.parquet")
+
+
 # ------------------------------------------------------------------------------------------------ classifier
 
 CLS_PROMPT = """You label real requests that people sent to a chatbot. Read the request and answer with one line of JSON.
@@ -408,7 +449,7 @@ def step_select() -> pd.DataFrame:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["filter", "embed", "classify", "select", "all"])
+    ap.add_argument("step", choices=["filter", "embed", "classify", "expand", "select", "all"])
     a = ap.parse_args()
     if a.step in ("filter", "all"):
         step_filter()
@@ -416,6 +457,8 @@ def main() -> None:
         step_embed()
     if a.step in ("classify", "all"):
         step_classify()
+    if a.step == "expand":
+        step_expand()
     if a.step in ("select", "all"):
         step_select()
 

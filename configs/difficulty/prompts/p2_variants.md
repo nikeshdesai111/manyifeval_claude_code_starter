@@ -1,26 +1,32 @@
-You write three versions (easy, medium, hard) of one task for an evaluation dataset. All three versions share the same scenario, the same core objective, the same request and the same correct answer. Only the difficulty mechanism changes.
+You write an easy, a medium and a hard version of one task for research on whether large language models violate individual instructions. Each version will later be paired with separate answer-format rules, so the versions must contain none.
 
-Seed scenario (domain: {domain}; task type: {task_type}):
+Scenario id: {seed_id}
+Domain: {domain}; task family: {task_type}
+Scenario:
 <<<
 {scenario}
 >>>
 Core objective: {core_objective}
-Correct answer: {correct_answer}
+Correct answer of the scenario: {correct_answer}
 
-Mechanism for these three versions: **{mechanism}**
+Evolution mechanism for these three versions: **{mechanism}**
 
 {mechanism_definition}
 
-Rules for every version:
-- Keep the person's voice (first person), the situation, the core objective and the final request of the seed. The correct answer must be exactly the same in all three versions.
-- Every fact needed for the answer is stated in the task. Nothing depends on outside knowledge.
-- No instructions about the answer's form: no length, format, structure, style, tone, wording or language requests, and none of these words anywhere: word, sentence, paragraph, bullet, list, heading, bold, format, tone, emoji, hashtag, quote, P.S., begin, end with, include the word, at least, at most, no more than.
+General requirements:
+- All three versions preserve the same scenario, task family and core objective. The correct answer is the same in all three.
+- Difficulty comes only from the demands of the task under the assigned mechanism, never from explicit response instructions. Each version is a natural request a real user might make, in the person's voice, as one block of plain prose ending with their request.
+- Manipulate only the assigned mechanism. Do not raise vocabulary or domain difficulty, and keep the expected response type the same.
+- No ambiguity, contradictions, missing information or impossible tasks. Every fact needed is supplied.
+- No explicit output rules: no counts, formatting, punctuation, mandatory or forbidden words, structure, length, style or tone. Avoid these words entirely: word, sentence, paragraph, bullet, list, heading, bold, format, tone, emoji, hashtag, quote, P.S., begin, end with, include the word, at least, at most, no more than.
 - No names of real people, companies or products, and no order or account numbers.
-- Each version is a single block of plain prose (no line breaks, no markup), 60-220 words. Within the mechanism, length grows only by what the mechanism adds.
+- Keep lengths comparable (60-220 words). Do not pad to equalise length; record differences in difficulty_justification instead.
+- Never use expected rule-following performance to set difficulty.
+- If the scenario cannot support this mechanism cleanly, still write your best versions and set "unsuitable_for_mechanism" to true with the reason.
+- The metadata fields below must not appear in task_text.
 {feedback}
-Return JSON with "tasks": exactly three items, in the order easy, medium, hard, each with:
-- "level": "easy", "medium" or "hard".
-- "task_text": the full task as the reader will see it, ending with the request.
-- "distractors": for the distractor mechanism, each distractor fact copied exactly as it appears in task_text (empty for the reasoning mechanism).
-- "inferences": for the reasoning mechanism, each necessary inference in order, written as "from X it follows that Y" (empty for the distractor mechanism).
-- "answer": the correct answer for this version in one or two sentences.
+Return JSON with:
+- "scenario_id", "domain", "task_family", "core_objective", "evolution_mechanism" ("{mechanism}").
+- "easy", "medium", "hard": each with "task_id" (scenario id, mechanism and level), "task_text", "designed_difficulty" (easy/medium/hard), "relevant_facts" (facts the answer needs, quoted from task_text), "irrelevant_facts" (each distractor, copied exactly as it appears in task_text; empty for the reasoning mechanism), "required_reasoning_steps" (number of necessary dependent operations), "reasoning_dependencies" (each operation in order, "from X it follows that Y"), "expected_answer_or_content", "task_completion_rubric" (what a complete answer must cover), "difficulty_justification".
+- "change_easy_to_medium" and "change_medium_to_hard": what changed between the versions.
+- "unsuitable_for_mechanism" (true/false) and "unsuitable_reason" (empty if suitable).
