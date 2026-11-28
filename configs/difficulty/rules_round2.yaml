@@ -1,4 +1,5 @@
-version: rule_levels_v1_draft
+# Rule catalog for calibration round 2 (rule_levels_v1). Round 1 used rules.yaml (rule_levels_v0).
+version: rule_levels_v1
 categories:
 - counting
 - word
@@ -287,7 +288,6 @@ types:
     - every_sentence
     reserve: true
 forbidden_pairs: []
-status: DRAFT for round 2, proposed 2026-11-28, not approved
 round1_moves:
   unique_words:
     level: hard
@@ -366,3 +366,8 @@ manyifeval_overlap_check: 'Checked 2026-11-28 against src/mife/source.py TYPE_IN
   Nearest relatives: nested_quotes vs startend:quotation (wrap the whole response in quotes; different check), keyword_sentence
   vs keywords:existence (position-specific vs anywhere), sentence_increment/longest_sentence vs length_constraints:number_sentences
   (sentence lengths vs sentence count). postscript is IFEval detectable_content:postscript, which ManyIFEval does not use.'
+approved_by: Nicky
+approved_on: '2026-11-28'
+decision: 'Round 2 = ''Moves + test reserves'': the 9 ladder moves, the 7 round-1 failures dropped, the 7 reserves tested;
+  categories (word 4, sentence 4, counting 3, decoration 3, position 2, markup 2) and the quote-containing pilot tasks (pc02b,
+  pc04b) kept as they are.'

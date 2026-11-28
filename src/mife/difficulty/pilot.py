@@ -90,7 +90,8 @@ def build(round_: int, seed_ids: list[str]) -> None:
             "max_model_len": MAX_MODEL_LEN, "n_chunks": 1, "prompts_sha256": hashlib.sha256(
                 (out / "prompts.parquet").read_bytes()).hexdigest(),
             "round": round_, "n_prompts": len(P), "n_tasks": len(tasks), "n_rules": len(rules),
-            "catalog_sha256": K.catalog_sha256(), "checker_version": C.CHECKER_VERSION, "decoding": DECODING,
+            "catalog_sha256": K.catalog_sha256(), "catalog_file": K.RULES_FILE.name,
+            "catalog_version": K.catalog()["version"], "checker_version": C.CHECKER_VERSION, "decoding": DECODING,
             "n_samples": N_SAMPLES, "models": {}}
     for key, (hf, rev) in MODELS.items():
         tok = AutoTokenizer.from_pretrained(hf, revision=rev)
@@ -237,8 +238,11 @@ def main() -> None:
     ap.add_argument("--seeds", nargs="+", default=None, help="default: the current calibration seeds")
     ap.add_argument("--model", choices=list(MODELS))
     ap.add_argument("--batch", type=int, default=16)
+    ap.add_argument("--rules", default=None, help="rules file in configs/difficulty (round 1: rules.yaml)")
     ap.add_argument("--limit", type=int)
     a = ap.parse_args()
+    if a.rules:
+        K.use_catalog(K.CFG / a.rules)
     if a.step == "build":
         build(a.round, a.seeds or calibration_seeds())
     elif a.step == "generate":

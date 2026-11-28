@@ -69,7 +69,7 @@ def test_divider_lines():
 
 @pytest.fixture
 def round2():
-    K.use_catalog(K.CFG / "rules_round2_draft.yaml")
+    K.use_catalog(K.CFG / "rules_round2.yaml")
     yield K.catalog()
     K.use_catalog(K.CFG / "rules.yaml")
 
