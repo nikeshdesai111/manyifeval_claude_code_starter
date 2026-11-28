@@ -78,7 +78,8 @@ def chat(model: str, messages: list[dict], *, provider: str | None = None, respo
             break
         except urllib.error.HTTPError as e:
             last = f"HTTP {e.code}: {e.read().decode()[:300]}"
-            if e.code not in (408, 429, 500, 502, 503, 504):
+            transient_402 = e.code == 402 and "in_flight" in last   # in-flight reservation, not an empty balance
+            if e.code not in (408, 429, 500, 502, 503, 504) and not transient_402:
                 raise OpenRouterError(last) from None
         except (urllib.error.URLError, TimeoutError) as e:
             last = str(e)

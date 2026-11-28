@@ -2,9 +2,11 @@
 # Difficulty calibration pilot, round R (data/difficulty/pilot/round<R>/inputs, built on the Mac by
 # `python -m mife.difficulty.pilot build --round R`). Same runner, backend and decoding as K10 (generate.py with
 # --inputs-dir/--outputs-dir); one task per model, chunk 0 = all 12,960 responses of that model.
-#   sbatch --export=ALL pilots/high_k/code/difficulty_pilot.sbatch gemma2b 1
-#   sbatch --export=ALL pilots/high_k/code/difficulty_pilot.sbatch llama 1
-#   sbatch --export=ALL pilots/high_k/code/difficulty_pilot.sbatch gemma9b 1
+# On Betty this script and the modified generate.py live in pilots/difficulty_pilot/code/ (staged there so the K10
+# copy in pilots/high_k/code/ is never overwritten). From ~/mife/repo:
+#   sbatch --export=ALL,HK_HF_CACHE=<K10 weights dir> pilots/difficulty_pilot/code/difficulty_pilot.sbatch gemma2b 1
+#   sbatch --export=ALL,HK_HF_CACHE=<K10 weights dir> pilots/difficulty_pilot/code/difficulty_pilot.sbatch llama 1
+#   sbatch --export=ALL,HK_HF_CACHE=<K10 weights dir> --time=02:00:00 pilots/difficulty_pilot/code/difficulty_pilot.sbatch gemma9b 1
 # Writes only data/difficulty/pilot/round<R>/betty/. Resumable: resubmit (check squeue first).
 #SBATCH --job-name=mife-diffpilot
 #SBATCH --account=zives-cis-academic-curri
@@ -21,7 +23,7 @@ cd "${SLURM_SUBMIT_DIR:-$(pwd)}"
 export MIFE_REPO="$(pwd)"
 source scripts/betty/env.sh
 mife_activate
-G=pilots/high_k/code/generate.py
+G="${PILOT_GEN:-pilots/difficulty_pilot/code/generate.py}"   # the --inputs-dir version (commit 34143fa)
 IN="data/difficulty/pilot/round${R}/inputs"
 OUT="data/difficulty/pilot/round${R}/betty"
 [[ -f "$IN/build_summary.json" ]] || { echo "missing $IN/build_summary.json"; exit 3; }
