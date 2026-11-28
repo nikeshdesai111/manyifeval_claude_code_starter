@@ -176,6 +176,12 @@ def rule_text(t: str, kw: dict) -> str:
                                    "response.",
                 "every_sentence": "Put every sentence of your response on its own, with a divider line (---) on its own "
                                   "line between every two sentences."}[kw["scope"]]
+    if t == "bold_first_word":
+        return {"paragraph_first": "Make the first word of the first sentence of every paragraph bold, like **this**.",
+                "first_two_paragraphs": "Make the first word of every sentence in the first two paragraphs of your "
+                                        "response bold, like **this**.",
+                "every_sentence": "Make the first word of every sentence of your response bold, like **this**."
+                }[kw["scope"]]
     raise KeyError(t)
 
 

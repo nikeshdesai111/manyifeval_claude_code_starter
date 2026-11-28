@@ -390,6 +390,57 @@ def divider_lines(text: str, scope: str) -> Result:
     raise ValueError(scope)
 
 
+# bold_first_word     new (markup)                  (the first word of every sentence in the scope is in bold)
+
+_LEAD_STRIP = re.compile(r"^(?:[ \t]*(?:[-*+•][ \t]+|\d+[.)][ \t]+|#{1,6}[ \t]+|>[ \t]*))*")
+_BOLD_START = re.compile(r"^(\*\*|__)(.+?)\1", re.S)
+
+
+def starts_bold(sentence: str) -> bool:
+    """True if the sentence's first word token sits inside a **...** or __...__ span that opens before it. List
+    markers, heading marks, block quotes, leading emoji, quotes, brackets and other punctuation may come first."""
+    s = _LEAD_STRIP.sub("", T.normalize(sentence).lstrip())
+    while True:   # leading emoji / punctuation (not a bold marker) may precede the bold span
+        s = s.lstrip()
+        lead = T._emoji.emoji_list(s)
+        if lead and lead[0]["match_start"] == 0:
+            s = s[lead[0]["match_end"]:]
+            continue
+        if s and not s.startswith(("**", "__")) and not T.WORD_RE.match(s) and not s[0].isdigit():
+            s = s[1:]
+            continue
+        break
+    if re.match(r"^(\*\*|__)[ \t]", s):   # closing marker of a bold span that ended the previous sentence
+        s = s[2:]
+        return starts_bold(s)
+    m = _BOLD_START.match(s)
+    if not m and s.startswith(("**", "__")) and s[:2] not in s[2:]:
+        # the bold span runs past this sentence's end (its closing marker went to the next sentence)
+        return bool(T.WORD_RE.search(re.sub(r"\d", " ", s[2:])))
+    return bool(m and T.WORD_RE.search(re.sub(r"\d", " ", m.group(2))))
+
+
+def bold_first_word(text: str, scope: str) -> Result:
+    ps = T.paragraphs(text)
+    if not ps:
+        return Result(False, "empty response")
+    if scope == "paragraph_first":
+        sents = [T.sentences_of_paragraph(p)[:1] for p in ps]
+    elif scope == "first_two_paragraphs":
+        sents = [T.sentences_of_paragraph(p) for p in ps[:2]]
+    elif scope == "every_sentence":
+        sents = [T.sentences_of_paragraph(p) for p in ps]
+    else:
+        raise ValueError(scope)
+    flat = [x for g in sents for x in g]
+    if not flat:
+        return Result(False, "no sentences")
+    for x in flat:
+        if not starts_bold(x):
+            return Result(False, f"first word not bold in {x[:60]!r} (scope {scope})")
+    return Result(True, f"{len(flat)} sentence starts bold (scope {scope})")
+
+
 # ----------------------------------------------------------------------------------------------- registry
 
 CHECKERS: dict[str, Callable[..., Result]] = {
@@ -401,6 +452,7 @@ CHECKERS: dict[str, Callable[..., Result]] = {
     "emoji_ends": emoji_ends, "stair_indent": stair_indent, "hashtags": hashtags,
     "person_names": person_names, "stopword_share": stopword_share, "sentence_increment": sentence_increment,
     "postscript": postscript, "nested_quotes": nested_quotes, "divider_lines": divider_lines,
+    "bold_first_word": bold_first_word,
 }
 
 
@@ -453,6 +505,10 @@ def spec(type_id: str, kw: dict) -> str:
                                   "every_paragraph": "passes if a divider line separates every two consecutive paragraphs",
                                   "every_sentence": "passes if every sentence stands alone between divider lines"}[kw["scope"]]
         + " (blank lines around dividers are allowed).",
+        "bold_first_word": lambda: {"paragraph_first": "passes if the first sentence of every paragraph",
+                                    "first_two_paragraphs": "passes if every sentence of the first two paragraphs",
+                                    "every_sentence": "passes if every sentence"}[kw["scope"]]
+        + " starts with its first word in bold (**word** or __word__; list markers, emoji or punctuation may come first).",
     }[type_id]()
 
 

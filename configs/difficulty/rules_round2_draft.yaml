@@ -273,6 +273,19 @@ types:
     - every_paragraph
     - every_sentence
     reserve: true
+  bold_first_word:
+    category: markup
+    source: new (bold sentence starts; scope axis)
+    param: scope
+    levels:
+      easy: paragraph_first
+      medium: first_two_paragraphs
+      hard: every_sentence
+    ladder:
+    - paragraph_first
+    - first_two_paragraphs
+    - every_sentence
+    reserve: true
 forbidden_pairs: []
 status: DRAFT for round 2, proposed 2026-11-28, not approved
 round1_moves:
@@ -349,3 +362,7 @@ dropped_round1:
     hard: all
 pair_review_note: 'No new pairwise impossibility among the 17 types at any level. Known triple: postscript >= 30/60 words
   x divider_lines every_sentence (P.S. must be one sentence) x longest_sentence: left to the pool-compatibility judge.'
+manyifeval_overlap_check: 'Checked 2026-11-28 against src/mife/source.py TYPE_INFO (the 15 ManyIFEval types): no exact overlap.
+  Nearest relatives: nested_quotes vs startend:quotation (wrap the whole response in quotes; different check), keyword_sentence
+  vs keywords:existence (position-specific vs anywhere), sentence_increment/longest_sentence vs length_constraints:number_sentences
+  (sentence lengths vs sentence count). postscript is IFEval detectable_content:postscript, which ManyIFEval does not use.'

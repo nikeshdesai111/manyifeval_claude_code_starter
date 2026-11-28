@@ -75,7 +75,7 @@ def round2():
 
 
 def test_round2_catalog_shape_texts_and_checkers(round2):
-    assert len(round2["types"]) == 17
+    assert len(round2["types"]) == 18
     rng = random.Random(0)
     for t in K.types():
         assert t in C.CHECKERS
@@ -95,3 +95,17 @@ def test_round2_sampler_meets_constraints_and_pair_coverage(round2):
         assert len(set(ts)) == 10 and max(Counter(K.category_of(t) for t in ts).values()) <= 2
         assert min(p["level_mix"].values()) >= 3
     assert d["coverage"]["n_failing"] == 0
+
+
+def test_bold_first_word():
+    assert C.bold_first_word("**Pack** early. Then rest.\n\n__Call__ movers. Done.", scope="paragraph_first").passed
+    assert not C.bold_first_word("**Pack** early. Then rest.\n\nCall movers.", scope="paragraph_first").passed
+    assert not C.bold_first_word("**Pack** early. Then rest.", scope="first_two_paragraphs").passed
+    assert C.bold_first_word("**Pack** early. **Then** rest.\n\n**Call** now.\n\nplain third.",
+                             scope="first_two_paragraphs").passed
+    assert C.bold_first_word("- **Pack** boxes\n- **Label** them", scope="every_sentence").passed      # list items
+    assert C.bold_first_word("## **Plan**\n😀 **First** step. \"**Second** step.\"", scope="every_sentence").passed
+    assert C.bold_first_word("**The whole sentence is bold.** **Next** one.", scope="every_sentence").passed
+    assert not C.bold_first_word("The **plan** works. **Next** one.", scope="every_sentence").passed  # not the first word
+    assert not C.bold_first_word("*Pack* early.", scope="paragraph_first").passed                     # italics, not bold
+    assert not C.bold_first_word("**12** boxes moved.", scope="paragraph_first").passed               # digits are not a word
