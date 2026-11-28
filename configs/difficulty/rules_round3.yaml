@@ -1,5 +1,5 @@
-# DRAFT rule catalog for calibration round 3 (not approved, not built).
-version: rule_levels_v2_draft
+# Rule catalog for calibration round 3 (rule_levels_v2).
+version: rule_levels_v2
 categories:
 - counting
 - word
@@ -282,7 +282,6 @@ manyifeval_overlap_check: 'Checked 2026-11-28 against src/mife/source.py TYPE_IN
   Nearest relatives: nested_quotes vs startend:quotation (wrap the whole response in quotes; different check), keyword_sentence
   vs keywords:existence (position-specific vs anywhere), sentence_increment/longest_sentence vs length_constraints:number_sentences
   (sentence lengths vs sentence count). postscript is IFEval detectable_content:postscript, which ManyIFEval does not use.'
-status: DRAFT for round 3 (the last adjustment round), proposed 2026-11-28, not approved
 frozen_after_round2:
 - conjunctions
 - word_repeats
@@ -357,3 +356,9 @@ scope_nesting: 'Scope types: easy is a subset of medium, and medium a subset of 
   < first two sentences < first four sentences (sentence counts, so nesting never depends on paragraph breaks); emoji_ends
   last sentence < last sentence of every paragraph < every sentence; divider_lines first gap < first two gaps < every paragraph
   gap; bold_first_word first sentence < first sentence of every paragraph < every sentence.'
+approved_by: Nicky
+approved_on: '2026-11-28'
+decision: 'Round 3 = ''Moves + fix scope types'': the 6 passing types frozen, one-level moves on the near-miss types, nested
+  scopes (easy < medium < hard) for title_case, emoji_ends, divider_lines, bold_first_word and no_consecutive_initial, hashtags
+  dropped. More than 3 calibration rounds are allowed if needed (plan).'
+checker_version: difficulty-checkers-v1
