@@ -218,9 +218,9 @@ def analyze(round_: int, n_boot: int = 2000) -> pd.DataFrame:
         lo, hi = np.percentile(b, 5, axis=0), np.percentile(b, 95, axis=0)
         gap = (rate["medium"] - rate["easy"], rate["hard"] - rate["medium"])
         order_models = sum(v["easy"] < v["medium"] < v["hard"] for v in by_model.values())
-        crit = {"order_pooled": rate["easy"] < rate["medium"] < rate["hard"], "order_models": order_models >= 2,
-                "gap_em": gap[0] >= 0.10 and lo[0] > 0, "gap_mh": gap[1] >= 0.10 and lo[1] > 0,
-                "easy_floor": rate["easy"] >= 0.03, "hard_ceiling": rate["hard"] <= 0.90}
+        crit = {"crit_order_pooled": rate["easy"] < rate["medium"] < rate["hard"], "crit_order_models": order_models >= 2,
+                "crit_gap_em": gap[0] >= 0.10 and lo[0] > 0, "crit_gap_mh": gap[1] >= 0.10 and lo[1] > 0,
+                "crit_easy_floor": rate["easy"] >= 0.03, "crit_hard_ceiling": rate["hard"] <= 0.90}
         out.append({"type_id": t, **{f"viol_{k}": round(v, 4) for k, v in rate.items()},
                     "gap_em": round(gap[0], 4), "gap_em_ci90": [round(lo[0], 4), round(hi[0], 4)],
                     "gap_mh": round(gap[1], 4), "gap_mh_ci90": [round(lo[1], 4), round(hi[1], 4)],

@@ -27,4 +27,4 @@ def test_analyze_criteria_on_synthetic_rates(tmp_path, monkeypatch):
     pd.DataFrame(rows).to_parquet(tmp_path / "round1" / "verification.parquet")
     A = PL.analyze(1, n_boot=300).set_index("type_id")
     assert A.loc["good", "passes"] and not A.loc["flat", "passes"]
-    assert not A.loc["flat", "gap_em"]
+    assert not A.loc["flat", "crit_gap_em"] and abs(A.loc["good", "gap_em"] - 0.3) < 0.05
