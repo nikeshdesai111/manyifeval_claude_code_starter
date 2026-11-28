@@ -108,7 +108,13 @@ def build(round_: int, seed_ids: list[str]) -> None:
         W = pd.DataFrame([{"prompt_id": p, "sample_index": s, "seed": derive_seed("pilot", round_, key, p, s) % (1 << 31),
                            "chunk": 0} for p in P.prompt_id for s in range(N_SAMPLES)])
         W.to_parquet(out / f"worklist_{key}.parquet")
+        extra = []
+        if key.startswith("gemma"):   # Nicky 2026-11-27: stop Gemma at <end_of_turn> in the pilot (K10 did not)
+            eot = tok.convert_tokens_to_ids(EOT)
+            assert eot == 107, eot
+            extra = [int(eot)]
         summ["models"][key] = {"hf_id": hf, "revision": rev, "chat_template_kwargs": {}, "n_samples": N_SAMPLES,
+                               "extra_stop_token_ids": extra, "extra_stop_tokens": [EOT] if extra else [],
                                "decoding": {"temperature": 0.6, "top_p": 0.9, "top_k": 0, "min_p": 0.0,
                                             "max_new_tokens": MAX_NEW},   # = K10 models.yaml
                                "n_responses": len(W), "max_input_tokens": max(n),

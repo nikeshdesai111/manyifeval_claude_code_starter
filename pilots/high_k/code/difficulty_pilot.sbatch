@@ -7,6 +7,7 @@
 #   sbatch --export=ALL,HK_HF_CACHE=<K10 weights dir> pilots/difficulty_pilot/code/difficulty_pilot.sbatch gemma2b 1
 #   sbatch --export=ALL,HK_HF_CACHE=<K10 weights dir> pilots/difficulty_pilot/code/difficulty_pilot.sbatch llama 1
 #   sbatch --export=ALL,HK_HF_CACHE=<K10 weights dir> --time=02:00:00 pilots/difficulty_pilot/code/difficulty_pilot.sbatch gemma9b 1
+# Gemma stops at <end_of_turn> (id 107) here: build_summary.json extra_stop_token_ids (pilot only; K10 unchanged).
 # Writes only data/difficulty/pilot/round<R>/betty/. Resumable: resubmit (check squeue first).
 #SBATCH --job-name=mife-diffpilot
 #SBATCH --account=zives-cis-academic-curri
