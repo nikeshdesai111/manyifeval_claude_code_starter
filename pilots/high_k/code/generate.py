@@ -58,7 +58,9 @@ def gen_settings(model_key: str) -> dict:
     s, cfg = spec(model_key), load_config()
     return {"model_key": model_key, "hf_id": s["hf_id"], "revision": s["revision"], "precision": cfg["precision"],
             "quantization": None, "backend": "vllm", "chat_template_kwargs": s["chat_template_kwargs"],
-            **s["decoding"], "n_samples": s["n_samples"], "sampler_semantics": SAMPLER_SEMANTICS["vllm"]}
+            **s["decoding"], "n_samples": s["n_samples"], "sampler_semantics": SAMPLER_SEMANTICS["vllm"],
+            # only builds that record extra stop tokens add this key, so K10 settings hashes are unchanged
+            **({"extra_stop_token_ids": s["extra_stop_token_ids"]} if s.get("extra_stop_token_ids") else {})}
 
 
 def settings_hash(model_key: str) -> str:
@@ -97,6 +99,7 @@ def eos_token_ids(model_key: str) -> list[int]:
     t = AutoTokenizer.from_pretrained(str(p), local_files_only=True)
     if t.eos_token_id is not None:
         ids.add(int(t.eos_token_id))
+    ids |= {int(i) for i in spec(model_key).get("extra_stop_token_ids", [])}   # absent in K10 builds
     return sorted(int(i) for i in ids)
 
 
