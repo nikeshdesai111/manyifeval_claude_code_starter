@@ -66,3 +66,22 @@ def test_rewrite_feedback_keeps_accepted_and_pins_medium_distractors():
     fb = TK.rewrite_feedback(prev, ["hard"], res)
     assert "Rewrite only the hard version" in fb and "keep easy exactly:\nT easy" in fb
     assert "keep medium exactly:\nT medium" in fb and "D1. | D2." in fb and "designed 4" in fb
+
+
+def test_compat_prompt_contains_definitions_and_every_checker_spec():
+    import random
+    from mife.difficulty import catalog as K, checkers as C, text as T
+    rng = random.Random(3)
+    rules = [K.rule_record(t, "hard", K.instantiate(t, "hard", rng, "train", set())) for t in K.types()[:10]]
+    rules += [K.rule_record(t, "easy", K.instantiate(t, "easy", rng, "train", set())) for t in K.types()[10:]]
+    tasks = [{"task_id": "x-dis-easy", "task_text": "Why did my bill rise?"}]
+    p = TK.compat_prompt("pool1", rules, tasks)
+    assert T.DEFINITIONS in p
+    for key in ("SECTION header lines are not sentences", "digit runs outside SECTION markers and hashtags",
+                "emoji may follow a sentence's end punctuation", "ignore case", "Paragraphs are blocks",
+                "Words are runs of letters"):
+        assert key in p
+    for i, r in enumerate(rules):
+        assert f"R{i + 1}: {r['rule_text']}" in p
+        assert C.spec(r["type_id"], r["kwargs"]) in p
+    assert "{" not in p.split("The 10 rules")[0].replace("{ }", "")  # no unfilled template fields

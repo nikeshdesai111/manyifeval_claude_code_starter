@@ -1,17 +1,11 @@
 You check whether a set of 10 answer-format rules can be satisfied together, for an instruction-following dataset. The rules will be attached to each of six tasks. A rule set is rejected only if it is impossible, not merely hard or unnatural. The answer does not have to read naturally; it only has to be possible.
 
-Fixed definitions used by the code that checks every rule:
-- Words are runs of letters with internal apostrophes or hyphens, lowercased; markdown symbols, emoji, digits and SECTION header lines are removed first; hashtag text counts as a word.
-- Sentences come from a fixed sentence splitter. SECTION header lines are not sentences. Headings and list items count as sentences. An emoji may follow the end punctuation of a sentence.
-- Paragraphs are separated by blank lines.
-- Keyword and closing-phrase matches ignore case. Trailing emoji are ignored when checking the closing phrase.
-- Numbers are digit runs outside SECTION markers and hashtags; a decimal counts once. List numbering counts.
-- Indentation is measured in leading spaces (a tab is 4); blank lines are skipped. Checks of other rules ignore leading whitespace.
-- No rule limits the total length of the answer.
+Fixed definitions used by the code that checks every rule (the same text the checkers implement):
+{definitions}
 
 Pool id: {pool_id}
 
-The 10 rules:
+The 10 rules (each with the instruction the model sees and the checker's exact test):
 {rules}
 
 The six tasks:

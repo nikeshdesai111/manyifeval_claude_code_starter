@@ -22,6 +22,17 @@ import unicodedata
 import emoji as _emoji
 import nltk
 
+# The pinned definitions, stated word for word in the compatibility judge's prompt (tests check they stay in sync).
+DEFINITIONS = """\
+- A SECTION header line is a line that starts with the word SECTION in capitals followed by a number (optionally after markdown symbols such as # or **), for example "SECTION 2: Costs". The whole line is a header line.
+- Words are runs of letters with internal apostrophes or hyphens, lowercased. Before words are taken, SECTION header lines, markdown symbols, emoji and digits are removed. Hashtag text counts as a word (#budget gives the word budget). A word's length is its number of letters.
+- Sentences come from one pinned sentence splitter (nltk punkt, English). SECTION header lines are not sentences. Markdown headings and list items are always sentences of their own. An emoji may follow a sentence's end punctuation and belongs to that sentence; emoji are never words.
+- Paragraphs are blocks of text separated by blank lines; SECTION header lines are not part of any paragraph.
+- Numbers are digit runs outside SECTION markers and hashtags; a decimal or a number with thousands separators counts once (2.5 and 1,200 are one number each). List numbering counts. Emoji keycaps are not numbers.
+- Keyword and closing-phrase matches ignore case. A keyword must appear as a whole word. The closing phrase is compared after removing trailing emoji, whitespace, closing quotes or brackets and end punctuation.
+- Indentation is the number of leading spaces on a line (a tab counts as 4); blank lines are skipped. Other rules ignore leading whitespace.
+- No rule limits the total length of the answer."""
+
 EMOJI_VERSION = _emoji.__version__
 NLTK_VERSION = nltk.__version__
 SPLITTER_ID = f"nltk-{NLTK_VERSION}-punkt_tab-english"

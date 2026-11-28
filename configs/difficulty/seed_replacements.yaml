@@ -1,0 +1,12 @@
+# Seed replacements (difficulty dataset). Applied by `seeds select` after selection.
+replacements:
+- seed_id: pc02
+  new_seed_id: pc02b
+  cell: home/explanation
+  role: calibration
+  old_conversation_hash: db7044d69eaf96b167d44ac18fa6598a
+  new_source: wildchat
+  new_conversation_hash: dabc40864e48257bde1ae3ce293e48fe
+  reason: scenario has two parallel outcomes, can't form a single 1/2/3 reasoning chain; judge rejected after 3 rewrites at
+    low and medium effort
+  date: '2026-11-27'

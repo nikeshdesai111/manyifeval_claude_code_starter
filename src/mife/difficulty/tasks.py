@@ -24,6 +24,8 @@ import pandas as pd
 import yaml
 
 from . import catalog as K
+from . import checkers as C
+from . import text as T
 from . import openrouter as OR
 from . import sampler as S
 
@@ -33,8 +35,10 @@ SEEDS_CFG = yaml.safe_load((CFG / "seeds.yaml").read_text())
 OUT = K.ROOT / "data" / "difficulty" / "tasks_test_batch"
 _OR = yaml.safe_load((CFG / "openrouter.yaml").read_text())
 WRITER = {"model": _OR["writer"]["model"], "provider": _OR["writer"]["provider"]}
-JUDGE = {"model": _OR["judge"]["model"], "provider": _OR["judge"]["provider"],
-         "reasoning": {"effort": _OR["judge"]["reasoning_effort"]}}
+JUDGE = {"model": _OR["task_judge"]["model"], "provider": _OR["task_judge"]["provider"],
+         "reasoning": {"effort": _OR["task_judge"]["reasoning_effort"]}}
+COMPAT_JUDGE = {"model": _OR["compat_judge"]["model"], "provider": _OR["compat_judge"]["provider"],
+                "reasoning": {"effort": _OR["compat_judge"]["reasoning_effort"]}}
 MAX_REWRITES = 3
 MAX_JUDGE_RETRIES = 3
 LEVELS = ("easy", "medium", "hard")
@@ -193,13 +197,20 @@ def accept_task(task: dict, v: dict, medium_distractors: list[str] | None) -> tu
     return not why, why
 
 
+def compat_prompt(pool_id: str, rules: list[dict], tasks: list[dict]) -> str:
+    """Prompt 5 with the pinned definitions and, per rule, the instruction text plus the checker's exact test."""
+    rr = "\n".join(f"R{i + 1}: {r['rule_text']}\n    Checked as: {C.spec(r['type_id'], r['kwargs'])}"
+                    for i, r in enumerate(rules))
+    tt = "\n\n".join(f"[{x['task_id']}]\n{x['task_text']}" for x in tasks)
+    return (PROMPTS / "p5_compat_judge.md").read_text().format(
+        definitions=T.DEFINITIONS, pool_id=pool_id, rules=rr, tasks=tt)
+
+
 def compat_judge(pool_id: str, rules: list[dict], tasks: list[dict], attempt: int, log: list) -> dict:
     rid = {f"R{i + 1}": r for i, r in enumerate(rules)}
-    rr = "\n".join(f"{k}: {r['rule_text']}" for k, r in rid.items())
-    tt = "\n\n".join(f"[{x['task_id']}]\n{x['task_text']}" for x in tasks)
-    prompt = (PROMPTS / "p5_compat_judge.md").read_text().format(pool_id=pool_id, rules=rr, tasks=tt)
+    prompt = compat_prompt(pool_id, rules, tasks)
     for k in range(MAX_JUDGE_RETRIES):
-        d, meta = _call_json(JUDGE, prompt, COMPAT_SCHEMA, "pool_compat", f"p5:{pool_id}:a{attempt}",
+        d, meta = _call_json(COMPAT_JUDGE, prompt, COMPAT_SCHEMA, "pool_compat", f"p5:{pool_id}:a{attempt}",
                              variant=attempt * 10 + k)
         verdicts = [d["rules_jointly_satisfiable"]] + [t["reasonably_possible"] for t in d["tasks"]]
         ids_ok = {t["task_id"] for t in d["tasks"]} == {x["task_id"] for x in tasks}
@@ -221,7 +232,7 @@ def compat_judge(pool_id: str, rules: list[dict], tasks: list[dict], attempt: in
 
 # ------------------------------------------------------------------------------------------- per seed
 
-def run_seed(seed: dict, split: str, sampler_seed: int) -> dict:
+def run_seed(seed: dict, split: str, sampler_seed: int, tasks_only: bool = False) -> dict:
     out = OUT / seed["seed_id"]
     out.mkdir(parents=True, exist_ok=True)
     scen, m1 = write_scenario(seed)
@@ -273,6 +284,9 @@ def run_seed(seed: dict, split: str, sampler_seed: int) -> dict:
               "judge_verdict": res[x["task_id"]]["verdict"]} for x in six]
     (out / "tasks.json").write_text(json.dumps(final, indent=1))
     seed_ok = all(accepted.values())
+    if tasks_only:   # calibration pilot: k = 1 prompts need no pool
+        return {"seed_id": seed["seed_id"], "domain": seed["domain"], "task_type": seed["task_type"],
+                "seed_accepted": seed_ok, "rounds": rnd + 1, "accepted_tasks": sum(x["accepted"] for x in final)}
     # pool + compatibility judge (only for a seed whose 6 tasks were accepted; else use the last tasks to test it)
     compat_log: list = []
     sampler = S.PoolSampler(sampler_seed)
@@ -287,16 +301,73 @@ def run_seed(seed: dict, split: str, sampler_seed: int) -> dict:
             "pool_rejections": [e for e in sampler.log if e["event"] == "pool_rejected"]}
 
 
+def rejudge_compat(run_dir: Path, seed_id: str, out_name: str = "compat_rejudge.json") -> list[dict]:
+    """Re-run only the compatibility judge (current prompt and effort) on every pool the earlier run judged."""
+    d = run_dir / seed_id
+    tasks = json.loads((d / "tasks.json").read_text())
+    old = json.loads((d / "compat_log.json").read_text())["judge_calls"]
+    pools = json.loads((d / "pool.json").read_text())["rules"]
+    by_text = {r["rule_text"]: r for r in pools}
+    results = []
+    for call in old:
+        # rebuild full rule records for the rejected pool (same types/levels/params as logged)
+        rules = []
+        for x in call["rules"]:
+            if x["rule_text"] in by_text:
+                rules.append(by_text[x["rule_text"]])
+            else:
+                rules.append(_record_from_text(x))
+        log: list = []
+        v = compat_judge(f"{seed_id}-rejudge-a{call['attempt']}", rules, tasks, call["attempt"], log)
+        results.append({"attempt": call["attempt"], "old_accepted": all(
+            [call["verdict"]["rules_jointly_satisfiable"]["pass"]] + [t["reasonably_possible"]["pass"]
+                                                                     for t in call["verdict"]["tasks"]]),
+                        "old_reason": call["verdict"]["rules_jointly_satisfiable"]["reason"] if not
+                        call["verdict"]["rules_jointly_satisfiable"]["pass"] else
+                        "; ".join(t["reasonably_possible"]["reason"] for t in call["verdict"]["tasks"]
+                                  if not t["reasonably_possible"]["pass"]),
+                        "new_accepted": v["accepted"], "new_reason": v["reason"], "log": log})
+    (d / out_name).write_text(json.dumps(results, indent=1, default=str))
+    return results
+
+
+def _record_from_text(x: dict) -> dict:
+    """Recover kwargs of a logged rule by matching its text against every instantiation of its type and level."""
+    import itertools as it
+    wl = K.wordlists()
+    t, lvl = x["type_id"], x["level"]
+    cands = [K.instantiate(t, lvl, __import__("random").Random(0), "train", set())]
+    if t in ("keyword_sentence", "keyword_position"):
+        base = cands[0]
+        cands = [{**base, "keyword": w} for w in it.chain(wl["keywords"]["train"], wl["keywords"]["test"])]
+    if t == "closing_phrase":
+        n = K.catalog()["types"][t]["levels"][lvl]
+        cands = [{"phrase": p} for sp in ("train", "test") for p in wl["closing_phrases"][sp][int(n)]]
+    for kw in cands:
+        if K.rule_text(t, kw) == x["rule_text"]:
+            return K.rule_record(t, lvl, kw)
+    raise KeyError(x)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", nargs="+", required=True)
     ap.add_argument("--sampler-seed", type=int, default=2026112701)
     ap.add_argument("--seeds-file", default=str(K.ROOT / "data" / "difficulty" / "seeds.parquet"))
+    ap.add_argument("--tasks-only", action="store_true", help="write and judge tasks, no pool (pilot seeds)")
+    ap.add_argument("--rejudge-compat", default=None, help="run dir: re-run only the compatibility judge")
     ap.add_argument("--out", default=None, help="output folder (default data/difficulty/tasks_test_batch)")
     a = ap.parse_args()
     global OUT
     if a.out:
         OUT = Path(a.out)
+    if a.rejudge_compat:
+        t0 = time.strftime("%Y-%m-%dT%H:%M:%S")
+        for sid in a.seeds:
+            for r in rejudge_compat(Path(a.rejudge_compat), sid):
+                print(json.dumps({k: v for k, v in r.items() if k != "log"}, indent=1))
+        print(json.dumps(OR.total_cost(since=t0), indent=1))
+        return
     seeds = pd.read_parquet(a.seeds_file).set_index("seed_id")
     summary = []
     t_start = time.strftime("%Y-%m-%dT%H:%M:%S")
@@ -304,10 +375,11 @@ def main() -> None:
         s = seeds.loc[sid].to_dict()
         s["seed_id"] = sid
         split = "test" if s.get("split") == "test" else "train"
-        summary.append(run_seed(s, split, a.sampler_seed))
+        summary.append(run_seed(s, split, a.sampler_seed, tasks_only=a.tasks_only))
         print(json.dumps(summary[-1], indent=1, default=str), flush=True)
     cost = OR.total_cost(since=t_start)
-    (OUT / "summary.json").write_text(json.dumps({"seeds": summary, "cost": cost, "writer": WRITER, "judge": JUDGE},
+    (OUT / "summary.json").write_text(json.dumps({"seeds": summary, "cost": cost, "writer": WRITER, "judge": JUDGE,
+                                                  "compat_judge": COMPAT_JUDGE},
                                                  indent=1, default=str))
     print(json.dumps(cost, indent=1))
 

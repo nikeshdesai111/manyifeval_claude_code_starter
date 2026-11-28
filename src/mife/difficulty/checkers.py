@@ -267,6 +267,48 @@ CHECKERS: dict[str, Callable[..., Result]] = {
 }
 
 
+_SCOPE_DESC = {"first_sentence": "the first sentence", "first_two_sentences": "the first two sentences",
+               "first_paragraph": "the first paragraph", "first_two_paragraphs": "the first two paragraphs",
+               "whole": "the whole response (SECTION header lines excluded)"}
+
+
+def spec(type_id: str, kw: dict) -> str:
+    """The checker's exact test in words (shown to the compatibility judge)."""
+    n = kw.get("n")
+    return {
+        "unique_words": lambda: f"passes if the number of different words is >= {n}.",
+        "numbers_exact": lambda: f"passes if the number of numbers is exactly {n}.",
+        "conjunctions": lambda: f"passes if >= {n} different words from {{and, but, for, nor, or, so, yet}} occur.",
+        "word_repeats": lambda: f"passes if no word occurs more than {n} times.",
+        "longest_word": lambda: f"passes if every word has <= {n} letters.",
+        "no_consecutive_initial": lambda: (f"passes if, in {_SCOPE_DESC[kw['scope']]}, no two consecutive words "
+                                           f"start with the same letter (case-insensitive, across sentence breaks)."),
+        "longest_sentence": lambda: f"passes if every sentence has <= {n} words.",
+        "questions": lambda: f"passes if >= {n} sentences end with '?' (ignoring trailing emoji, quotes, brackets, markdown).",
+        "title_case": lambda: (f"passes if, in {_SCOPE_DESC[kw['scope']]}, every word starts with a capital letter, "
+                               f"except that these words may stay lower case when not first: "
+                               + ", ".join(sorted(TITLE_MINOR)) + "."),
+        "keyword_sentence": lambda: f"passes if sentence {n} contains the word '{kw['keyword']}'.",
+        "keyword_position": lambda: f"passes if word {kw['m']} of sentence {n} is '{kw['keyword']}'.",
+        "closing_phrase": lambda: f"passes if the response ends with '{kw['phrase']}' (preceded by a non-letter).",
+        "sections": lambda: f"passes if there are >= {n} SECTION header lines.",
+        "highlights": lambda: (f"passes if >= {n} non-empty spans *like this* or **like this** occur "
+                               f"(each on one line)."),
+        "bracket_depth": lambda: (f"passes if some correctly closed group of ( ), [ ], {{ }} is nested >= {n} deep; "
+                                  f"a mismatched closing bracket resets the count."),
+        "emoji_ends": lambda: {"last_sentence": "passes if the last sentence ends with an emoji",
+                               "first_and_last_sentence": "passes if the first and last sentences end with an emoji",
+                               "each_paragraph": "passes if the last sentence of every paragraph ends with an emoji",
+                               "every_sentence": "passes if every sentence ends with an emoji"}[kw["scope"]]
+        + " (end punctuation may come before or after the emoji).",
+        "stair_indent": lambda: ("passes if every non-blank line has more indentation than the one before it."
+                                 if kw["lines"] == "all" else
+                                 f"passes if there are >= {kw['lines']} non-blank lines and each of the first "
+                                 f"{kw['lines']} has more indentation than the one before it."),
+        "hashtags": lambda: f"passes if >= {n} different hashtags (# then a letter, case-insensitive) occur.",
+    }[type_id]()
+
+
 def check(type_id: str, text: str, kwargs: dict) -> Result:
     """Run one rule. ``kwargs`` are the instantiated parameters (see catalog.instantiate)."""
     return CHECKERS[type_id](text, **kwargs)

@@ -426,6 +426,7 @@ def step_select() -> pd.DataFrame:
          else f"Dolly-15k@{CFG['dolly']['revision'][:12]} {r.conversation_hash}" if r.source == "dolly" else None)
         for r in out.itertuples()]
     out["seeds_version"] = CFG["version"]
+    out = apply_replacements(out)
     out.to_parquet(DATA / "seeds.parquet")
     # coverage: accepted WildChat candidates per cell, and what was picked
     cov = pd.DataFrame([{"domain": d, "task_type": t, "wildchat_accepted": counts[(d, t)],
@@ -447,9 +448,87 @@ def step_select() -> pd.DataFrame:
     return out
 
 
+REPLACEMENTS = ROOT / "configs" / "difficulty" / "seed_replacements.yaml"
+
+
+def _replacement_log() -> list[dict]:
+    return (yaml.safe_load(REPLACEMENTS.read_text()) or {}).get("replacements", []) if REPLACEMENTS.exists() else []
+
+
+def _row_vec(r) -> np.ndarray:
+    name = "wildchat" if r["source"] == "wildchat" else "dolly"
+    base = pd.read_parquet(WORK / ("filtered.parquet" if name == "wildchat" else "dolly_filtered.parquet"))
+    i = int(np.flatnonzero(base.conversation_hash.values == r["conversation_hash"])[0])
+    return np.load(WORK / f"emb_{name}.npy")[i]
+
+
+def pick_replacement(out: pd.DataFrame, seed_id: str) -> dict:
+    """Next-best accepted candidate for the replaced seed's cell: a user and conversation not used by any seed row
+    (including replaced ones) and cosine < threshold to every seed row."""
+    old = out[out.seed_id == seed_id].iloc[0]
+    cell = f"{old.domain}|{old.task_type}"
+    used_u, used_c = set(out.user_hash.dropna()), set(out.conversation_hash.dropna())
+    vecs = np.stack([_row_vec(r) for r in out[out.source.notna()].to_dict("records")])
+    for name in ("wildchat", "dolly"):
+        acc = _accepted(name)
+        acc = acc[acc.accepted & (acc.cell == cell)].sort_values("cell_cos", ascending=False)
+        E = np.load(WORK / f"emb_{name}.npy")
+        for r in acc.itertuples(index=False):
+            if r.user_hash in used_u or r.conversation_hash in used_c:
+                continue
+            if float(np.max(vecs @ E[r.row])) >= CFG["embedding"]["near_duplicate_cosine"]:
+                continue
+            return {k: getattr(r, k) for k in ("source", "conversation_hash", "user_hash", "model", "timestamp",
+                                               "country", "text", "text_hash", "cell_cos", "cls_raw")}
+    raise RuntimeError(f"no replacement candidate for {seed_id} ({cell})")
+
+
+def apply_replacements(out: pd.DataFrame) -> pd.DataFrame:
+    """Re-apply configs/difficulty/seed_replacements.yaml: the old row keeps its id with role 'replaced', the new
+    row takes the old role under new_seed_id and the logged conversation."""
+    for rep in _replacement_log():
+        m = out.seed_id == rep["seed_id"]
+        if not m.any() or (out.seed_id == rep["new_seed_id"]).any():
+            continue
+        old = out[m].iloc[0].to_dict()
+        out.loc[m, "role"] = "replaced"
+        name = rep["new_source"]
+        acc = _accepted("wildchat" if name == "wildchat" else "dolly")
+        r = acc[acc.conversation_hash == rep["new_conversation_hash"]].iloc[0]
+        new = {**old, **{k: r[k] for k in ("source", "conversation_hash", "user_hash", "model", "timestamp", "country",
+                                            "text", "text_hash", "cell_cos", "cls_raw")},
+               "seed_id": rep["new_seed_id"], "role": old["role"], "dolly_fill": name == "dolly", "missing": False,
+               "replaces": rep["seed_id"]}
+        new["provenance"] = (f"WildChat-1M@{CFG['wildchat']['revision'][:12]} conversation_hash={new['conversation_hash']}"
+                             if name == "wildchat" else f"Dolly-15k@{CFG['dolly']['revision'][:12]} {new['conversation_hash']}")
+        out = pd.concat([out, pd.DataFrame([new])], ignore_index=True)
+    return out
+
+
+def step_replace(seed_id: str, reason: str) -> dict:
+    out = pd.read_parquet(DATA / "seeds.parquet")
+    old = out[out.seed_id == seed_id].iloc[0]
+    new = pick_replacement(out, seed_id)
+    log = _replacement_log()
+    n = sum(r["seed_id"].startswith(seed_id) for r in log)
+    rep = {"seed_id": seed_id, "new_seed_id": f"{seed_id}{'bcdefgh'[n]}", "cell": f"{old.domain}/{old.task_type}",
+           "role": old.role, "old_conversation_hash": old.conversation_hash, "new_source": new["source"],
+           "new_conversation_hash": new["conversation_hash"], "reason": reason,
+           "date": time.strftime("%Y-%m-%d")}
+    log.append(rep)
+    REPLACEMENTS.write_text("# Seed replacements (difficulty dataset). Applied by `seeds select` after selection.\n"
+                            + yaml.safe_dump({"replacements": log}, sort_keys=False, width=120))
+    out = apply_replacements(out)
+    out.to_parquet(DATA / "seeds.parquet")
+    print(json.dumps(rep, indent=1))
+    return rep
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["filter", "embed", "classify", "expand", "select", "all"])
+    ap.add_argument("step", choices=["filter", "embed", "classify", "expand", "select", "replace", "all"])
+    ap.add_argument("--seed-id")
+    ap.add_argument("--reason")
     a = ap.parse_args()
     if a.step in ("filter", "all"):
         step_filter()
@@ -457,6 +536,8 @@ def main() -> None:
         step_embed()
     if a.step in ("classify", "all"):
         step_classify()
+    if a.step == "replace":
+        step_replace(a.seed_id, a.reason)
     if a.step == "expand":
         step_expand()
     if a.step in ("select", "all"):
