@@ -86,7 +86,10 @@ def build(round_: int, seed_ids: list[str]) -> None:
                          "rule_instance_id": r["rule_instance_id"], "prompt_text": text, "prompt_sha256": sha(text)})
     P = pd.DataFrame(rows)
     P.to_parquet(out / "prompts.parquet")
-    summ = {"round": round_, "n_prompts": len(P), "n_tasks": len(tasks), "n_rules": len(rules),
+    summ = {"version": f"difficulty-pilot-r{round_}-v0", "run_name": f"difficulty_pilot_r{round_}",
+            "max_model_len": MAX_MODEL_LEN, "n_chunks": 1, "prompts_sha256": hashlib.sha256(
+                (out / "prompts.parquet").read_bytes()).hexdigest(),
+            "round": round_, "n_prompts": len(P), "n_tasks": len(tasks), "n_rules": len(rules),
             "catalog_sha256": K.catalog_sha256(), "checker_version": C.CHECKER_VERSION, "decoding": DECODING,
             "n_samples": N_SAMPLES, "models": {}}
     for key, (hf, rev) in MODELS.items():
@@ -105,7 +108,10 @@ def build(round_: int, seed_ids: list[str]) -> None:
         W = pd.DataFrame([{"prompt_id": p, "sample_index": s, "seed": derive_seed("pilot", round_, key, p, s) % (1 << 31),
                            "chunk": 0} for p in P.prompt_id for s in range(N_SAMPLES)])
         W.to_parquet(out / f"worklist_{key}.parquet")
-        summ["models"][key] = {"hf_id": hf, "revision": rev, "n_responses": len(W), "max_input_tokens": max(n),
+        summ["models"][key] = {"hf_id": hf, "revision": rev, "chat_template_kwargs": {}, "n_samples": N_SAMPLES,
+                               "decoding": {"temperature": 0.6, "top_p": 0.9, "top_k": 0, "min_p": 0.0,
+                                            "max_new_tokens": MAX_NEW},   # = K10 models.yaml
+                               "n_responses": len(W), "max_input_tokens": max(n),
                                "mean_input_tokens": round(float(np.mean(n)), 1),
                                "worklist_sha256": hashlib.sha256((out / f"worklist_{key}.parquet").read_bytes()).hexdigest(),
                                "tokenized_sha256": hashlib.sha256((out / f"tokenized_{key}.parquet").read_bytes()).hexdigest()}

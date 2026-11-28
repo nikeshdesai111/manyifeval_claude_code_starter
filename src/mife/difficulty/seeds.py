@@ -510,8 +510,9 @@ def step_replace(seed_id: str, reason: str) -> dict:
     old = out[out.seed_id == seed_id].iloc[0]
     new = pick_replacement(out, seed_id)
     log = _replacement_log()
-    n = sum(r["seed_id"].startswith(seed_id) for r in log)
-    rep = {"seed_id": seed_id, "new_seed_id": f"{seed_id}{'bcdefgh'[n]}", "cell": f"{old.domain}/{old.task_type}",
+    stem = seed_id.rstrip("bcdefgh") if seed_id[-1] in "bcdefgh" and seed_id[:-1][-1].isdigit() else seed_id
+    n = sum(r["seed_id"].rstrip("bcdefgh") == stem or r["seed_id"] == stem for r in log)
+    rep = {"seed_id": seed_id, "new_seed_id": f"{stem}{'bcdefgh'[n]}", "cell": f"{old.domain}/{old.task_type}",
            "role": old.role, "old_conversation_hash": old.conversation_hash, "new_source": new["source"],
            "new_conversation_hash": new["conversation_hash"], "reason": reason,
            "date": time.strftime("%Y-%m-%d")}

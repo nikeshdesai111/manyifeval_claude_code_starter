@@ -354,6 +354,8 @@ def main() -> None:
     ap.add_argument("--seeds", nargs="+", required=True)
     ap.add_argument("--sampler-seed", type=int, default=2026112701)
     ap.add_argument("--seeds-file", default=str(K.ROOT / "data" / "difficulty" / "seeds.parquet"))
+    ap.add_argument("--auto-replace", action="store_true",
+                    help="replace a seed whose tasks fail after the last round, and run the replacement")
     ap.add_argument("--tasks-only", action="store_true", help="write and judge tasks, no pool (pilot seeds)")
     ap.add_argument("--rejudge-compat", default=None, help="run dir: re-run only the compatibility judge")
     ap.add_argument("--out", default=None, help="output folder (default data/difficulty/tasks_test_batch)")
@@ -371,12 +373,22 @@ def main() -> None:
     seeds = pd.read_parquet(a.seeds_file).set_index("seed_id")
     summary = []
     t_start = time.strftime("%Y-%m-%dT%H:%M:%S")
-    for sid in a.seeds:
+    queue = list(a.seeds)
+    while queue:
+        sid = queue.pop(0)
         s = seeds.loc[sid].to_dict()
         s["seed_id"] = sid
         split = "test" if s.get("split") == "test" else "train"
         summary.append(run_seed(s, split, a.sampler_seed, tasks_only=a.tasks_only))
         print(json.dumps(summary[-1], indent=1, default=str), flush=True)
+        if a.auto_replace and not summary[-1]["seed_accepted"]:
+            # replacement rule (configs/difficulty/SEED_SELECTION.md): next-ranked candidate, same cell, unused user
+            from . import seeds as SD
+            rep = SD.step_replace(sid, f"task judge rejected after {MAX_REWRITES} rewrites "
+                                       f"({summary[-1]['accepted_tasks']}/6 accepted); automatic replacement")
+            summary[-1]["replaced_by"] = rep["new_seed_id"]
+            seeds = pd.read_parquet(a.seeds_file).set_index("seed_id")
+            queue.insert(0, rep["new_seed_id"])
     cost = OR.total_cost(since=t_start)
     (OUT / "summary.json").write_text(json.dumps({"seeds": summary, "cost": cost, "writer": WRITER, "judge": JUDGE,
                                                   "compat_judge": COMPAT_JUDGE},
