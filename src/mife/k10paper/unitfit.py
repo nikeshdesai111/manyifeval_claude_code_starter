@@ -259,8 +259,10 @@ def fit(pack_dir: Path, units_dir: Path, request: dict, types: list[int] | None 
                 init = np.r_[h.w, h.b]
                 preds.append(ridge.expit(Xh @ h.w + h.b))
                 diag.append({"fold": f, "type_id": TYPES[ti], "setting": k, "n_iter": h.n_iter, "converged": h.converged,
-                             "hessian_jitter_steps": len(ridge.JITTER_EVENTS)})
+                             "hessian_jitter_steps": len(ridge.JITTER_EVENTS),
+                             "hessian_float64_fallback": len(ridge.FLOAT64_FALLBACK_EVENTS)})
                 ridge.JITTER_EVENTS.clear()
+                ridge.FLOAT64_FALLBACK_EVENTS.clear()
             tmp = out.with_suffix(".tmp.npz")
             np.savez(tmp, held_global=D.rows_global[held], preds=np.array(preds), settings=np.array(keys),
                      diag=np.array(json.dumps(diag)))
@@ -303,8 +305,10 @@ def fit_local(model: str, request: dict, units_dir: Path, types: list[int]) -> d
                 init = np.r_[h.w, h.b]
                 preds.append(ridge.expit(Xh @ h.w + h.b))
                 diag.append({"fold": f, "type_id": t, "setting": k, "n_iter": h.n_iter, "converged": h.converged,
-                             "hessian_jitter_steps": len(ridge.JITTER_EVENTS)})
+                             "hessian_jitter_steps": len(ridge.JITTER_EVENTS),
+                             "hessian_float64_fallback": len(ridge.FLOAT64_FALLBACK_EVENTS)})
                 ridge.JITTER_EVENTS.clear()
+                ridge.FLOAT64_FALLBACK_EVENTS.clear()
             tmp = out.with_suffix(".tmp.npz")
             np.savez(tmp, held_global=held, preds=np.array(preds), settings=np.array(keys), diag=np.array(json.dumps(diag)))
             os.replace(tmp, out)

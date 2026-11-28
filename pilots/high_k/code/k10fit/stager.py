@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shlex
 import subprocess
 import sys
@@ -52,8 +53,9 @@ def sh(cmd: list[str], check=True, timeout=None) -> str:
 
 def ssh(cmd: str, check=True, timeout=600) -> str:
     out = sh(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=30", B, f"bash -lc {shlex.quote(cmd)}"], check, timeout)
-    return "\n".join(l for l in out.splitlines() if not l.startswith(("|", "---")) and "quota" not in l.lower()
-                     and "parcc_" not in l and "vast/parcc" not in l and l.strip())
+    banner = ("quota", "parcc_", "vast/parcc", "storage usage", "if you run into an issue")
+    return "\n".join(l for l in out.splitlines() if not l.startswith(("|", "---")) and l.strip()
+                     and not any(x in l.lower() for x in banner))
 
 
 def unitfit(*args: str) -> str:
@@ -66,12 +68,36 @@ HOME_MAX_GB = 46.0
 def budget_bytes() -> float:
     """In-flight pack budget: 4 GB while gemma9b generation (G3) still runs on Betty, then 8 GB."""
     g3 = ssh("squeue -h -j 11275185 -o %i", check=False)
-    return (4.0 if g3.strip() else 8.0) * 1e9
+    running = [l for l in g3.splitlines() if re.match(r"^11275185(_|$)", l.strip())]  # job-id lines only (login banner!)
+    return (4.0 if running else 8.0) * 1e9
+
+
+_HOME_CACHE = {"t": 0.0, "gb": 99.0}
 
 
 def home_used_gb() -> float:
-    out = ssh("parcc_quota.py 2>/dev/null | grep 'home |' | head -1", check=False)
-    for tok in out.replace("|", " ").split():
+    """Measured Betty home usage: max(parcc_quota, du of ~). parcc_quota lags deletions by up to hours, and du alone
+    could miss quota accounting, so the stager uses du when the quota figure is stale-high, refreshed every 10 min."""
+    if time.time() - _HOME_CACHE["t"] < 600:
+        return _HOME_CACHE["gb"]
+    q = _quota_gb()
+    raw = sh(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=30", B, "du -sb ~ 2>/dev/null | cut -f1"],
+             check=False, timeout=900)
+    try:
+        du = int(raw.strip().splitlines()[-1]) / 1e9
+    except (ValueError, IndexError):
+        du = q
+    gb = du if q > du else q   # quota stale-high after deletions -> trust du; otherwise the quota
+    _HOME_CACHE.update(t=time.time(), gb=gb)
+    return gb
+
+
+def _quota_gb() -> float:
+    raw = sh(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=30", B,
+              "bash -lc \"parcc_quota.py 2>/dev/null | grep 'home |' | tail -1\""], check=False, timeout=120)
+    line = [l for l in raw.splitlines() if "| home |" in l or l.strip().startswith("| home")]
+    out = line[-1].split("|")[3] if line else ""        # columns: | Src | Path | Used | Limit | ...
+    for tok in out.replace("GB", " ").split():
         try:
             return float(tok)
         except ValueError:
@@ -157,10 +183,11 @@ def push_pack(name: str, local: Path) -> None:
     if "MD5_OK" not in ok:
         raise RuntimeError(f"md5 mismatch on Betty for pack {name}")
     size = sum(f.stat().st_size for f in local.iterdir())
+    _HOME_CACHE["t"] = 0.0
     log(f"pushed {name} {size / 1e9:.2f} GB in {time.time() - t0:.0f}s ({size / 1e6 / max(time.time() - t0, 1):.1f} MB/s), md5 OK")
 
 
-PART = {"cuda": "--partition=dgx-b200 --gpus=1 --cpus-per-task=28", "cpu": "--partition=genoa-std-mem --cpus-per-task=32"}
+PART = {"cuda": "--partition=dgx-b200 --gpus=1 --cpus-per-task=28", "cpu": "--partition=genoa-std-mem --cpus-per-task=8"}
 
 
 def submit_array(pack: str, units: str, req_remote: str, types: list[int], dev: str, tlimit: str) -> str:
@@ -225,9 +252,22 @@ def run_request(model: str, req_path: Path, dev: str, tlimit: str) -> None:
     req = json.loads(req_path.read_text())
     rid = req["request_id"]
     blocks = widths(model, req)
-    cap = budget_bytes() * 0.9
-    gs = groups(model, blocks, cap)
-    for g in gs:  # wait (never delete) until Betty home has room for the first pack
+    # reuse a whole-spec pack that is already on Betty (md5-checked earlier), instead of re-splitting around it
+    reused = False
+    full = f"{model}__{'+'.join(sorted(blocks))}__t{'-'.join(f'{t:02d}' for t in range(TYPES_N))}".replace(":", "_")
+    if ssh(f"test -f ~/{RK}/in/{full}/.ok && echo yes", check=False).strip().endswith("yes"):
+        gs = [list(range(TYPES_N))]
+        reused = True
+        log(f"reusing pack {full} already on Betty")
+    else:
+        # pack size cap: the in-flight budget, and the room left under the 46 GB home limit (never delete other files)
+        cap = min(budget_bytes() * 0.9, (HOME_MAX_GB - home_used_gb()) * 1e9 * 0.9)
+        while cap < 1.5e9:
+            log(f"waiting: Betty home {home_used_gb():.2f} GB leaves under 1.5 GB below {HOME_MAX_GB} GB")
+            time.sleep(600)
+            cap = min(budget_bytes() * 0.9, (HOME_MAX_GB - home_used_gb()) * 1e9 * 0.9)
+        gs = groups(model, blocks, cap)
+    for g in ([] if reused else gs):  # wait (never delete) until Betty home has room for the first pack
         while home_used_gb() + est_bytes(model, blocks, g) / 1e9 > HOME_MAX_GB:
             log(f"waiting: Betty home {home_used_gb():.2f} GB + pack {est_bytes(model, blocks, g) / 1e9:.1f} GB > {HOME_MAX_GB} GB")
             time.sleep(600)
@@ -246,6 +286,8 @@ def run_request(model: str, req_path: Path, dev: str, tlimit: str) -> None:
         if pending:
             g = [t for t in pending[0] if not all((f, t) in fb for f in range(5))]
             need = est_bytes(model, blocks, pending[0])
+            if reused and len(pending[0]) == TYPES_N:
+                need = 0.0  # the pack is already on Betty and counted in home usage
             if not g:
                 pending.pop(0)
                 continue

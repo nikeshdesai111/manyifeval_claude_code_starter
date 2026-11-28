@@ -119,7 +119,16 @@ def fit(Xs: np.ndarray, v: np.ndarray, n: np.ndarray, lam: np.ndarray, mean, sca
             H[:d, :d][np.diag_indices(d)] += lam_n
             H[:d, d] = H[d, :d] = Xs.T @ s
             H[d, d] = s.sum()
-            fac = _factor(H.T)  # H is symmetric: its transpose is the same matrix in LAPACK (Fortran) order
+            try:
+                fac = _factor(H.T)  # H is symmetric: its transpose is the same matrix in LAPACK (Fortran) order
+            except np.linalg.LinAlgError:
+                # float32 assembly too inexact even with the maximum jitter: rebuild this Hessian exactly in float64
+                # (the recipe's exact Hessian; float32 assembly is only a speed choice). Only reached where the
+                # float32 path would raise, so every fit that succeeds without it is unchanged.
+                H[:d, :d] = _gram64(Xs, s)
+                H[:d, :d][np.diag_indices(d)] += lam_n
+                fac = _factor(H.T)
+                FLOAT64_FALLBACK_EVENTS.append(d)
             n_hess += 1
             del H
         step = cho_solve(fac, g, check_finite=False)
@@ -160,6 +169,17 @@ def _factor(H):
 
 
 JITTER_EVENTS: list = []
+FLOAT64_FALLBACK_EVENTS: list = []
+
+
+def _gram64(Xs: np.ndarray, s: np.ndarray, chunk: int = 20000) -> np.ndarray:
+    """Exact float64 X' diag(s) X, accumulated over row chunks (bounded extra memory)."""
+    d = Xs.shape[1]
+    G = np.zeros((d, d))
+    for i in range(0, len(Xs), chunk):
+        Xw = Xs[i:i + chunk] * np.sqrt(s[i:i + chunk])[:, None]
+        G += Xw.T @ Xw
+    return G
 
 
 def log_loss(p, v, n) -> tuple[float, float]:
