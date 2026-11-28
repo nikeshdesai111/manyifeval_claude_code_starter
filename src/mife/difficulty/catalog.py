@@ -14,9 +14,19 @@ CFG = ROOT / "configs" / "difficulty"
 LEVELS = ("easy", "medium", "hard")
 
 
+RULES_FILE = CFG / "rules.yaml"
+
+
+def use_catalog(path) -> None:
+    """Point the catalog at another rules file (e.g. the round-2 draft) and clear the cache."""
+    global RULES_FILE
+    RULES_FILE = path
+    catalog.cache_clear()
+
+
 @functools.lru_cache(maxsize=1)
 def catalog() -> dict:
-    return yaml.safe_load((CFG / "rules.yaml").read_text())
+    return yaml.safe_load(RULES_FILE.read_text())
 
 
 @functools.lru_cache(maxsize=1)
@@ -26,8 +36,8 @@ def wordlists() -> dict:
 
 def catalog_sha256() -> str:
     h = hashlib.sha256()
-    for f in ("rules.yaml", "wordlists.yaml"):
-        h.update((CFG / f).read_bytes())
+    for f in (RULES_FILE, CFG / "wordlists.yaml"):
+        h.update(f.read_bytes())
     return h.hexdigest()
 
 
@@ -65,6 +75,8 @@ def instantiate(t: str, level: str, rng: random.Random, split: str, taken_keywor
         return {"keyword": kw, "n": int(v[0]), "m": int(v[1])}
     if t == "closing_phrase":
         return {"phrase": rng.choice(wordlists()["closing_phrases"][_word_split(split)][int(v)])}
+    if spec["param"] == "pct":
+        return {"pct": int(v)}
     if spec["param"] == "scope":
         return {"scope": v}
     if spec["param"] == "lines":
@@ -142,6 +154,28 @@ def rule_text(t: str, kw: dict) -> str:
                 f"with more leading spaces than the line before it.")
     if t == "hashtags":
         return (f"Include at least {n} " + ("hashtag" if n == 1 else "different hashtags") + " (such as #example) in your response.")
+    if t == "person_names":
+        return (f"Mention at least {n} different person names in your response, from this list of person names: "
+                + ", ".join(wordlists()["person_names"]) + ".")
+    if t == "stopword_share":
+        return (f"Ensure that stop words (common words such as the, and, of, to, is, it) make up no more than "
+                f"{kw['pct']}% of the words in your response.")
+    if t == "sentence_increment":
+        return (f"Make each of the first {n} sentences of your response longer, in words, than the sentence before it.")
+    if t == "postscript":
+        return (f"At the end of your response, add a postscript starting with P.S. as its own final paragraph, "
+                f"with at least {n} words after the P.S.")
+    if t == "nested_quotes":
+        ex = {1: '"a"', 2: '"a \'b\' c"', 3: '"a \'b "c" d\' e"', 4: '"a \'b "c \'d\' e" f\' g"'}.get(n, "")
+        return (f"Include quotation marks nested at least {n} level{_s(n)} deep somewhere in your response, alternating "
+                f"double and single quotes, for example {ex}.")
+    if t == "divider_lines":
+        return {"first_gap": "Put a divider line (---) on its own line between the first and second paragraphs of "
+                             "your response.",
+                "every_paragraph": "Put a divider line (---) on its own line between every two paragraphs of your "
+                                   "response.",
+                "every_sentence": "Put every sentence of your response on its own, with a divider line (---) on its own "
+                                  "line between every two sentences."}[kw["scope"]]
     raise KeyError(t)
 
 

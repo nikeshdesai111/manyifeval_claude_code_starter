@@ -1,0 +1,351 @@
+version: rule_levels_v1_draft
+categories:
+- counting
+- word
+- sentence
+- position
+- markup
+- decoration
+max_per_category: 2
+pool_size: 10
+min_per_level: 3
+types:
+  unique_words:
+    category: counting
+    source: IFBench count:unique_word_count (100-500)
+    param: n
+    levels:
+      easy: 100
+      medium: 160
+      hard: 200
+    ladder:
+    - 60
+    - 100
+    - 130
+    - 160
+    - 200
+    - 240
+    - 300
+  conjunctions:
+    category: counting
+    source: IFBench count:conjunctions (2-6)
+    param: n
+    levels:
+      easy: 2
+      medium: 4
+      hard: 6
+    ladder:
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+  word_repeats:
+    category: word
+    source: IFBench words:repeats (1-5)
+    param: n
+    levels:
+      easy: 20
+      medium: 10
+      hard: 5
+    ladder:
+    - 30
+    - 20
+    - 15
+    - 10
+    - 8
+    - 5
+    - 4
+  longest_word:
+    category: word
+    source: new
+    param: n
+    levels:
+      easy: 12
+      medium: 10
+      hard: 8
+    ladder:
+    - 16
+    - 14
+    - 12
+    - 10
+    - 9
+    - 8
+    - 7
+  no_consecutive_initial:
+    category: word
+    source: IFBench words:no_consecutive (whole response)
+    param: scope
+    levels:
+      easy: first_sentence
+      medium: first_paragraph
+      hard: first_two_paragraphs
+    ladder:
+    - first_sentence
+    - first_two_sentences
+    - first_paragraph
+    - first_two_paragraphs
+    - whole
+  longest_sentence:
+    category: sentence
+    source: new
+    param: n
+    levels:
+      easy: 28
+      medium: 22
+      hard: 14
+    ladder:
+    - 40
+    - 35
+    - 28
+    - 22
+    - 18
+    - 14
+    - 12
+  questions:
+    category: sentence
+    source: new
+    param: n
+    levels:
+      easy: 1
+      medium: 3
+      hard: 6
+    ladder:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 8
+  title_case:
+    category: sentence
+    source: IFBench format:title_case (whole response)
+    param: scope
+    levels:
+      easy: first_sentence
+      medium: first_two_paragraphs
+      hard: whole
+    ladder:
+    - first_sentence
+    - first_two_sentences
+    - first_paragraph
+    - first_two_paragraphs
+    - whole
+  keyword_sentence:
+    category: position
+    source: IFBench sentence:keyword (n 1-20)
+    param: n
+    needs: keyword
+    levels:
+      easy: 2
+      medium: 5
+      hard: 7
+    ladder:
+    - 1
+    - 2
+    - 3
+    - 5
+    - 7
+    - 10
+    - 12
+  emoji_ends:
+    category: decoration
+    source: IFBench format:emoji (every sentence)
+    param: scope
+    levels:
+      easy: last_sentence
+      medium: first_and_last_sentence
+      hard: every_sentence
+    ladder:
+    - last_sentence
+    - first_and_last_sentence
+    - each_paragraph
+    - every_sentence
+  hashtags:
+    category: decoration
+    source: new
+    param: n
+    levels:
+      easy: 2
+      medium: 3
+      hard: 6
+    ladder:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 6
+    - 8
+  person_names:
+    category: counting
+    source: IFBench count:person_names (list of 50 names in the prompt)
+    param: n
+    levels:
+      easy: 3
+      medium: 7
+      hard: 12
+    ladder:
+    - 1
+    - 2
+    - 3
+    - 5
+    - 7
+    - 10
+    - 12
+    - 15
+    reserve: true
+  stopword_share:
+    category: word
+    source: IFBench words:stop_words (percentage, pinned 179-word list)
+    param: pct
+    levels:
+      easy: 50
+      medium: 42
+      hard: 36
+    ladder:
+    - 55
+    - 50
+    - 46
+    - 42
+    - 39
+    - 36
+    - 33
+    reserve: true
+  sentence_increment:
+    category: sentence
+    source: IFBench sentence:increment (scoped to the first n sentences)
+    param: n
+    levels:
+      easy: 2
+      medium: 4
+      hard: 6
+    ladder:
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 8
+    reserve: true
+  postscript:
+    category: position
+    source: IFEval detectable_content:postscript (P.S. length levels added)
+    param: n
+    levels:
+      easy: 10
+      medium: 30
+      hard: 60
+    ladder:
+    - 1
+    - 10
+    - 20
+    - 30
+    - 45
+    - 60
+    - 80
+    reserve: true
+  nested_quotes:
+    category: markup
+    source: IFBench format:quotes (alternating double/single, depth 3)
+    param: n
+    levels:
+      easy: 1
+      medium: 2
+      hard: 3
+    ladder:
+    - 1
+    - 2
+    - 3
+    - 4
+    reserve: true
+  divider_lines:
+    category: decoration
+    source: new (dividers; scope axis instead of the old 1/2/4 counts)
+    param: scope
+    levels:
+      easy: first_gap
+      medium: every_paragraph
+      hard: every_sentence
+    ladder:
+    - first_gap
+    - every_paragraph
+    - every_sentence
+    reserve: true
+forbidden_pairs: []
+status: DRAFT for round 2, proposed 2026-11-28, not approved
+round1_moves:
+  unique_words:
+    level: hard
+    from: 240
+    to: 200
+  longest_word:
+    level: easy
+    from: 14
+    to: 12
+  no_consecutive_initial:
+    level: hard
+    from: whole
+    to: first_two_paragraphs
+  longest_sentence:
+    level: easy
+    from: 35
+    to: 28
+  questions:
+    level: hard
+    from: 5
+    to: 6
+  title_case:
+    level: medium
+    from: first_paragraph
+    to: first_two_paragraphs
+  keyword_sentence:
+    level: hard
+    from: 10
+    to: 7
+  emoji_ends:
+    level: medium
+    from: each_paragraph
+    to: first_and_last_sentence
+  hashtags:
+    level: easy
+    from: 1
+    to: 2
+dropped_round1:
+  sections:
+    easy: 2
+    medium: 3
+    hard: 5
+  highlights:
+    easy: 1
+    medium: 3
+    hard: 6
+  bracket_depth:
+    easy: 2
+    medium: 3
+    hard: 5
+  closing_phrase:
+    easy: 3
+    medium: 8
+    hard: 15
+  keyword_position:
+    easy:
+    - 2
+    - 3
+    medium:
+    - 4
+    - 8
+    hard:
+    - 8
+    - 15
+  numbers_exact:
+    easy: 2
+    medium: 4
+    hard: 6
+  stair_indent:
+    easy: 3
+    medium: 6
+    hard: all
+pair_review_note: 'No new pairwise impossibility among the 17 types at any level. Known triple: postscript >= 30/60 words
+  x divider_lines every_sentence (P.S. must be one sentence) x longest_sentence: left to the pool-compatibility judge.'

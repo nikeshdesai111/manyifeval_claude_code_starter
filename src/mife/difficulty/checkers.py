@@ -255,6 +255,141 @@ def hashtags(text: str, n: int) -> Result:
     return Result(len(tags) >= n, f"{len(tags)} different hashtags {tags[:8]} (need >= {n})")
 
 
+# ----------------------------------------------------------------------------------------------- reserve types (round 2)
+# person_names        IFBench count:person_names   (>= n different names from the pinned 50-name list)
+# stopword_share      IFBench words:stop_words      (stop words <= pct% of words; pinned 179-word list)
+# sentence_increment  IFBench sentence:increment    (each of the first n sentences longer than the one before)
+# postscript          IFEval detectable_content:postscript (last paragraph starts with P.S. and has >= n words)
+# nested_quotes       IFBench format:quotes         (alternating " and ' quotes nested >= n deep)
+# divider_lines       new                           (a divider line --- / *** / ___ between the units of the scope)
+
+import functools as _ft
+
+
+@_ft.lru_cache(maxsize=1)
+def _stopwords() -> frozenset:
+    from .catalog import CFG
+    return frozenset(w.strip() for w in (CFG / "stopwords_en.txt").read_text().splitlines()
+                     if w.strip() and not w.startswith("#"))
+
+
+@_ft.lru_cache(maxsize=1)
+def _names() -> tuple:
+    from .catalog import wordlists
+    return tuple(wordlists()["person_names"])
+
+
+def person_names(text: str, n: int) -> Result:
+    t = T.normalize(text)
+    found = sorted({nm for nm in _names() if re.search(rf"(?<![\w-]){nm}(?![\w-])", t)})   # case-sensitive, as IFBench
+    return Result(len(found) >= n, f"{len(found)} listed names {found[:8]} (need >= {n})")
+
+
+def stopword_share(text: str, pct: int) -> Result:
+    ws = T.words(text)
+    if not ws:
+        return Result(False, "no words")
+    k = sum(w in _stopwords() for w in ws)
+    share = 100 * k / len(ws)
+    return Result(share <= pct, f"stop words {share:.1f}% of {len(ws)} words (max {pct}%)")
+
+
+def sentence_increment(text: str, n: int) -> Result:
+    ss = T.sentences(text)
+    if len(ss) < n:
+        return Result(False, f"only {len(ss)} sentences (need {n})")
+    lens = [len(T.words(x)) for x in ss[:n]]
+    for i in range(1, n):
+        if lens[i] <= lens[i - 1]:
+            return Result(False, f"sentence {i + 1} has {lens[i]} words, not more than sentence {i}'s {lens[i - 1]}")
+    return Result(True, f"first {n} sentence lengths {lens}")
+
+
+PS_RE = re.compile(r"^[ \t]*(?:[*_]{1,2})?P\.[ \t]?S\.", re.M)
+
+
+def postscript(text: str, n: int) -> Result:
+    ps = T.paragraphs(text)
+    if not ps or not PS_RE.match(ps[-1]):
+        return Result(False, "last paragraph does not start with P.S.")
+    body = PS_RE.sub("", ps[-1], count=1)
+    k = len(T.words(body))
+    return Result(k >= n, f"P.S. has {k} words (need >= {n})")
+
+
+def max_quote_depth(text: str) -> int:
+    """Depth of properly closed, alternating double/single quote nesting. Straight quotes after normalisation; a single
+    quote between two letters is an apostrophe and is ignored; a quote must close with the same mark."""
+    t = T.normalize(text)
+    stack: list[str] = []
+    best = 0
+    for i, ch in enumerate(t):
+        if ch not in "\"'":
+            continue
+        if ch == "'" and 0 < i < len(t) - 1 and t[i - 1].isalnum() and t[i + 1].isalnum():
+            continue  # apostrophe (don't, it's)
+        if ch == "'" and i > 0 and t[i - 1] in "sS" and (i == len(t) - 1 or not t[i + 1].isalnum()) and \
+                (not stack or stack[-1] != "'"):
+            continue  # plural possessive (parents') when no single quote is open
+        if stack and stack[-1] == ch:
+            best = max(best, len(stack))
+            stack.pop()
+        elif not stack or stack[-1] != ch:
+            stack.append(ch)
+    return best
+
+
+def nested_quotes(text: str, n: int) -> Result:
+    d = max_quote_depth(text)
+    return Result(d >= n, f"max closed quote depth {d} (need >= {n})")
+
+
+DIVIDER_RE = re.compile(r"^[ \t]*(?:-{3,}|\*{3,}|_{3,})[ \t]*$")
+
+
+def _blocks(text: str) -> list[tuple[str, str]]:
+    """Lines in order, tagged 'div' (divider line), 'blank' or 'text'; SECTION header lines are dropped."""
+    out = []
+    for ln in T.remove_section_lines(T.normalize(text)).split("\n"):
+        out.append(("div" if DIVIDER_RE.match(ln) else "blank" if not ln.strip() else "text", ln))
+    return out
+
+
+def divider_lines(text: str, scope: str) -> Result:
+    bl = _blocks(text)
+    # paragraphs separated by blank lines and/or divider lines; record whether a divider sits in each gap
+    paras, gaps, cur, div_in_gap = [], [], [], False
+    for kind, ln in bl:
+        if kind == "text":
+            if not cur and paras:
+                gaps.append(div_in_gap)
+            cur.append(ln)
+            div_in_gap = False
+        else:
+            if cur:
+                paras.append("\n".join(cur))
+                cur = []
+            div_in_gap = div_in_gap or kind == "div"
+    if cur:
+        paras.append("\n".join(cur))
+    if scope == "first_gap":
+        if len(paras) < 2:
+            return Result(False, "fewer than 2 paragraphs")
+        return Result(gaps[0], "divider between paragraphs 1 and 2" if gaps[0] else "no divider after paragraph 1")
+    if scope == "every_paragraph":
+        if len(paras) < 2:
+            return Result(False, "fewer than 2 paragraphs")
+        miss = [i + 1 for i, g in enumerate(gaps) if not g]
+        return Result(not miss, f"{len(gaps)} paragraph gaps, missing dividers after paragraph(s) {miss[:6]}")
+    if scope == "every_sentence":
+        # every sentence must be its own paragraph block, and every gap must hold a divider
+        multi = [i + 1 for i, pp in enumerate(paras) if len(T.sentences_of_paragraph(pp)) > 1]
+        miss = [i + 1 for i, g in enumerate(gaps) if not g]
+        ok = len(paras) >= 2 and not multi and not miss
+        return Result(ok, f"{len(paras)} blocks; blocks with >1 sentence {multi[:6]}; gaps without divider {miss[:6]}")
+    raise ValueError(scope)
+
+
 # ----------------------------------------------------------------------------------------------- registry
 
 CHECKERS: dict[str, Callable[..., Result]] = {
@@ -264,6 +399,8 @@ CHECKERS: dict[str, Callable[..., Result]] = {
     "keyword_sentence": keyword_sentence, "keyword_position": keyword_position, "closing_phrase": closing_phrase,
     "sections": sections, "highlights": highlights, "bracket_depth": bracket_depth,
     "emoji_ends": emoji_ends, "stair_indent": stair_indent, "hashtags": hashtags,
+    "person_names": person_names, "stopword_share": stopword_share, "sentence_increment": sentence_increment,
+    "postscript": postscript, "nested_quotes": nested_quotes, "divider_lines": divider_lines,
 }
 
 
@@ -306,6 +443,16 @@ def spec(type_id: str, kw: dict) -> str:
                                  f"passes if there are >= {kw['lines']} non-blank lines and each of the first "
                                  f"{kw['lines']} has more indentation than the one before it."),
         "hashtags": lambda: f"passes if >= {n} different hashtags (# then a letter, case-insensitive) occur.",
+        "person_names": lambda: f"passes if >= {n} different names from the given list occur (exact spelling, capitalised).",
+        "stopword_share": lambda: f"passes if stop words (a fixed 179-word list) are <= {kw['pct']}% of all words.",
+        "sentence_increment": lambda: f"passes if each of the first {n} sentences has more words than the one before it.",
+        "postscript": lambda: f"passes if the last paragraph starts with P.S. and has >= {n} words after it.",
+        "nested_quotes": lambda: (f"passes if some correctly closed quotation alternating \" and ' is nested >= {n} deep "
+                                  f"(apostrophes inside words are ignored)."),
+        "divider_lines": lambda: {"first_gap": "passes if a divider line (---, *** or ___) separates paragraphs 1 and 2",
+                                  "every_paragraph": "passes if a divider line separates every two consecutive paragraphs",
+                                  "every_sentence": "passes if every sentence stands alone between divider lines"}[kw["scope"]]
+        + " (blank lines around dividers are allowed).",
     }[type_id]()
 
 

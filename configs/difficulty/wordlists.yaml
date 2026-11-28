@@ -32,3 +32,8 @@ closing_phrases:
          "Feel ready to start now, and write again whenever a fresh new question comes up",
          "Every choice may change later, so begin small, then refine it as you learn more",
          "Thank you for your time, and I hope the next few weeks go very smoothly"]
+# Person-name list for the person_names reserve type (IFBench count:person_names list, 50 names, pinned).
+person_names: [Emma, Liam, Sophia, Jackson, Olivia, Noah, Ava, Lucas, Isabella, Mason, Mia, Ethan, Charlotte, Alexander,
+               Amelia, Benjamin, Harper, Leo, Zoe, Daniel, Chloe, Samuel, Lily, Matthew, Grace, Owen, Abigail, Gabriel,
+               Ella, Jacob, Scarlett, Nathan, Victoria, Elijah, Layla, Nicholas, Audrey, David, Hannah, Christopher,
+               Penelope, Thomas, Nora, Andrew, Aria, Joseph, Claire, Ryan, Stella, Jonathan]
