@@ -6,6 +6,12 @@
 Same backend, sampling semantics and record schema as the S3 expansion runner (src/mife/expansion_s3), with the
 models and decoding in code/models.yaml as recorded in data/inputs/build_summary.json. Reads pilots/high_k/data/inputs/
 and writes only pilots/high_k/data/generations/<model>/. Resumable per (prompt, sample).
+
+--inputs-dir / --outputs-dir (defaults: the K10 paths above, so K10 behaviour is unchanged) point the same runner at
+another build in the same schema, e.g. the difficulty calibration pilot:
+    python pilots/high_k/code/generate.py generate llama --chunk 0 \
+        --inputs-dir data/difficulty/pilot/round1/inputs --outputs-dir data/difficulty/pilot/round1/betty
+The run name and version then come from that build_summary.json (run_name, version).
 """
 from __future__ import annotations
 
@@ -24,8 +30,20 @@ from mife.generate_mlx import GEN_SCHEMA, SAMPLER_SEMANTICS
 
 PILOT = ROOT / "pilots" / "high_k"
 INP = PILOT / "data" / "inputs"
+DATA = PILOT / "data"          # generations/, env/ and the space guard live here
 RUN_NAME = "pilot_high_k_20261126"
 VERSION = "pilot-high-k-2026-11-26"
+
+
+def set_dirs(inputs_dir: str | None, outputs_dir: str | None) -> None:
+    """Override the K10 paths (only when given); run name and version follow the build being read."""
+    global INP, DATA, RUN_NAME, VERSION
+    if inputs_dir:
+        INP = Path(inputs_dir).resolve()
+        s = summary()
+        RUN_NAME, VERSION = s.get("run_name", RUN_NAME), s.get("version", VERSION)
+    if outputs_dir:
+        DATA = Path(outputs_dir).resolve()
 
 
 def summary() -> dict:
@@ -106,7 +124,7 @@ def done(out_dir: Path, shash: str) -> set[tuple[str, int]]:
 def max_gb(default: float = 4.0) -> float:
     """In-flight output cap in GB. pilots/high_k/data/env/max_gb (re-read on every check, so the cap can be changed
     for running and queued tasks) wins over HK_MAX_GB, which wins over the default."""
-    f = PILOT / "data" / "env" / "max_gb"
+    f = DATA / "env" / "max_gb"
     try:
         return float(f.read_text().strip())
     except (OSError, ValueError):
@@ -137,7 +155,7 @@ def space_guard(limit_gb: float | None = None, wait_s: float | None = None, rese
     """Betty home has only a few GB free: wait until data/generations + data/features hold less than the cap (max_gb()),
     i.e. until the Mac has copied finished shards back and removed them. Waits up to wait_s, by default the job's
     remaining time limit minus reserve_s (so work can still finish), and at least 20 min. Exits non-zero otherwise."""
-    root = PILOT / "data"
+    root = DATA
     t0 = time.time()
     if wait_s is None:
         left = job_seconds_left()
@@ -177,7 +195,7 @@ def generate(model_key: str, chunk: int, prompts_per_shard: int = 500, gpu_mem: 
     work, tok, wmeta = load(model_key)
     max_model_len = summary()["max_model_len"]
     work = work[work.chunk == chunk]
-    out_dir = PILOT / "data" / "generations" / model_key
+    out_dir = DATA / "generations" / model_key
     out_dir.mkdir(parents=True, exist_ok=True)
     st = gen_settings(model_key)
     shash = settings_hash(model_key)
@@ -254,7 +272,7 @@ def generate(model_key: str, chunk: int, prompts_per_shard: int = 500, gpu_mem: 
 
 def check(model_key: str) -> dict:
     work, _, _ = load(model_key)
-    out_dir = PILOT / "data" / "generations" / model_key
+    out_dir = DATA / "generations" / model_key
     d = pd.concat([pd.read_parquet(f, columns=["prompt_id", "sample_index", "batch_seed", "settings_hash",
                                                "n_output_tokens", "hit_max_tokens"])
                    for f in sorted(out_dir.glob("shard_*.parquet"))])
@@ -276,7 +294,10 @@ if __name__ == "__main__":
     ap.add_argument("model", choices=["gemma2b", "llama", "gemma9b"])
     ap.add_argument("--chunk", type=int, default=0)
     ap.add_argument("--max-records", type=int)
+    ap.add_argument("--inputs-dir", default=None, help="build to read (default: pilots/high_k/data/inputs)")
+    ap.add_argument("--outputs-dir", default=None, help="where generations/ and env/ go (default: pilots/high_k/data)")
     a = ap.parse_args()
+    set_dirs(a.inputs_dir, a.outputs_dir)
     if a.cmd == "generate":
         generate(a.model, a.chunk, max_records=a.max_records)
     elif a.cmd == "check":
