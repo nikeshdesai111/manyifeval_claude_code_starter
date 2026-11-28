@@ -174,9 +174,18 @@ def verify(round_: int) -> pd.DataFrame:
     base = PILOT / f"round{round_}"
     P = pd.read_parquet(base / "inputs" / "prompts.parquet").set_index("prompt_id")
     rows = []
-    for f in sorted((base / "generations").glob("*.jsonl")):
-        for line in f.read_text().splitlines():
-            g = json.loads(line)
+
+    def records():
+        for f in sorted((base / "generations").glob("*.jsonl")):          # Mac MLX fallback
+            for line in f.read_text().splitlines():
+                yield json.loads(line)
+        for f in sorted((base / "betty" / "generations").glob("*/shard_*.parquet")):   # Betty vLLM (K10 schema)
+            for g in pd.read_parquet(f, columns=["prompt_id", "model_key", "sample_index", "response_text",
+                                                 "finish_reason"]).to_dict("records"):
+                yield g
+
+    for g in records():
+        if g["prompt_id"] in P.index:
             p = P.loc[g["prompt_id"]]
             text = g["response_text"].split(EOT, 1)[0]
             r = C.check(p.type_id, text, json.loads(p.kwargs_json))

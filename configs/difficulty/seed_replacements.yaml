@@ -10,3 +10,48 @@ replacements:
   reason: scenario has two parallel outcomes, can't form a single 1/2/3 reasoning chain; judge rejected after 3 rewrites at
     low and medium effort
   date: '2026-11-27'
+- seed_id: pc04
+  new_seed_id: pc04b
+  cell: school/troubleshooting
+  role: calibration
+  old_conversation_hash: 8afef17ff4d3d8dbb686b65671a53e7c
+  new_source: wildchat
+  new_conversation_hash: 3cb651c9a52ab67c3e9aa4011a28de2e
+  reason: task judge rejected after 3 rewrites (4/6 accepted); automatic replacement
+  date: '2026-11-27'
+- seed_id: pc07
+  new_seed_id: pc07b
+  cell: travel/planning
+  role: calibration
+  old_conversation_hash: 01bf783b47600cbd42544033e59b5a5b
+  new_source: wildchat
+  new_conversation_hash: dcb0b6080407d77829aefcac65e792ed
+  reason: task judge rejected after 3 rewrites (3/6 accepted); automatic replacement
+  date: '2026-11-27'
+- seed_id: pc08
+  new_seed_id: pc08b
+  cell: workplace/explanation
+  role: calibration
+  old_conversation_hash: 0ddaf81aca790a679ff4fd5ffcaab204
+  new_source: wildchat
+  new_conversation_hash: 54012097e2e2f32b7c6219b13aa84c92
+  reason: task judge rejected after 3 rewrites (5/6 accepted); automatic replacement
+  date: '2026-11-27'
+- seed_id: pc08b
+  new_seed_id: pc08c
+  cell: workplace/explanation
+  role: calibration
+  old_conversation_hash: 54012097e2e2f32b7c6219b13aa84c92
+  new_source: wildchat
+  new_conversation_hash: 1bd9fb74ceb9136293776fb49305425a
+  reason: task judge rejected after 3 rewrites (5/6 accepted); automatic replacement
+  date: '2026-11-27'
+- seed_id: pc08c
+  new_seed_id: pc08d
+  cell: workplace/explanation
+  role: calibration
+  old_conversation_hash: 1bd9fb74ceb9136293776fb49305425a
+  new_source: wildchat
+  new_conversation_hash: 3a24f753658b6a19f5446ae470cea380
+  reason: task judge rejected after 3 rewrites (3/6 accepted); automatic replacement
+  date: '2026-11-27'
