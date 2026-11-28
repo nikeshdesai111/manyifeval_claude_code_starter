@@ -70,6 +70,9 @@ def instantiate(t: str, level: str, rng: random.Random, split: str, taken_keywor
     if t == "keyword_sentence":
         kw = rng.choice(sorted(set(wordlists()["keywords"][_word_split(split)]) - taken_keywords))
         return {"keyword": kw, "n": int(v)}
+    if t == "keyword_line_end":
+        kw = rng.choice(sorted(set(wordlists()["keywords"][_word_split(split)]) - taken_keywords))
+        return {"keyword": kw, "scope": v}
     if t == "keyword_position":
         kw = rng.choice(sorted(set(wordlists()["keywords"][_word_split(split)]) - taken_keywords))
         return {"keyword": kw, "n": int(v[0]), "m": int(v[1])}
@@ -188,6 +191,19 @@ def rule_text(t: str, kw: dict) -> str:
                                         "response bold, like **this**.",
                 "every_sentence": "Make the first word of every sentence of your response bold, like **this**."
                 }[kw["scope"]]
+    if t == "keyword_line_end":
+        where = {"response_end": "the last word of your response",
+                 "first_and_last_paragraph": "the last word of your first paragraph and of your last paragraph",
+                 "every_paragraph": "the last word of every paragraph of your response"}[kw["scope"]]
+        return f"Make the word \"{kw['keyword']}\" {where}."
+    if t == "exclamations":
+        return f"Include at least {n} sentence{_s(n)} ending with an exclamation mark (!) in your response."
+    if t == "parentheticals":
+        return f"Include at least {n} parenthetical aside{_s(n)} in your response, each written in round brackets (like this)."
+    if t == "emoji_paragraph_start":
+        return {"first_paragraph": "Start the first paragraph of your response with an emoji.",
+                "first_two_paragraphs": "Start each of the first two paragraphs of your response with an emoji.",
+                "every_paragraph": "Start every paragraph of your response with an emoji."}[kw["scope"]]
     raise KeyError(t)
 
 

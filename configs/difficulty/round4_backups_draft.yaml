@@ -1,0 +1,25 @@
+# DRAFT backup types for a possible calibration round 4 (not in any rules file yet; not approved).
+# None is a ManyIFEval type (src/mife/source.py TYPE_INFO). Checkers in src/mife/difficulty/checkers.py.
+keyword_line_end:
+  category: position
+  source: new (keyword at paragraph ends; nested scope axis)
+  param: scope
+  needs: keyword
+  levels: {easy: response_end, medium: first_and_last_paragraph, hard: every_paragraph}
+exclamations:
+  category: sentence
+  source: new (same shape as questions, which passed)
+  param: n
+  levels: {easy: 1, medium: 3, hard: 6}
+  ladder: [1, 2, 3, 4, 6, 8]
+parentheticals:
+  category: markup
+  source: new (count of (...) asides with a word; nested ones count)
+  param: n
+  levels: {easy: 2, medium: 5, hard: 9}
+  ladder: [1, 2, 3, 5, 7, 9, 12]
+emoji_paragraph_start:
+  category: decoration
+  source: new (emoji at paragraph starts; nested scope axis)
+  param: scope
+  levels: {easy: first_paragraph, medium: first_two_paragraphs, hard: every_paragraph}

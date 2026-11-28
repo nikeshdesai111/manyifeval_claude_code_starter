@@ -455,6 +455,59 @@ def bold_first_word(text: str, scope: str) -> Result:
     return Result(True, f"{len(flat)} sentence starts bold (scope {scope})")
 
 
+# ----------------------------------------------------------------------------------------------- round-4 backups
+# keyword_line_end       position   keyword is the last word of the response / first+last paragraph / every paragraph
+# exclamations           sentence   >= n sentences end with "!"
+# parentheticals         markup     >= n parenthetical asides (...) containing a word
+# emoji_paragraph_start  decoration the first paragraph / first two / every paragraph starts with an emoji
+
+
+def keyword_line_end(text: str, keyword: str, scope: str) -> Result:
+    ps = [p for p in T.paragraphs(text) if T.words(p)]
+    if not ps:
+        return Result(False, "no paragraphs with words")
+    idx = {"response_end": [len(ps) - 1], "first_and_last_paragraph": sorted({0, len(ps) - 1}),
+           "every_paragraph": list(range(len(ps)))}[scope]
+    for i in idx:
+        last = T.words(ps[i])[-1]
+        if last != keyword.lower():
+            return Result(False, f"paragraph {i + 1} ends with {last!r} (need {keyword.lower()!r}; scope {scope})")
+    return Result(True, f"{len(idx)} paragraph end(s) checked (scope {scope})")
+
+
+def exclamations(text: str, n: int) -> Result:
+    k = sum(T.sentence_core_end(x).endswith("!") for x in T.sentences(text))
+    return Result(k >= n, f"{k} exclamations (need >= {n})")
+
+
+def parentheticals(text: str, n: int) -> Result:
+    t = T.normalize(text)
+    k, prev = 0, None
+    while prev != t:   # count innermost (...) spans with a word, then remove them, so nested asides count separately
+        prev = t
+        spans = [m for m in re.finditer(r"\([^()\n]*\)", t) if T.words(m.group(0))]
+        k += len(spans)
+        t = re.sub(r"\([^()\n]*\)", " ", t)
+    return Result(k >= n, f"{k} parenthetical asides (need >= {n})")
+
+
+def _starts_with_emoji(par: str) -> bool:
+    s = _LEAD_STRIP.sub("", T.normalize(par).lstrip()).lstrip("*_ \t")
+    lead = T._emoji.emoji_list(s)
+    return bool(lead) and lead[0]["match_start"] == 0
+
+
+def emoji_paragraph_start(text: str, scope: str) -> Result:
+    ps = T.paragraphs(text)
+    if not ps:
+        return Result(False, "empty response")
+    sel = {"first_paragraph": ps[:1], "first_two_paragraphs": ps[:2], "every_paragraph": ps}[scope]
+    for i, p in enumerate(sel):
+        if not _starts_with_emoji(p):
+            return Result(False, f"paragraph {i + 1} does not start with an emoji (scope {scope})")
+    return Result(True, f"{len(sel)} paragraph start(s) checked (scope {scope})")
+
+
 # ----------------------------------------------------------------------------------------------- registry
 
 CHECKERS: dict[str, Callable[..., Result]] = {
@@ -467,6 +520,8 @@ CHECKERS: dict[str, Callable[..., Result]] = {
     "person_names": person_names, "stopword_share": stopword_share, "sentence_increment": sentence_increment,
     "postscript": postscript, "nested_quotes": nested_quotes, "divider_lines": divider_lines,
     "bold_first_word": bold_first_word,
+    "keyword_line_end": keyword_line_end, "exclamations": exclamations, "parentheticals": parentheticals,
+    "emoji_paragraph_start": emoji_paragraph_start,
 }
 
 
@@ -527,6 +582,16 @@ def spec(type_id: str, kw: dict) -> str:
                                     "first_two_paragraphs": "passes if every sentence of the first two paragraphs",
                                     "every_sentence": "passes if every sentence"}[kw["scope"]]
         + " starts with its first word in bold (**word** or __word__; list markers, emoji or punctuation may come first).",
+        "keyword_line_end": lambda: {"response_end": "passes if the last word of the response",
+                                     "first_and_last_paragraph": "passes if the last word of the first and of the last paragraph",
+                                     "every_paragraph": "passes if the last word of every paragraph"}[kw["scope"]]
+        + f" is '{kw['keyword']}' (trailing punctuation and emoji ignored).",
+        "exclamations": lambda: f"passes if >= {n} sentences end with '!' (ignoring trailing emoji, quotes, brackets).",
+        "parentheticals": lambda: f"passes if >= {n} parenthetical asides ( ... ) containing a word occur (nested ones count).",
+        "emoji_paragraph_start": lambda: {"first_paragraph": "passes if the first paragraph",
+                                          "first_two_paragraphs": "passes if each of the first two paragraphs",
+                                          "every_paragraph": "passes if every paragraph"}[kw["scope"]]
+        + " starts with an emoji (after list markers or markdown).",
     }[type_id]()
 
 

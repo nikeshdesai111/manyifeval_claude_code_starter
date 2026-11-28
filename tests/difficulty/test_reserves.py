@@ -145,3 +145,47 @@ def test_round3_scope_nesting_on_constructed_responses(t, easy, med, hard):
     for x in samples:
         h, m, e = (C.check(t, x, {"scope": s}).passed for s in (hard, med, easy))
         assert (not h or m) and (not m or e), (t, x, h, m, e)
+
+
+def test_keyword_line_end():
+    t = "We plan the garden.\n\nThen the river.\n\nFinally the garden!"
+    assert C.keyword_line_end(t, keyword="garden", scope="response_end").passed
+    assert C.keyword_line_end(t, keyword="garden", scope="first_and_last_paragraph").passed
+    assert not C.keyword_line_end(t, keyword="garden", scope="every_paragraph").passed
+    assert C.keyword_line_end("All about the GARDEN 🌱.", keyword="garden", scope="response_end").passed
+    assert not C.keyword_line_end("The gardens.", keyword="garden", scope="response_end").passed
+
+
+def test_exclamations():
+    assert C.exclamations("Wow! Great. Yes! 🎉 Done!\"", n=3).passed
+    assert not C.exclamations("Wow! Great.", n=2).passed
+    assert not C.exclamations("Hi!? Really.", n=1).passed
+
+
+def test_parentheticals():
+    assert C.parentheticals("A (one) b (two) c (three [x]).", n=3).passed
+    assert C.parentheticals("A (outer (inner) part).", n=2).passed          # nested asides count separately
+    assert not C.parentheticals("A () b (123) c :)", n=1).passed            # need a word inside
+    assert not C.parentheticals("A (one) b.", n=2).passed
+
+
+def test_emoji_paragraph_start():
+    t = "😀 One.\n\n- 🎉 Two.\n\nThree."
+    assert C.emoji_paragraph_start(t, scope="first_paragraph").passed
+    assert C.emoji_paragraph_start(t, scope="first_two_paragraphs").passed
+    assert not C.emoji_paragraph_start(t, scope="every_paragraph").passed
+    assert C.emoji_paragraph_start("**👍🏽 Bold** start.", scope="first_paragraph").passed
+    assert not C.emoji_paragraph_start("One 😀.", scope="first_paragraph").passed
+
+
+def test_round4_backups_render():
+    import yaml
+    d = yaml.safe_load((K.CFG / "round4_backups_draft.yaml").read_text())
+    rng = random.Random(0)
+    for t, spec in d.items():
+        for lvl, v in spec["levels"].items():
+            kw = {"scope": v} if spec["param"] == "scope" else {"n": v}
+            if spec.get("needs") == "keyword":
+                kw["keyword"] = rng.choice(K.wordlists()["keywords"]["train"])
+            assert K.rule_text(t, kw).endswith(".") and C.spec(t, kw)
+            assert isinstance(C.check(t, "Some text! More (aside) text?", kw).passed, bool)

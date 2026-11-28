@@ -89,8 +89,11 @@ class PoolSampler:
             jitter += 0.5
         raise RuntimeError("could not avoid forbidden pairs")
 
-    def instantiate(self, pairs: list[tuple[str, str]], split: str, rng: random.Random) -> list[dict]:
-        taken: set[str] = set()
+    def instantiate(self, pairs: list[tuple[str, str]], split: str, rng: random.Random,
+                    task_texts: list[str] | None = None) -> list[dict]:
+        # keywords that already occur in the group's tasks would make keyword rules trivially easier: never draw them
+        from .text import words as _words
+        taken: set[str] = {w for t in (task_texts or []) for w in _words(t)}
         rules = []
         for t, lvl in pairs:
             kw = K.instantiate(t, lvl, rng, split, taken)
@@ -100,12 +103,13 @@ class PoolSampler:
         return rules
 
     # ------------------------------------------------------------------ accepted pool with judge
-    def sample_pool(self, seed_id: str, split: str, judge: Callable[[list[dict], int], dict] | None = None) -> dict:
+    def sample_pool(self, seed_id: str, split: str, judge: Callable[[list[dict], int], dict] | None = None,
+                    task_texts: list[str] | None = None) -> dict:
         """Draw a pool for one seed. ``judge(rules, attempt)`` returns {"accepted": bool, "reason": str, ...}."""
         rng = random.Random(derive_seed(self.seed, "pool", seed_id))
         for attempt in range(MAX_ATTEMPTS):
             pairs = self.draw(split, rng, attempt)
-            rules = self.instantiate(pairs, split, rng)
+            rules = self.instantiate(pairs, split, rng, task_texts)
             verdict = judge(rules, attempt) if judge else {"accepted": True, "reason": "no judge"}
             if verdict["accepted"]:
                 break

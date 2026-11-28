@@ -291,7 +291,8 @@ def run_seed(seed: dict, split: str, sampler_seed: int, tasks_only: bool = False
     compat_log: list = []
     sampler = S.PoolSampler(sampler_seed)
     pool = sampler.sample_pool(seed["seed_id"], split,
-                               judge=lambda rules, a: compat_judge(seed["seed_id"], rules, six, a, compat_log))
+                               judge=lambda rules, a: compat_judge(seed["seed_id"], rules, six, a, compat_log),
+                               task_texts=[x["task_text"] for x in six])
     (out / "pool.json").write_text(json.dumps(pool, indent=1, default=str))
     (out / "compat_log.json").write_text(json.dumps({"judge_calls": compat_log, "sampler_log": sampler.log},
                                                     indent=1, default=str))

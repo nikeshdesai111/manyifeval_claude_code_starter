@@ -118,3 +118,13 @@ def test_rule_texts_render_and_mention_their_parameter():
             assert txt and txt.endswith(".")
             if "n" in kw and t not in ("keyword_sentence", "keyword_position"):
                 assert str(kw["n"]) in txt
+
+
+def test_keywords_never_drawn_from_the_groups_own_tasks():
+    wl = K.wordlists()["keywords"]["train"]
+    tasks = ["My " + " and ".join(wl[:-2]) + " plans."]          # every keyword but the last two appears in a task
+    for seed in range(20):
+        s = S.PoolSampler(seed)
+        p = s.sample_pool(f"x{seed}", "train", task_texts=tasks)
+        kws = [r["kwargs"]["keyword"] for r in p["rules"] if "keyword" in r["kwargs"]]
+        assert set(kws) <= set(wl[-2:])
