@@ -109,3 +109,39 @@ def test_bold_first_word():
     assert not C.bold_first_word("The **plan** works. **Next** one.", scope="every_sentence").passed  # not the first word
     assert not C.bold_first_word("*Pack* early.", scope="paragraph_first").passed                     # italics, not bold
     assert not C.bold_first_word("**12** boxes moved.", scope="paragraph_first").passed               # digits are not a word
+
+
+def test_round3_scopes():
+    # title_case: first sentence of every paragraph
+    t = "Plan The Week. then rest.\n\nPack The Boxes. then sleep."
+    assert C.title_case(t, scope="paragraph_first").passed and not C.title_case(t, scope="whole").passed
+    assert not C.title_case("Plan The Week.\n\npack the boxes.", scope="paragraph_first").passed
+    # divider_lines: first two gaps
+    three = "One.\n---\nTwo.\n---\nThree.\n\nFour."
+    assert C.divider_lines(three, scope="first_two_gaps").passed
+    assert not C.divider_lines(three, scope="every_paragraph").passed
+    assert not C.divider_lines("One.\n---\nTwo.\n\nThree.", scope="first_two_gaps").passed
+    assert C.divider_lines("One.\n---\nTwo.", scope="first_two_gaps").passed      # 2 paragraphs: the one gap
+    # bold_first_word: first sentence only
+    assert C.bold_first_word("**Pack** early. Then rest.\n\nCall movers.", scope="first_sentence").passed
+    assert not C.bold_first_word("Pack early.", scope="first_sentence").passed
+
+
+@pytest.mark.parametrize("t,easy,med,hard", [
+    ("title_case", "first_sentence", "paragraph_first", "whole"),
+    ("emoji_ends", "last_sentence", "each_paragraph", "every_sentence"),
+    ("divider_lines", "first_gap", "first_two_gaps", "every_paragraph"),
+    ("bold_first_word", "first_sentence", "paragraph_first", "every_sentence"),
+])
+def test_round3_scope_nesting_on_constructed_responses(t, easy, med, hard):
+    """hard passes => medium passes => easy passes, on a small grid of constructed responses."""
+    samples = [
+        "**Go** Now 😀.\n---\n**Pack** It 🎉. **Move** On 🙂.\n---\n**Rest** Well 👍.",
+        "**Go** now. then rest 😀.\n\nPack it.",
+        "Go Now 😀.\n---\nPack It.\n\nRest 😀.",
+        "**One** 😀.\n---\n**Two** 😀.",
+        "plain text only.",
+    ]
+    for x in samples:
+        h, m, e = (C.check(t, x, {"scope": s}).passed for s in (hard, med, easy))
+        assert (not h or m) and (not m or e), (t, x, h, m, e)

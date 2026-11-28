@@ -33,7 +33,7 @@ from typing import Callable
 
 from . import text as T
 
-CHECKER_VERSION = "difficulty-checkers-v0"
+CHECKER_VERSION = "difficulty-checkers-v1"  # v1 (round 3): sentence scopes skip word-less lines; new scopes
 CONJUNCTIONS = ("and", "but", "for", "nor", "or", "so", "yet")  # IFBench's list
 # Words that may stay lower case in title case (pinned; articles, coordinating conjunctions, short prepositions).
 TITLE_MINOR = frozenset("a an the and but or nor for so yet as at by in of off on per to up via vs with from into onto "
@@ -54,9 +54,16 @@ def _scope_text(text: str, scope: str) -> str:
     if scope in ("first_paragraph", "first_two_paragraphs"):
         ps = T.paragraphs(text)
         return "\n\n".join(ps[: 1 if scope == "first_paragraph" else 2])
-    if scope in ("first_sentence", "first_two_sentences"):
-        ss = T.sentences(text)
-        return " ".join(ss[: 1 if scope == "first_sentence" else 2])
+    n_first = {"first_sentence": 1, "first_two_sentences": 2, "first_four_sentences": 4}
+    if scope in n_first:   # sentences without words (a leading --- or emoji line) do not count
+        ss = [x for x in T.sentences(text) if T.words(x)]
+        return " ".join(ss[: n_first[scope]])
+    if scope == "paragraph_first":   # the first sentence (with words) of every paragraph
+        firsts = []
+        for p in T.paragraphs(text):
+            ws = [x for x in T.sentences_of_paragraph(p) if T.words(x)]
+            firsts += ws[:1]
+        return " ".join(firsts)
     raise ValueError(f"unknown scope {scope!r}")
 
 
@@ -376,6 +383,11 @@ def divider_lines(text: str, scope: str) -> Result:
         if len(paras) < 2:
             return Result(False, "fewer than 2 paragraphs")
         return Result(gaps[0], "divider between paragraphs 1 and 2" if gaps[0] else "no divider after paragraph 1")
+    if scope == "first_two_gaps":   # nested between first_gap and every_paragraph (a 2-paragraph answer has one gap)
+        if len(paras) < 2:
+            return Result(False, "fewer than 2 paragraphs")
+        miss = [i + 1 for i, g in enumerate(gaps[:2]) if not g]
+        return Result(not miss, f"first two gaps; missing dividers after paragraph(s) {miss}")
     if scope == "every_paragraph":
         if len(paras) < 2:
             return Result(False, "fewer than 2 paragraphs")
@@ -424,7 +436,9 @@ def bold_first_word(text: str, scope: str) -> Result:
     ps = T.paragraphs(text)
     if not ps:
         return Result(False, "empty response")
-    if scope == "paragraph_first":
+    if scope == "first_sentence":
+        sents = [T.sentences_of_paragraph(ps[0])[:1]]
+    elif scope == "paragraph_first":
         sents = [T.sentences_of_paragraph(p)[:1] for p in ps]
     elif scope == "first_two_paragraphs":
         sents = [T.sentences_of_paragraph(p) for p in ps[:2]]
@@ -457,6 +471,8 @@ CHECKERS: dict[str, Callable[..., Result]] = {
 
 
 _SCOPE_DESC = {"first_sentence": "the first sentence", "first_two_sentences": "the first two sentences",
+               "paragraph_first": "the first sentence of every paragraph",
+               "first_four_sentences": "the first four sentences",
                "first_paragraph": "the first paragraph", "first_two_paragraphs": "the first two paragraphs",
                "whole": "the whole response (SECTION header lines excluded)"}
 
@@ -502,10 +518,12 @@ def spec(type_id: str, kw: dict) -> str:
         "nested_quotes": lambda: (f"passes if some correctly closed quotation alternating \" and ' is nested >= {n} deep "
                                   f"(apostrophes inside words are ignored)."),
         "divider_lines": lambda: {"first_gap": "passes if a divider line (---, *** or ___) separates paragraphs 1 and 2",
+                                  "first_two_gaps": "passes if divider lines separate paragraphs 1-2 and 2-3",
                                   "every_paragraph": "passes if a divider line separates every two consecutive paragraphs",
                                   "every_sentence": "passes if every sentence stands alone between divider lines"}[kw["scope"]]
         + " (blank lines around dividers are allowed).",
-        "bold_first_word": lambda: {"paragraph_first": "passes if the first sentence of every paragraph",
+        "bold_first_word": lambda: {"first_sentence": "passes if the first sentence of the response",
+                                    "paragraph_first": "passes if the first sentence of every paragraph",
                                     "first_two_paragraphs": "passes if every sentence of the first two paragraphs",
                                     "every_sentence": "passes if every sentence"}[kw["scope"]]
         + " starts with its first word in bold (**word** or __word__; list markers, emoji or punctuation may come first).",

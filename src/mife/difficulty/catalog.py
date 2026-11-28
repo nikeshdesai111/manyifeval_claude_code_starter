@@ -93,6 +93,8 @@ def _ordinal(n: int) -> str:
 
 
 _SCOPE = {"first_sentence": "In the first sentence of your response", "first_two_sentences": "In the first two sentences",
+          "paragraph_first": "In the first sentence of every paragraph of your response",
+          "first_four_sentences": "In the first four sentences of your response",
           "first_paragraph": "In the first paragraph of your response",
           "first_two_paragraphs": "In the first two paragraphs", "whole": "In your entire response"}
 
@@ -121,6 +123,7 @@ def rule_text(t: str, kw: dict) -> str:
     if t == "title_case":
         what = {"first_sentence": "Write the first sentence of your response",
                 "first_two_sentences": "Write the first two sentences of your response",
+                "paragraph_first": "Write the first sentence of every paragraph of your response",
                 "first_paragraph": "Write the first paragraph of your response",
                 "first_two_paragraphs": "Write the first two paragraphs of your response",
                 "whole": "Write your entire response"}[kw["scope"]]
@@ -172,12 +175,15 @@ def rule_text(t: str, kw: dict) -> str:
     if t == "divider_lines":
         return {"first_gap": "Put a divider line (---) on its own line between the first and second paragraphs of "
                              "your response.",
+                "first_two_gaps": "Put a divider line (---) on its own line between the first and second paragraphs, "
+                                  "and another between the second and third paragraphs of your response.",
                 "every_paragraph": "Put a divider line (---) on its own line between every two paragraphs of your "
                                    "response.",
                 "every_sentence": "Put every sentence of your response on its own, with a divider line (---) on its own "
                                   "line between every two sentences."}[kw["scope"]]
     if t == "bold_first_word":
-        return {"paragraph_first": "Make the first word of the first sentence of every paragraph bold, like **this**.",
+        return {"first_sentence": "Make the first word of your response bold, like **this**.",
+                "paragraph_first": "Make the first word of the first sentence of every paragraph bold, like **this**.",
                 "first_two_paragraphs": "Make the first word of every sentence in the first two paragraphs of your "
                                         "response bold, like **this**.",
                 "every_sentence": "Make the first word of every sentence of your response bold, like **this**."
