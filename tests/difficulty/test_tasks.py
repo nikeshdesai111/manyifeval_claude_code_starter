@@ -57,3 +57,12 @@ def test_compat_schema():
     v = {"pass": False, "conflicting_rules": ["R1", "R2"], "reason": "x"}
     jsonschema.validate({"pool_id": "p", "rules_jointly_satisfiable": v,
                          "tasks": [{"task_id": "t", "reasonably_possible": v}]}, TK.COMPAT_SCHEMA)
+
+
+def test_rewrite_feedback_keeps_accepted_and_pins_medium_distractors():
+    prev = [{"task_id": f"x-dis-{TK.LEVEL_SHORT[l]}", "level": l, "mechanism": "distractors", "task_text": f"T {l}",
+             "distractors": ["D1.", "D2."] if l == "medium" else []} for l in TK.LEVELS]
+    res = {"x-dis-hard": {"why": ["judge found 5 distractors (designed 4)"]}}
+    fb = TK.rewrite_feedback(prev, ["hard"], res)
+    assert "Rewrite only the hard version" in fb and "keep easy exactly:\nT easy" in fb
+    assert "keep medium exactly:\nT medium" in fb and "D1. | D2." in fb and "designed 4" in fb

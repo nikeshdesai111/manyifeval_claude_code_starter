@@ -109,10 +109,12 @@ def json_schema_format(name: str, schema: dict) -> dict:
     return {"type": "json_schema", "json_schema": {"name": name, "strict": True, "schema": schema}}
 
 
-def total_cost() -> dict:
+def total_cost(since: str | None = None) -> dict:
     if not LOG.exists():
         return {"calls": 0, "cost_usd": 0.0}
     rows = [json.loads(x) for x in LOG.read_text().splitlines() if x.strip()]
+    if since:
+        rows = [r for r in rows if r["time"] >= since]
     by = {}
     for r in rows:
         b = by.setdefault(r["model"] or "?", {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "cost_usd": 0.0})

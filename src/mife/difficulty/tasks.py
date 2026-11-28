@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import time
 from pathlib import Path
 
 import jsonschema
@@ -30,8 +31,10 @@ CFG = K.CFG
 PROMPTS = CFG / "prompts"
 SEEDS_CFG = yaml.safe_load((CFG / "seeds.yaml").read_text())
 OUT = K.ROOT / "data" / "difficulty" / "tasks_test_batch"
-WRITER = {"model": "anthropic/claude-sonnet-5.5", "provider": "anthropic"}
-JUDGE = {"model": "openai/gpt-5.5", "provider": "openai", "reasoning": {"effort": "medium"}}
+_OR = yaml.safe_load((CFG / "openrouter.yaml").read_text())
+WRITER = {"model": _OR["writer"]["model"], "provider": _OR["writer"]["provider"]}
+JUDGE = {"model": _OR["judge"]["model"], "provider": _OR["judge"]["provider"],
+         "reasoning": {"effort": _OR["judge"]["reasoning_effort"]}}
 MAX_REWRITES = 3
 MAX_JUDGE_RETRIES = 3
 LEVELS = ("easy", "medium", "hard")
@@ -138,6 +141,24 @@ def write_variants(seed: dict, scen: dict, mechanism: str, attempt: int, feedbac
     return tasks, meta
 
 
+def rewrite_feedback(prev: list[dict], todo: list[str], res: dict) -> str:
+    keep = [x for x in prev if x["level"] not in todo]
+    lines = [f"Rewrite only the {', '.join(todo)} version(s). Return all three versions, but copy the "
+             f"{', '.join(x['level'] for x in keep) or 'other'} version(s) below word for word, unchanged."
+             if keep else f"Rewrite all three versions."]
+    for x in prev:
+        if x["level"] in todo and x["task_id"] in res:
+            lines.append(f"- {x['level']} was rejected: " + "; ".join(res[x["task_id"]]["why"]))
+    for x in keep:
+        lines.append(f"- keep {x['level']} exactly:\n{x['task_text']}")
+    if "hard" in todo and prev[0]["mechanism"] == "distractors":
+        med = next(x for x in prev if x["level"] == "medium")
+        if "medium" not in todo:
+            lines.append("- the hard version must contain the medium version's 2 distractors word for word: "
+                         + " | ".join(med["distractors"]))
+    return "\n".join(lines)
+
+
 # ------------------------------------------------------------------------------------------- judges
 
 def judge_tasks(seed: dict, scen: dict, tasks: list[dict], variant: int) -> tuple[dict, dict]:
@@ -206,28 +227,44 @@ def run_seed(seed: dict, split: str, sampler_seed: int) -> dict:
     scen, m1 = write_scenario(seed)
     (out / "scenario.json").write_text(json.dumps({"seed": seed, "scenario": scen, "meta": m1}, indent=1, default=str))
     tasks = {m: None for m in DESIGN}
-    feedback = {m: "" for m in DESIGN}
     history = []
-    accepted = {m: False for m in DESIGN}
+    ok_lvls = {m: set() for m in DESIGN}      # accepted variants stay fixed (sticky) in later rounds
+    res: dict = {}
     for rnd in range(MAX_REWRITES + 1):
         for m in DESIGN:
-            if not accepted[m]:
-                tasks[m], meta = write_variants(seed, scen, m, rnd, feedback[m])
-                history.append({"round": rnd, "mechanism": m, "writer_meta": meta, "tasks": tasks[m]})
+            todo = [lvl for lvl in LEVELS if lvl not in ok_lvls[m]]
+            if not todo:
+                continue
+            if tasks[m] is None:
+                tasks[m], meta = write_variants(seed, scen, m, rnd, "")
+            else:
+                fb = rewrite_feedback(tasks[m], todo, res)
+                new, meta = write_variants(seed, scen, m, rnd, fb)
+                tasks[m] = [x if x["level"] in ok_lvls[m] else next(y for y in new if y["level"] == x["level"])
+                            for x in tasks[m]]
+            history.append({"round": rnd, "mechanism": m, "rewritten_levels": todo, "writer_meta": meta,
+                            "tasks": tasks[m]})
         six = tasks["distractors"] + tasks["reasoning"]
         verdict, jm = judge_tasks(seed, scen, six, variant=rnd)
         by_id = {v["task_id"]: v for v in verdict["tasks"]}
-        res = {}
         med = next(x for x in tasks["distractors"] if x["level"] == "medium")["distractors"]
+        new_res = {}
         for x in six:
             v = by_id.get(x["task_id"])
             ok, why = (False, ["judge returned no verdict for this task"]) if v is None else accept_task(x, v, med)
-            res[x["task_id"]] = {"accepted": ok, "why": why, "verdict": v}
+            if x["level"] in ok_lvls[x["mechanism"]]:   # kept from an earlier round: acceptance is not re-decided
+                new_res[x["task_id"]] = {**res[x["task_id"]], "rejudged": {"accepted": ok, "why": why, "verdict": v}}
+            else:
+                new_res[x["task_id"]] = {"accepted": ok, "why": why, "verdict": v, "round": rnd}
+        res = new_res
         history.append({"round": rnd, "judge": verdict, "judge_meta": jm, "acceptance": res})
-        for m in DESIGN:
-            fails = {tid: r["why"] for tid, r in res.items() if tid.split("-")[1] == MECH_SHORT[m] and not r["accepted"]}
-            accepted[m] = not fails
-            feedback[m] = "\n".join(f"- {tid}: " + "; ".join(w) for tid, w in fails.items())
+        for x in six:
+            if res[x["task_id"]]["accepted"]:
+                ok_lvls[x["mechanism"]].add(x["level"])
+        # a rewritten medium distractor version changes the distractors the hard version must keep
+        if "medium" not in ok_lvls["distractors"]:
+            ok_lvls["distractors"].discard("hard")
+        accepted = {m: len(ok_lvls[m]) == 3 for m in DESIGN}
         if all(accepted.values()):
             break
     (out / "tasks_history.json").write_text(json.dumps(history, indent=1, default=str))
@@ -255,16 +292,21 @@ def main() -> None:
     ap.add_argument("--seeds", nargs="+", required=True)
     ap.add_argument("--sampler-seed", type=int, default=2026112701)
     ap.add_argument("--seeds-file", default=str(K.ROOT / "data" / "difficulty" / "seeds.parquet"))
+    ap.add_argument("--out", default=None, help="output folder (default data/difficulty/tasks_test_batch)")
     a = ap.parse_args()
+    global OUT
+    if a.out:
+        OUT = Path(a.out)
     seeds = pd.read_parquet(a.seeds_file).set_index("seed_id")
     summary = []
+    t_start = time.strftime("%Y-%m-%dT%H:%M:%S")
     for sid in a.seeds:
         s = seeds.loc[sid].to_dict()
         s["seed_id"] = sid
         split = "test" if s.get("split") == "test" else "train"
         summary.append(run_seed(s, split, a.sampler_seed))
         print(json.dumps(summary[-1], indent=1, default=str), flush=True)
-    cost = OR.total_cost()
+    cost = OR.total_cost(since=t_start)
     (OUT / "summary.json").write_text(json.dumps({"seeds": summary, "cost": cost, "writer": WRITER, "judge": JUDGE},
                                                  indent=1, default=str))
     print(json.dumps(cost, indent=1))
