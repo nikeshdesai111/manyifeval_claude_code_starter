@@ -104,9 +104,11 @@ def generate(models: list[str], samples: int, max_tokens: int) -> list[dict]:
                 t1 = time.time()
                 out = mgen(model, tok, ids, max_tokens=max_tokens, sampler=make_sampler(temp=0.6, top_p=0.9))
                 el = time.time() - t1
-                r = C.check(t, out, kw)
+                # MLX does not stop at Gemma's <end_of_turn>; cut there, as K10's verify.py does
+                eot = "<end_of_turn>" in out
+                r = C.check(t, out.split("<end_of_turn>", 1)[0], kw)
                 rows.append({"model": key, "type_id": t, "kwargs": kw, "sample": s, "passed": r.passed,
-                             "detail": r.detail, "seconds": round(el, 1), "load_s": round(load_s, 1),
+                             "detail": r.detail, "eot_cut": eot, "seconds": round(el, 1), "load_s": round(load_s, 1),
                              "response": out})
                 print(key, t, s, r.passed, r.detail, f"{el:.0f}s", flush=True)
         del model
